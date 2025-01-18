@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+body {
+  background-color: rgba(16,0,88,255); /* Replace this with your desired color */
+  margin: 0; /* Remove default body margins */
+  font-family: Arial, sans-serif; /* Optional: Set a font */
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
