@@ -1,9 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "../pages/Home";
-import SearchPage from "../pages/SearchPage";
-import RequestBook from "../pages/RequestBook";
-import NotFound from "../pages/NotFound.jsx";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Home from "../pages/Home"
+import SearchPage from "../pages/SearchPage"
+import RequestBook from "../pages/RequestBook"
+import NotFound from "../pages/NotFound"
 
 const AppRoutes = () => {
   return (
