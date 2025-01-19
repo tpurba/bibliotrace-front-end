@@ -16,7 +16,7 @@ const Home = () => {
   
     return (
       <div>
-        <NavBar useDarkTheme={true} showTitle={true}/>
+        <NavBar useDarkTheme={true} showTitle={false}/>
         <h1>Start Page</h1>
         <button onClick={handleNavigate}>Go to Search Book</button>
         <button onClick={handleRequestBookNav}>Go to Request Book Page</button>
