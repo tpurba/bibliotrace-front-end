@@ -15,14 +15,14 @@ const NavBar = ({ useDarkTheme, showTitle }) => {
 
     let title
     if (showTitle) {
-        title = <h1 className="absolute top-0 right-0 left-0 text-center p-2">BiblioTrace 3.0</h1>
+        title = <h1 className="h-16 absolute top-0 right-0 left-0 flex text-center text-xl items-center justify-center p-2">BiblioTrace 3.0</h1>
     }
     const Logo = useDarkTheme ? IhLogoDark : IhLogo
     const Home = useDarkTheme ? HomeLogoDark : HomeLogo
 
     return (
-        <div className="w-full top-0 z-50" style={{height: "calc(min(6vh, 60px) + 1rem)"}}>
-            <Logo className="absolute top-0 left-0 p-2" height="calc(min(6vh, 60px))" width="calc(min(6vh, 60px)* 3)"/>
+        <div className="w-full top-0 z-50 h-16">
+            <Logo className="absolute left-0 p-2 h-16 w-48" />
             {title}
             <button className="absolute top-0 right-0 flex flex-col justify-center items-center bg-transparent" onClick={navigateHome}>
                 <Home className="" />
