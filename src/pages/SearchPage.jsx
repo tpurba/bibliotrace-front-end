@@ -10,6 +10,7 @@ const Search = () => {
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
   const [searchInput, setSearchInput] = useState('')
+  const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
     selfLink: 'none', 
@@ -31,7 +32,9 @@ const Search = () => {
       const bookResults = bookItems.map((item) => { return convertBooksObjToBook(item) })
       console.log(bookResults)
       setSearchResults(bookResults)
-    })    
+      setPageOffset(0)
+      setInputQuery(searchInput)
+    })
   }
 
   const handleKeyDown = (event) => {
@@ -86,7 +89,7 @@ const Search = () => {
   }
 
   return (
-    <div className="w-screen h-screen pb-5 search-bg flex flex-col items-center">
+    <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ height: "calc(max(100%, 100vh))"}}>
       <NavBar useDarkTheme={true} showTitle={false} />
       <h1 className="mt-16 text-5xl">BiblioTrace 3.0</h1>
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
@@ -98,12 +101,12 @@ const Search = () => {
           <button className="bg-transparent border-none">
             <Filter />
           </button>
-          <p className="flex items-center">{(searchInput != '') ? `Showing search results for "${searchInput}"` : ""}</p>
+          <p className="flex items-center">{(inputQuery != '') ? `Showing search results for "${inputQuery}"` : ""}</p>
           <div className="w-10"></div> {/* placeholder to put above p element in the center */}
         </div>
         <div className=""> {/* Results Table */}
           <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl"> {/* Table Header */}
-            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-20 text-transparent">
+            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
               <h3>Cover</h3>
             </div>
             <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/3">
