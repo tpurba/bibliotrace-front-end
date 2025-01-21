@@ -5,11 +5,13 @@ import SearchPage from "../pages/SearchPage"
 import RequestBook from "../pages/RequestBook"
 import NotFound from "../pages/NotFound"
 
+const BASE_URL = '/dummy-frunt-end'
+
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path={BASE_URL} element={<Home />} />
         <Route path="/requestbook" element={<RequestBook />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}

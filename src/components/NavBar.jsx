@@ -5,12 +5,13 @@ import IhLogoDark from '../assets/ih-dark.svg?react'
 import HomeLogo from '../assets/home-white.svg?react'
 import HomeLogoDark from '../assets/home-black.svg?react'
 
+const BASE_URL = '/dummy-frunt-end'
 
 const NavBar = ({ useDarkTheme, showTitle }) => {
     const navigate = useNavigate()
 
     const navigateHome = () => {
-        navigate("/")
+        navigate(BASE_URL)
     }
 
     let title

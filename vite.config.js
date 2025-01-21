@@ -10,5 +10,6 @@ export default defineConfig({
     postcss: {
       plugins: [tailwindcss()],
     }
-  }
+  },
+  base: '/dummy-frunt-end',
 })
