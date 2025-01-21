@@ -11,5 +11,5 @@ export default defineConfig({
       plugins: [tailwindcss()],
     }
   },
-  base: '/dummy-frunt-end',
+  base: '/bibilotrace-front-end',
 })
