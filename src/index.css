@@ -83,3 +83,8 @@ button:focus-visible {
   background-size: cover;
 }
 /* Credit to search-bg goes to Matt with SvgBackgrounds.com (Scattered Forcefields) */
+.start-bg{
+  background-color: rgba(16,0,88,255);
+  /* background-attachment: fixed;
+  background-size: cover; */
+}
