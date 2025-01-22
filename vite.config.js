@@ -11,5 +11,5 @@ export default defineConfig({
       plugins: [tailwindcss()],
     }
   },
-  base: '/bibilotrace-front-end',
+  base: '/bibliotrace-front-end',
 })

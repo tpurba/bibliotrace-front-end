@@ -5,7 +5,7 @@ import SearchPage from "../pages/SearchPage"
 import RequestBook from "../pages/RequestBook"
 import NotFound from "../pages/NotFound"
 
-const BASE_URL = '/bibilotrace-front-end'
+const BASE_URL = '/bibliotrace-front-end'
 
 const AppRoutes = () => {
   return (
