@@ -7,7 +7,7 @@ import NotFound from "../pages/NotFound";
 
 const AppRoutes = () => {
   return (
-    <Router>
+    <Router basename="/bibliotrace-front-end">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/suggest" element={<SuggestPage />} />
