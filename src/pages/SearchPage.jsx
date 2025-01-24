@@ -6,7 +6,7 @@ import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult"
 
-const Search = () => {
+const Search = ({ initSearchInput }) => {
   const location = useLocation();
   const rowHeight = 100
   const headerHeight = 450
@@ -86,10 +86,11 @@ const Search = () => {
     }
   }, [searchInput]); 
 
-
-
-
-
+  useEffect(() => {
+    if (initSearchInput != null) {
+      setInputQuery(initSearchInput)
+    }
+  }, [])
 
   // Set up the resize listener
   useEffect(() => {
