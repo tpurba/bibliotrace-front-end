@@ -15,17 +15,28 @@ const Home = () => {
     // Navigate programmatically
     navigate("/search");
   };
-  const handleRequestBookNav = () => {
-      // Navigate programmatically
-      navigate("/requestbook");
+  const handleSuggestBookNav = () => {
+    // Navigate programmatically
+    navigate("/suggest");
   };
   return (
     <div className="h-screen w-screen pb-5 start-bg flex flex-col items-center">
-      <NavBar useDarkTheme={true} showTitle={false}/>
+      <NavBar useDarkTheme={true} showTitle={false} />
       <h1 className="mt-16 text-5xl text-white">Bibliotrace 3.0</h1>
-      <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
-        <input className="m-2 px-3 w-10/12 border-2 border-[#a49bc6] rounded-2xl placeholder-[#a49bc6] placeholder:font-bold" type="text" placeholder="Search" ></input>
-        <button className="m-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]" onClick={() => {}}>Go!</button>
+      <div className="h-16 my-6 flex w-7/12 justify-center">
+        {" "}
+        {/* Search Bar */}
+        <input
+          className="m-2 px-3 w-10/12 border-2 border-[#a49bc6] rounded-2xl placeholder-[#a49bc6] placeholder:font-bold"
+          type="text"
+          placeholder="Search"
+        ></input>
+        <button
+          className="m-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]"
+          onClick={() => {}}
+        >
+          Go!
+        </button>
       </div>
       <div class="flex flex-row">
         <CustomButton
@@ -66,7 +77,7 @@ const Home = () => {
           imageSrc={SuggestBook}
           text="Suggest Book"
           textColor="#FFFFFF"
-          onClick={handleRequestBookNav}
+          onClick={handleSuggestBookNav}
           borderColor="#e12502" // Yellow border
           bgColor="#110057"
         />
