@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
@@ -6,6 +7,7 @@ import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult"
 
 const Search = () => {
+  const location = useLocation();
   const rowHeight = 100
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
@@ -22,20 +24,23 @@ const Search = () => {
     series: ''
   }])
   const [pageOffset, setPageOffset] = useState(0)
-  
+
+  const { searchQuery } = location.state || {searchQuery: ''};
+
   const conductSearch = () => {
-    console.log(`search includes ${searchInput}`)
+    console.log('search includes: ', searchInput);
+
     fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
     .then((result) => result.json())
     .then((response) => {
       const bookItems = response.items || []
       const bookResults = bookItems.map((item) => { return convertBooksObjToBook(item) })
-      console.log(bookResults)
+      // console.log(bookResults)
       setSearchResults(bookResults)
       setPageOffset(0)
       setInputQuery(searchInput)
-    })
-  }
+    });
+  }; 
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -44,7 +49,7 @@ const Search = () => {
   };
 
   const convertBooksObjToBook = (bookObj) => {
-    console.log(bookObj)
+    // console.log(bookObj)
     return {
       selfLink: bookObj.selfLink,
       imgLink: bookObj.volumeInfo.imageLinks?.smallThumbnail ?? 'Unknown',
@@ -63,6 +68,29 @@ const Search = () => {
     setRowCount(count);
   };
 
+  // Trigger search if searchQuery is provided
+  useEffect(() => {
+    console.log('searchQuery:', searchQuery); // Debugging line
+    if (searchQuery) {
+      console.log('Effect hook happened');
+      setSearchInput(searchQuery); // Populate the input with the search query
+    }
+    console.log(' in effect search input :', searchInput);
+  }, [searchQuery]);
+
+  // New useEffect to log the updated searchInput
+  useEffect(() => {
+    console.log('in effect search input:', searchInput);
+    if (searchInput) {
+      conductSearch(); // Trigger search with the updated input
+    }
+  }, [searchInput]); 
+
+
+
+
+
+
   // Set up the resize listener
   useEffect(() => {
     calculateRowCount(); // Initial calculation
@@ -73,6 +101,8 @@ const Search = () => {
       window.removeEventListener('resize', calculateRowCount);
     };
   }, []);
+  
+  
 
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
