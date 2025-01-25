@@ -17,8 +17,9 @@ const Home = () => {
     // Navigate programmatically
     // navigate("/search");
     console.log("HOME.jsx searchInput: " , searchInput);
-    navigate("/search", { state: { searchQuery: searchInput } });
+    navigate("/search", { state: { initSearchInput: searchInput }});
   };
+  
   const handleRequestBookNav = () => {
       // Navigate programmatically
       navigate("/requestbook");

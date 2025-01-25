@@ -8,10 +8,11 @@ import NotFound from "../pages/NotFound"
 const BASE_URL = '/bibliotrace-front-end'
 
 const AppRoutes = () => {
+  
   return (
-    <Router>
+    <Router basename={BASE_URL}>
       <Routes>
-        <Route path={BASE_URL} element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/requestbook" element={<RequestBook />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
