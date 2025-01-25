@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react"
+import defaultBook from '../assets/generic-book.png'
 
 const SearchResult = ({ imageUrl, title, author, genre, series }) => {
-    const [image, setImage] = useState()
+    const [image, setImage] = useState(defaultBook)
 
     const bookTitle = <p id='book-title' className="text-center">{title}</p>
     const bookAuthor = <p id='book-author' className="text-center">{author}</p>
@@ -33,7 +33,7 @@ const SearchResult = ({ imageUrl, title, author, genre, series }) => {
     return (
         <div className="flex justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90">
             <div className="h-40 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
-                {(imageUrl != 'Unknown') ? <img src={image} className="w-28 m-2" alt="Cover Thumbnail"></img> : null}
+                <img src={image} className="w-28 m-2" alt="Cover Thumbnail"></img>
             </div>
             <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/3">
                 {bookTitle}

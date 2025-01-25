@@ -6,12 +6,12 @@ import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult"
 
-const Search = ({ initSearchInput }) => {
-  const location = useLocation();
-  const rowHeight = 100
+const Search = () => {
+  const location = useLocation()
+  const rowHeight = 160
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
-  const [searchInput, setSearchInput] = useState('')
+  const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '')
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
@@ -25,10 +25,8 @@ const Search = ({ initSearchInput }) => {
   }])
   const [pageOffset, setPageOffset] = useState(0)
 
-  const { searchQuery } = location.state || {searchQuery: ''};
-
   const conductSearch = () => {
-    console.log('search includes: ', searchInput);
+    console.log('search includes: ', searchInput)
 
     fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
     .then((result) => result.json())
@@ -68,32 +66,12 @@ const Search = ({ initSearchInput }) => {
     setRowCount(count);
   };
 
-  // Trigger search if searchQuery is provided
+  // Effect that runs once at initialization
   useEffect(() => {
-    console.log('searchQuery:', searchQuery); // Debugging line
-    if (searchQuery) {
-      console.log('Effect hook happened');
-      setSearchInput(searchQuery); // Populate the input with the search query
+    if (searchInput != '') {
+      conductSearch()
     }
-    console.log(' in effect search input :', searchInput);
-  }, [searchQuery]);
 
-  // New useEffect to log the updated searchInput
-  useEffect(() => {
-    console.log('in effect search input:', searchInput);
-    if (searchInput) {
-      conductSearch(); // Trigger search with the updated input
-    }
-  }, [searchInput]); 
-
-  useEffect(() => {
-    if (initSearchInput != null) {
-      setInputQuery(initSearchInput)
-    }
-  }, [])
-
-  // Set up the resize listener
-  useEffect(() => {
     calculateRowCount(); // Initial calculation
     window.addEventListener('resize', calculateRowCount);
 
@@ -101,9 +79,7 @@ const Search = ({ initSearchInput }) => {
     return () => {
       window.removeEventListener('resize', calculateRowCount);
     };
-  }, []);
-  
-  
+  }, []);  
 
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
