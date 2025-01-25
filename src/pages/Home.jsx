@@ -19,16 +19,9 @@ const Home = () => {
     console.log("HOME.jsx searchInput: " , searchInput);
     navigate("/search", { state: { initSearchInput: searchInput }});
   };
-<<<<<<< HEAD
-
-  const handleRequestBookNav = () => {
-      // Navigate programmatically
-      navigate("/requestbook");
-=======
   const handleSuggestBookNav = () => {
     // Navigate programmatically
     navigate("/suggest");
->>>>>>> cb109dfbc9e7374fddbee79386b784f7f651e3ee
   };
 
   const handleKeyDown = (event) => {
