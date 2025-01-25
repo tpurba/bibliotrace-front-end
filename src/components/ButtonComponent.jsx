@@ -13,7 +13,7 @@ function CustomButton({ imageSrc, text, textColor, onClick, borderColor, bgColor
         </div>
         <div
           className="w-20 h-12 sm:w-24 sm:h-14 md:w-28 md:h-16 mb-2 border-2 rounded-lg flex items-center justify-center font-bold"
-          style={{ borderColor: borderColor, background: bgColor, color: textColor }}
+          style={{ borderColor: borderColor, background: bgColor, color: textColor, whiteSpace: 'pre-wrap' }}
         >
           {text}
         </div>

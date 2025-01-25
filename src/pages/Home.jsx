@@ -19,6 +19,7 @@ const Home = () => {
     console.log("HOME.jsx searchInput: " , searchInput);
     navigate("/search", { state: { searchQuery: searchInput } });
   };
+
   const handleRequestBookNav = () => {
       // Navigate programmatically
       navigate("/requestbook");
@@ -58,7 +59,7 @@ const Home = () => {
         />
         <CustomButton
           imageSrc={NewArrivalsIcon}
-          text="New Arrivals"
+          text={"New\nArrivals"}
           textColor="#FFFFFF"
           onClick={handleSearch}
           borderColor="#FFD700" // Yellow border
@@ -75,7 +76,7 @@ const Home = () => {
         />
         <CustomButton
           imageSrc={SuggestBook}
-          text="Suggest Book"
+          text="Suggest a Book"
           textColor="#FFFFFF"
           onClick={handleRequestBookNav}
           borderColor="#e12502" // Yellow border
