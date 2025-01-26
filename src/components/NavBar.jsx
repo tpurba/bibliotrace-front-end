@@ -5,7 +5,7 @@ import IhLogoDark from '../assets/ih-dark.svg?react'
 import HomeLogo from '../assets/home-white.svg?react'
 import HomeLogoDark from '../assets/home-black.svg?react'
 
-const NavBar = ({ useDarkTheme, showTitle }) => {
+const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor }) => {
   const navigate = useNavigate();
 
     const navigateHome = () => {
@@ -20,6 +20,7 @@ const NavBar = ({ useDarkTheme, showTitle }) => {
       </h1>
     );
   }
+  //TODO change the LOGO so that it isnt the dark theme or not and its actually a logo that we pass in or this wont work
   const Logo = useDarkTheme ? IhLogoDark : IhLogo;
   const Home = useDarkTheme ? HomeLogoDark : HomeLogo;
 
@@ -28,7 +29,8 @@ const NavBar = ({ useDarkTheme, showTitle }) => {
       <Logo className="absolute left-0 top-0 p-2 h-16 w-48" />
       {title}
       <button
-        className="absolute top-0 right-0 flex flex-col justify-center items-center bg-transparent"
+        style={{background: bgColor, color: textColor}}
+        className="absolute top-0 right-0 flex flex-col justify-center items-center"
         onClick={navigateHome}
       >
         <Home className="" />

@@ -32,7 +32,7 @@ const Home = () => {
 
   return (
     <div className="h-screen w-screen pb-5 start-bg flex flex-col items-center">
-      <NavBar useDarkTheme={true} showTitle={false} />
+      <NavBar useDarkTheme={false} showTitle={false} bgColor={"#110057"} textColor={"#FFFFFF"} />
       <h1 className="mt-16 text-5xl text-white">Bibliotrace 3.0</h1>
 
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
