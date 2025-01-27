@@ -14,21 +14,25 @@ const Search = () => {
   const [rowCount, setRowCount] = useState(0)
   const [pageOffset, setPageOffset] = useState(0)
   const [isLoading, setLoading] = useState(false)
-  const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '')
+  const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '') // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
+  // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
     selfLink: 'none', 
     imgLink: 'Unknown', 
     title: '',
-    author: 'Search Above!',
+    author: '',
     isbn: 'none',
     genre: '',
     series: ''
   }])
 
   const conductSearch = () => {
-    console.log('search includes: ', searchInput)
+    if (searchInput == '') {
+      return
+    }
+
     setLoading(true)
 
     fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
