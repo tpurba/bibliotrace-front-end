@@ -40,7 +40,7 @@ const Home = () => {
         <button className="m-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]" onClick= {handleSearch}>Go!</button>
 
       </div>
-      <div class="flex flex-row">
+      <div className="flex flex-row">
         <CustomButton
           imageSrc={WhatsPopular}
           text="Whats Popular"

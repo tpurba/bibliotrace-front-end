@@ -5,12 +5,15 @@ import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult"
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const Search = () => {
   const location = useLocation()
   const rowHeight = 160
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
+  const [pageOffset, setPageOffset] = useState(0)
+  const [isLoading, setLoading] = useState(false)
   const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '')
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
@@ -23,10 +26,10 @@ const Search = () => {
     genre: '',
     series: ''
   }])
-  const [pageOffset, setPageOffset] = useState(0)
 
   const conductSearch = () => {
     console.log('search includes: ', searchInput)
+    setLoading(true)
 
     fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
     .then((result) => result.json())
@@ -37,14 +40,15 @@ const Search = () => {
       setSearchResults(bookResults)
       setPageOffset(0)
       setInputQuery(searchInput)
-    });
-  }; 
+      setLoading(false)
+    })
+  }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       conductSearch()
     }
-  };
+  }
 
   const convertBooksObjToBook = (bookObj) => {
     // console.log(bookObj)
@@ -101,7 +105,9 @@ const Search = () => {
       <h1 className="mt-16 text-5xl">BiblioTrace 3.0</h1>
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
-        <button className="m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>Go!</button>
+        <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>
+          {isLoading ? <LoadingSpinner size={'3rem'}/> : "Go!"}
+        </button>
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
         <div className="w-full flex justify-between my-4"> {/* Buttons Above Results */}
