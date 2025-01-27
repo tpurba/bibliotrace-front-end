@@ -1,0 +1,2 @@
+// This is the modal that shows all of the details for a particular book. The details shown will differ depending on if we're in an Admin page or not.
+// I'm assuming the parent page will supply the details displayed in the modal.

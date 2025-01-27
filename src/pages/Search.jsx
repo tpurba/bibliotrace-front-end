@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
-import NavBar from "../components/NavBar"
+import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
-import SearchResult from "../components/SearchResult"
+import SearchResult from "../components/SearchResult.jsx"
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const Search = () => {
@@ -102,7 +102,7 @@ const Search = () => {
   return (
     <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ minHeight: "100vh" }}>
       <NavBar useDarkTheme={true} showTitle={false} bgColor={'none'} />
-      <h1 className="mt-16 text-5xl">BiblioTrace 3.0</h1>
+      <h1 className="mt-16 text-5xl">Bibliotrace 3.0</h1>
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
         <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>

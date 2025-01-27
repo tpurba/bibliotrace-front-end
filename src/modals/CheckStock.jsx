@@ -1,0 +1,2 @@
+// In the Admin Reports page, there is an option to check the stock reported in a given date range. I am assuming this is filtering through
+// the inventory of the system by the dates it was added to the inventory?
