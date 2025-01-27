@@ -97,7 +97,7 @@ const Search = () => {
 
   return (
     <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ minHeight: "100vh" }}>
-      <NavBar useDarkTheme={true} showTitle={false} />
+      <NavBar useDarkTheme={true} showTitle={false} bgColor={'none'} />
       <h1 className="mt-16 text-5xl">BiblioTrace 3.0</h1>
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>

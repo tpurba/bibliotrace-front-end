@@ -16,7 +16,7 @@ const SearchResult = ({ imageUrl, title, author, genre, series }) => {
             }
 
             try {
-                const response = await fetch('https://cors-anywhere.herokuapp.com/' + imageUrl)
+                const response = await fetch('https://cors-anywhere.herokuapp.com/' + imageUrl) // TODO: Swap this out with backend API calls or use a blob objectURL from upstream.
                 if (response.ok) {
                     const blob = await response.blob()
                     const objectURL = URL.createObjectURL(blob)
@@ -31,7 +31,7 @@ const SearchResult = ({ imageUrl, title, author, genre, series }) => {
     }, []) // Effect only runs once during component rendering
 
     return (
-        <div className="flex justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90">
+        <div className="flex justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90 text-xl">
             <div className="h-40 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
                 <img src={image} className="w-28 m-2" alt="Cover Thumbnail"></img>
             </div>
