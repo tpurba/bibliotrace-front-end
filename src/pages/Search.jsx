@@ -1,32 +1,39 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
-import NavBar from "../components/NavBar"
+import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
-import SearchResult from "../components/SearchResult"
+import SearchResult from "../components/SearchResult.jsx"
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const Search = () => {
   const location = useLocation()
   const rowHeight = 160
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
-  const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '')
+  const [pageOffset, setPageOffset] = useState(0)
+  const [isLoading, setLoading] = useState(false)
+  const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '') // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
+  // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
     selfLink: 'none', 
     imgLink: 'Unknown', 
     title: '',
-    author: 'Search Above!',
+    author: '',
     isbn: 'none',
     genre: '',
     series: ''
   }])
-  const [pageOffset, setPageOffset] = useState(0)
 
   const conductSearch = () => {
-    console.log('search includes: ', searchInput)
+    if (searchInput == '') {
+      return
+    }
+
+    setLoading(true)
 
     fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
     .then((result) => result.json())
@@ -37,14 +44,15 @@ const Search = () => {
       setSearchResults(bookResults)
       setPageOffset(0)
       setInputQuery(searchInput)
-    });
-  }; 
+      setLoading(false)
+    })
+  }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       conductSearch()
     }
-  };
+  }
 
   const convertBooksObjToBook = (bookObj) => {
     // console.log(bookObj)
@@ -97,11 +105,13 @@ const Search = () => {
 
   return (
     <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ minHeight: "100vh" }}>
-      <NavBar useDarkTheme={true} showTitle={false} />
-      <h1 className="mt-16 text-5xl">BiblioTrace 3.0</h1>
+      <NavBar useDarkTheme={true} showTitle={false} bgColor={'none'} />
+      <h1 className="mt-16 text-5xl">Bibliotrace 3.0</h1>
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
-        <button className="m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>Go!</button>
+        <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>
+          {isLoading ? <LoadingSpinner size={'3rem'}/> : "Go!"}
+        </button>
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
         <div className="w-full flex justify-between my-4"> {/* Buttons Above Results */}
