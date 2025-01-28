@@ -4,7 +4,7 @@ import Home from "../pages/Home";
 import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
-
+import AddBooks from "../pages/AddBooks";
 const AppRoutes = () => {
   
   return (
@@ -13,6 +13,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/suggest" element={<SuggestPage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/add" element={<AddBooks />} />
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
       </Routes>
     </Router>
