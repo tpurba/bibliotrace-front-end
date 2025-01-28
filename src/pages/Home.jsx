@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import ExploreByAge from "../assets/ExploreByAge.jpg";
 import ExploreByGenre from "../assets/ExploreByGenre.jpg";
-import NewArrivals from "../assets/NewArrivals.jpg";
 import NewArrivalsIcon from "../assets/NewArrivalsIcon.jpg";
 import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
