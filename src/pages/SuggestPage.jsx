@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import tailwindConfig from "../../tailwind.config";
 
 function SuggestPage() {
   const submittedDialog = useRef(null);
@@ -28,7 +29,12 @@ function SuggestPage() {
           <path className="fill-darkBlue" d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"></path>
         </svg>
 
-        <NavBar useDarkTheme={true} showTitle={true} />
+        <NavBar
+          useDarkTheme={false}
+          showTitle={true}
+          bgColor={tailwindConfig.theme.colors.lightBlue}
+          textColor={tailwindConfig.theme.colors.white}
+        />
 
         <dialog className="rounded-md p-8" ref={submittedDialog}>
           <h1 className="text-xl text-center mb-5">Thank you for your suggestion!</h1>
