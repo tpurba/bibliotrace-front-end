@@ -7,30 +7,42 @@ import NewArrivalsIcon from "../assets/NewArrivalsIcon.jpg";
 import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
+import PullOutBar from "../components/PullOutBar";
+
 const Home = () => {
+  
   const [searchInput, setSearchInput] = useState('')
-
+  const [isBlurred, setIsBlurred] = useState(false);
+  const [showPulloutBar, setShowPulloutBar] = useState(false);
   const navigate = useNavigate(); 
-
+  
+  //handle routes
   const handleSearch = () => {
-    // Navigate programmatically
-    // navigate("/search");
     console.log("HOME.jsx searchInput: " , searchInput);
     navigate("/search", { state: { initSearchInput: searchInput }});
   };
+
   const handleSuggestBookNav = () => {
-    // Navigate programmatically
     navigate("/suggest");
   };
 
+  const handleExploreByAge = () => {
+    setShowPulloutBar(!showPulloutBar)
+  };
+
+
+  //event 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       handleSearch()
     }
   };
 
+  
+
   return (
-    <div className="h-screen w-screen pb-5 start-bg flex flex-col items-center">
+    // TODO: some how use blur-sm in the div class here
+    <div className={`h-screen w-screen pb-5 start-bg flex flex-col items-center ${isBlurred ? 'blur-sm' : ''}`}>
       <NavBar useDarkTheme={false} showTitle={false} bgColor={"#110057"} textColor={"#FFFFFF"} />
       <h1 className="mt-16 text-5xl text-white">Bibliotrace 3.0</h1>
 
@@ -45,32 +57,34 @@ const Home = () => {
           text="Whats Popular"
           textColor="#FFFFFF"
           onClick={handleSearch}
-          borderColor="#ff50df" // Yellow border
+          borderColor="#ff50df" 
           bgColor="#110057"
         />
         <CustomButton
           imageSrc={ExploreByAge}
           text="Explore By Age"
           textColor="#FFFFFF"
-          onClick={handleSearch}
-          borderColor="#fa8804" // Yellow border
+          onClick={handleExploreByAge}
+          borderColor="#fa8804" 
           bgColor="#110057"
           className="mt-12"
         />
+        {showPulloutBar && <PullOutBar onClose={() => {setShowPulloutBar(false); }} />}
+
         <CustomButton
           imageSrc={NewArrivalsIcon}
           text={"New\nArrivals"}
           textColor="#FFFFFF"
           onClick={handleSearch}
-          borderColor="#FFD700" // Yellow border
+          borderColor="#FFD700" 
           bgColor="#110057"
         />
         <CustomButton
           imageSrc={ExploreByGenre}
           text="Explore By Genre"
           textColor="#FFFFFF"
-          onClick={handleSearch}
-          borderColor="#669bff" // Yellow border
+          onClick={handleExploreByAge}
+          borderColor="#669bff" 
           bgColor="#110057"
           className="mt-12"
         />
@@ -79,11 +93,12 @@ const Home = () => {
           text="Suggest a Book"
           textColor="#FFFFFF"
           onClick={handleSuggestBookNav}
-          borderColor="#e12502" // Yellow border
+          borderColor="#e12502" 
           bgColor="#110057"
         />
       </div>
     </div>
+    
   );
 };
 
