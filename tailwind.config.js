@@ -6,6 +6,8 @@ export default {
       darkBlue: "#110057",
       lightBlue: "#649cff",
       white: "#ffffff",
+      orange: "#fa8804",
+      skyBlue: "#669bff"
     },
     extend: {},
   },
