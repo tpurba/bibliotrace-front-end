@@ -96,9 +96,20 @@ const AddBooks = () => {
                 <option value="" disabled>
                     -- Choose an option --
                 </option>
+                <option value="Advanced">Advanced</option>
+                <option value="Action/Adventure">Action/Adventure</option>
+                <option value="Dystopian">Dystopian</option>
                 <option value="Fantasy">Fantasy</option>
-                <option value="History">History</option>
+                <option value="Fiction">Fiction</option>
+                <option value="Graphic Novel">Graphic Novel</option>
+                <option value="History Fiction">History Fiction</option>
+                <option value="Mystery/Thriller">Mystery/Thriller</option>
+                <option value="Non-Fiction">Non-Fiction</option>
+                <option value="Paranormal">Paranormal</option>
+                <option value="Poetry">Poetry</option>
                 <option value="Romance">Romance</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Spanish">Spanish</option>
                 </select>
                 <p>Selected Value: {primary_genre || "None"}</p>
             </label>
@@ -110,9 +121,12 @@ const AddBooks = () => {
                 <option value="" disabled>
                     -- Choose an option --
                 </option>
-                <option value="0-8 Years old">0-8 Years old</option>
-                <option value="9-12 Years old">9-12 Years old</option>
-                <option value="13-18 Years old">13-18 Years old</option>
+                <option value="Board (0-2)">Board (0-2)</option>
+                <option value="Picture (2-8)">Picture (2-8)</option>
+                <option value="Early Chapter (6-9)">Early Chapter (6-9)</option>
+                <option value="Middle Grade (8-12)">Middle Grade (8-12)</option>
+                <option value="Young Adult (12-18+)">Young Adult (12-18+)</option>
+                <option value="Advanced (16+)">Advanced (16+)</option>
                 </select>
                 <p>Selected Value: {audience || "None"}</p>
             </label>
