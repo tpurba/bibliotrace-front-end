@@ -8,12 +8,14 @@ import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
 import PullOutBar from "../components/PullOutBar";
+import PullOutBarGenre from "../components/PullOutBarGenre";
 
 const Home = () => {
   
   const [searchInput, setSearchInput] = useState('')
   const [isBlurred, setIsBlurred] = useState(false);
   const [showPulloutBar, setShowPulloutBar] = useState(false);
+  const [showPulloutBarGenre, setShowPulloutBarGenre] = useState(false);
   const navigate = useNavigate(); 
   
   //handle routes
@@ -30,6 +32,9 @@ const Home = () => {
     setShowPulloutBar(!showPulloutBar)
   };
 
+  const handleExploreByGenre = () => {
+    setShowPulloutBarGenre(!showPulloutBarGenre)
+  };
 
   //event 
   const handleKeyDown = (event) => {
@@ -83,11 +88,12 @@ const Home = () => {
           imageSrc={ExploreByGenre}
           text="Explore By Genre"
           textColor="#FFFFFF"
-          onClick={handleExploreByAge}
+          onClick={handleExploreByGenre}
           borderColor="#669bff" 
           bgColor="#110057"
           className="mt-12"
         />
+        {showPulloutBarGenre && <PullOutBarGenre onClose={() => {setShowPulloutBarGenre(false); }} />}
         <CustomButton
           imageSrc={SuggestBook}
           text="Suggest a Book"
