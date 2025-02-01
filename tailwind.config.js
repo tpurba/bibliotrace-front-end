@@ -7,7 +7,8 @@ export default {
       lightBlue: "#649cff",
       white: "#ffffff",
       orange: "#fa8804",
-      skyBlue: "#669bff"
+      skyBlue: "#669bff",
+      black: "#000000",
     },
     extend: {},
   },
