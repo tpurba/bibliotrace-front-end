@@ -28,19 +28,17 @@ const Search = () => {
   }])
 
   const conductSearch = () => {
-    if (searchInput == '') {
+    if (searchInput == '' || searchInput == null) {
       return
     }
 
     setLoading(true)
 
-    fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
+    fetch(`http://localhost:8080/search/${searchInput}`)
     .then((result) => result.json())
     .then((response) => {
-      const bookItems = response.items || []
-      const bookResults = bookItems.map((item) => { return convertBooksObjToBook(item) })
-      // console.log(bookResults)
-      setSearchResults(bookResults)
+      const bookItems = response.results || []
+      setSearchResults(bookItems)
       setPageOffset(0)
       setInputQuery(searchInput)
       setLoading(false)
@@ -50,18 +48,6 @@ const Search = () => {
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       conductSearch()
-    }
-  }
-
-  const convertBooksObjToBook = (bookObj) => {
-    // console.log(bookObj)
-    return {
-      selfLink: bookObj.selfLink,
-      isbn: bookObj.volumeInfo.industryIdentifiers[0].identifier,
-      title: bookObj.volumeInfo.title ?? 'Unknown',
-      author: (bookObj.volumeInfo.authors != null && bookObj.volumeInfo.authors.length > 0) ? bookObj.volumeInfo.authors[0] : 'Unknown',
-      genre: bookObj.volumeInfo.categories ?? ['unkonwn'],
-      series: 'Not Available'
     }
   }
 
