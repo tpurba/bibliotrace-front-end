@@ -18,9 +18,9 @@ jobs:
         with:
           node-version: '22.x'
 
-      - name: set back-end url
-        run: |
-          find ./ -type f -exec sed -i 's|http://localhost:8080|https://TODO-SET THIS URL UP LATER.URL|g' {} +
+      # - name: set back-end url
+      #   run: |
+      #     find ./ -type f -exec sed -i 's|http://localhost:8080|https://TODO-SET THIS URL UP LATER.URL|g' {} +
 
       - name: Build
         run: |
