@@ -20,7 +20,6 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
     selfLink: 'none', 
-    imgLink: 'Unknown', 
     title: '',
     author: '',
     isbn: 'none',
@@ -58,10 +57,9 @@ const Search = () => {
     // console.log(bookObj)
     return {
       selfLink: bookObj.selfLink,
-      imgLink: bookObj.volumeInfo.imageLinks?.smallThumbnail ?? 'Unknown',
+      isbn: bookObj.volumeInfo.industryIdentifiers[0].identifier,
       title: bookObj.volumeInfo.title ?? 'Unknown',
       author: (bookObj.volumeInfo.authors != null && bookObj.volumeInfo.authors.length > 0) ? bookObj.volumeInfo.authors[0] : 'Unknown',
-      isbn: bookObj.volumeInfo.industryIdentifiers,
       genre: bookObj.volumeInfo.categories ?? ['unkonwn'],
       series: 'Not Available'
     }
@@ -148,7 +146,7 @@ const Search = () => {
             return bookData ? (
               <SearchResult 
                 key={bookData.selfLink}
-                imageUrl={bookData.imgLink} 
+                isbn={bookData.isbn}
                 title={bookData.title} 
                 author={bookData.author} 
                 genre={bookData.genre} 
