@@ -18,8 +18,8 @@ const Search = () => {
   // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
-    key: 'helloSearch', 
-    selfLink: 'none', 
+    key: 'helloSearch',
+    selfLink: 'none',
     title: '',
     author: '',
     isbn: 'none',
@@ -34,15 +34,23 @@ const Search = () => {
 
     setLoading(true)
 
-    fetch(`http://localhost:8080/search/${searchInput}`)
-    .then((result) => result.json())
-    .then((response) => {
-      const bookItems = response.results || []
-      setSearchResults(bookItems)
+    try {
+      fetch(`http://localhost:8080/search/${searchInput}`)
+        .then((response) => {
+          const bookItems = response.results || []
+          setSearchResults(bookItems)
+          setPageOffset(0)
+          setInputQuery(searchInput)
+          setLoading(false)
+        })
+    } catch (error) {
+      setSearchResults({
+        author: `Error: ${error}`
+      })
       setPageOffset(0)
       setInputQuery(searchInput)
       setLoading(false)
-    })
+    }
   }
 
   const handleKeyDown = (event) => {
@@ -71,7 +79,7 @@ const Search = () => {
     return () => {
       window.removeEventListener('resize', calculateRowCount);
     };
-  }, []);  
+  }, []);
 
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
@@ -94,7 +102,7 @@ const Search = () => {
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
         <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>
-          {isLoading ? <LoadingSpinner size={'3rem'}/> : "Go!"}
+          {isLoading ? <LoadingSpinner size={'3rem'} /> : "Go!"}
         </button>
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
@@ -130,14 +138,14 @@ const Search = () => {
             }
             const bookData = searchResults[index + pageOffset]
             return bookData ? (
-              <SearchResult 
+              <SearchResult
                 key={bookData.selfLink}
                 isbn={bookData.isbn}
-                title={bookData.title} 
-                author={bookData.author} 
-                genre={bookData.genre} 
-                series={bookData.series}/>
-              ) : null
+                title={bookData.title}
+                author={bookData.author}
+                genre={bookData.genre}
+                series={bookData.series} />
+            ) : null
           })}
         </div>
         <div className="flex align-middle items-center justify-center py-4"> {/* Pagination Buttons */}
