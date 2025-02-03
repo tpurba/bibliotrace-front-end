@@ -37,11 +37,15 @@ const Search = () => {
     try {
       fetch(`http://localhost:8080/search/${searchInput}`)
         .then((response) => {
-          const bookItems = response.results || []
-          setSearchResults(bookItems)
-          setPageOffset(0)
-          setInputQuery(searchInput)
-          setLoading(false)
+          response.json().then((data) => {
+            const bookItems = data.results
+            console.log('I GOT THE RESULTS!!')
+            console.log(bookItems)
+            setSearchResults(bookItems)
+            setPageOffset(0)
+            setInputQuery(searchInput)
+            setLoading(false)
+          })
         })
     } catch (error) {
       setSearchResults({
