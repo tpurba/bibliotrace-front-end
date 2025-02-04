@@ -46,12 +46,11 @@ const Home = () => {
   
 
   return (
-    // TODO: some how use blur-sm in the div class here
     <div className={`h-screen w-screen pb-5 start-bg flex flex-col items-center ${isBlurred ? 'blur-sm' : ''}`}>
       <NavBar useDarkTheme={false} showTitle={false} bgColor={"#110057"} textColor={"#FFFFFF"} />
       <h1 className="mt-16 text-5xl text-white">Bibliotrace 3.0</h1>
-
-      <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
+      {/* Search Bar */}
+      <div className="h-16 my-6 flex w-7/12 justify-center"> 
         <input className="m-2 px-3 w-10/12 border-2 border-[#a49bc6] rounded-2xl placeholder-[#a49bc6] placeholder:font-bold" type="text" placeholder="Search" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
         <button className="m-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]" onClick= {handleSearch}>Go!</button>
 
@@ -59,7 +58,7 @@ const Home = () => {
       <div className="flex flex-row">
         <CustomButton
           imageSrc={WhatsPopular}
-          text="Whats Popular"
+          text="What's Popular"
           textColor="#FFFFFF"
           onClick={handleSearch}
           borderColor="#ff50df" 
