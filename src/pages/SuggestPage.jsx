@@ -12,10 +12,25 @@ function SuggestPage() {
     submittedDialog.current.showModal();
     const data = new FormData(event.target);
 
-    for (const pair of data.entries()) {
-      console.log("suggestion: ", pair[1]);
-    }
+    // try {
+    //   for (const pair of data.entries()) {
+    //     console.log("suggestion: ", pair[1]);
+
+    //     const res = await fetch("/suggest", {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: { location: location, suggestion: pair[1] },
+    //     }).then((r) => r.json());
+
+    //     if (res == 200) {
+    //       submittedDialog.current.showModal();
+    //     } else {
+    //       //error
+    //     }
+    //   }
+    // } catch (e) {}
   };
+
   return (
     <>
       <div className="bg-lightBlue w-full h-full relative z-10">
