@@ -48,9 +48,11 @@ const Search = () => {
           })
         })
     } catch (error) {
-      setSearchResults({
-        author: `Error: ${error}`
-      })
+      setSearchResults([
+        {
+          author: `Error: ${error}`
+        }
+      ])
       setPageOffset(0)
       setInputQuery(searchInput)
       setLoading(false)
