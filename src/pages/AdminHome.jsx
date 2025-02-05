@@ -12,8 +12,7 @@ import PinkIcon from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
 import PullOutBar from "../components/PullOutBar";
 import PullOutBarGenre from "../components/PullOutBarGenre";
-import PurpleIcon from "../assets/CheckOutIcon.jpg";
-import CustomTextBoxButton from "../components/BarButtons.jsx";
+import PurpleIcon from "../assets/checkoutIcon.jpg";
 
 export default function AdminHome({}) {
 
