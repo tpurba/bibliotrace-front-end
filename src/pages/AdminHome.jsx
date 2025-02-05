@@ -13,7 +13,7 @@ import CustomButton from "../components/ButtonComponent";
 import PullOutBar from "../components/PullOutBar";
 import PullOutBarGenre from "../components/PullOutBarGenre";
 import PurpleIcon from "../assets/checkoutIcon.jpg";
-
+import CustomTextBoxButton from "../components/BarButtons.jsx";
 export default function AdminHome({}) {
 
   const [searchInput, setSearchInput] = useState('')
