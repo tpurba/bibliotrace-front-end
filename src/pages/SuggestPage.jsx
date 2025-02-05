@@ -28,7 +28,7 @@ function SuggestPage() {
           <path className="fill-darkBlue" d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"></path>
         </svg>
 
-        <NavBar useDarkTheme={true} showTitle={true} />
+        <NavBar useDarkTheme={true} showTitle={true} bgColor={"#649cff"} textColor={"#FFFFFF"}/>
 
         <dialog className="rounded-md p-8" ref={submittedDialog}>
           <h1 className="text-xl text-center mb-5">Thank you for your suggestion!</h1>
