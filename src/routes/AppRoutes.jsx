@@ -7,6 +7,7 @@ import NotFound from "../pages/NotFound";
 import AddBooks from "../pages/AddBooks";
 import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
+import AddScannedBooks from "../pages/AddScannedBooks";
 
 const AppRoutes = () => {
   const [token, setToken] = useState();
@@ -37,6 +38,7 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/add" element={<AddBooks />} />
           <Route path="/admin" element={<AdminHome />} />
+          <Route path="/add-scanned" element={<AddScannedBooks />} />
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
       </Routes>
