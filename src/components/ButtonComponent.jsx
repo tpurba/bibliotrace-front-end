@@ -15,8 +15,7 @@ function CustomButton({
     return (
       <button
         className={`flex ${layout === 'col' ? 'flex-col' : 'flex-row'}
-                    items-center justify-center 
-                    p-2 sm:p-4 md:p-6 
+                    items-center justify-center  
                     shadow-lg transition-transform duration-200 hover:scale-105 ${className}`}
         onClick={onClick}
         style={{ background: bgColor }}
@@ -24,7 +23,7 @@ function CustomButton({
         
         {/* Container for image */}
         <div 
-          className="flex-shrink-0 m-4"
+          className={`flex-shrink-0 ${layout === 'col' ? 'mb-4' : 'mr-4'}`}
           style={{ width: imageWidth, height: imageHeight }}
         >
           <img src={imageSrc} alt={text} className="w-full h-full object-cover" />
