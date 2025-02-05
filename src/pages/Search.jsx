@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
+import { useAuth } from '../components/AuthContext.jsx'
 import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
@@ -9,6 +10,7 @@ import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const Search = () => {
   const location = useLocation()
+  const { jwt, setJwt } = useAuth()
   const rowHeight = 160
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
@@ -35,17 +37,38 @@ const Search = () => {
     setLoading(true)
 
     try {
-      fetch(`http://localhost:8080/search/${searchInput}`)
+      fetch(`http://localhost:8080/search/${searchInput}`, {
+        headers: {
+          "Authorization": `Bearer ${jwt}`
+        }
+      })
         .then((response) => {
-          response.json().then((data) => {
-            const bookItems = data.results
-            console.log('I GOT THE RESULTS!!')
-            console.log(bookItems)
-            setSearchResults(bookItems)
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const bookItems = data.results
+              console.log('I GOT THE RESULTS!!')
+              console.log(bookItems)
+              setSearchResults(bookItems)
+              setPageOffset(0)
+              setInputQuery(searchInput)
+              setLoading(false)
+            })
+          } else {
+            setSearchResults([
+              {
+                author: `Error: ${response.status} Code Received`,
+                key: 'Error Code'
+              },
+              {
+                author: `Error Address: ${response.url}`,
+                key: 'Error Addy'
+              }
+            ])
             setPageOffset(0)
             setInputQuery(searchInput)
             setLoading(false)
-          })
+          }
+
         })
         .catch((error) => {
           setSearchResults([
@@ -56,7 +79,7 @@ const Search = () => {
           ])
           setPageOffset(0)
           setInputQuery(searchInput)
-          setLoading(false)        
+          setLoading(false)
         })
     } catch (error) {
       setSearchResults([
