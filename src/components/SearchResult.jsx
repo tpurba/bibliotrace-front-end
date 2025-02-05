@@ -23,9 +23,12 @@ const SearchResult = ({ isbn, title, author, genre, series }) => {
                         const objectURL = URL.createObjectURL(blob)
                         setImage(objectURL)
                     }
+                } else {
+                    setImage(defaultBook)
                 }
             } catch (e) {
                 console.log(e)
+                setImage(defaultBook)
             }
         }
         fetchImage()

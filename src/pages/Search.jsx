@@ -47,6 +47,17 @@ const Search = () => {
             setLoading(false)
           })
         })
+        .catch((error) => {
+          setSearchResults([
+            {
+              author: `Error: ${error}`,
+              key: 'errorResult'
+            }
+          ])
+          setPageOffset(0)
+          setInputQuery(searchInput)
+          setLoading(false)        
+        })
     } catch (error) {
       setSearchResults([
         {
