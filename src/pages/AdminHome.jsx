@@ -3,155 +3,51 @@
 // Home, ManageInventory, Settings, Help, and Reports. These components are stored in the ../components/admin folder.
 import React, { useState} from "react"
 import { useNavigate } from "react-router-dom";
-import NavBar from "../components/NavBar";
-import AdminNavBar from "../components/AdminNavBar.jsx";
-import OrangeIcon from "../assets/ExploreByAge.jpg";
-import BlueIcon from "../assets/ExploreByGenre.jpg";
-import YellowIcon from "../assets/NewArrivalsIcon.jpg";
-import RedIcon from "../assets/SuggestBook.jpg";
-import PinkIcon from "../assets/WhatsPopular.jpg";
-import CustomButton from "../components/ButtonComponent";
-import PullOutBar from "../components/PullOutBar";
-import PullOutBarGenre from "../components/PullOutBarGenre";
-import PurpleIcon from "../assets/checkoutIcon.jpg";
+import AdminNavBar from "../components/admin/AdminNavBar.jsx";
+import AdminMainMenu from "../components/admin/AdminMainMenu.jsx";
+import AdminSideBar from "../components/admin/AdminSideBar.jsx";
 import CustomTextBoxButton from "../components/BarButtons.jsx";
-export default function AdminHome({}) {
 
+
+export default function AdminHome({}) {
   const [searchInput, setSearchInput] = useState('')
-    const [isBlurred, setIsBlurred] = useState(false);
-    const [showPulloutBar, setShowPulloutBar] = useState(false);
-    const [showPulloutBarGenre, setShowPulloutBarGenre] = useState(false);
-    const navigate = useNavigate(); 
-    
-    //handle routes
-    const handleSuggestBookNav = () => {
-      navigate("/suggest");
-    };
+  const navigate = useNavigate(); 
   
-    const handleExploreByAge = () => {
-      setShowPulloutBar(!showPulloutBar)
-    };
-  
-    const handleExploreByGenre = () => {
-      setShowPulloutBarGenre(!showPulloutBarGenre)
-    };
-    const handleTestClick = () => {
-      console.log('Button pressed');
-    };
+  //handle routes
+  const handleTestClick = () => {
+    console.log('Button pressed');
+  };
+
+  const sideButtons =[
+    {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", onClick: handleTestClick, className: "mt-12 pr-16"},
+    {text: "Settings", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", onClick: handleTestClick, className: "mt-12 pr-16"},
+    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", onClick: handleTestClick, className: "mt-12 pr-16"},
+    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", onClick: handleTestClick, className: "mt-12 pr-16"},
+  ];
+
 
   return (
 
 
   
-<div className={`h-screen w-screen pb-5 start-bg flex flex-col items-center ${isBlurred ? 'blur-sm' : ''}`}>
-  <AdminNavBar/>
-    
-    <div className="absolute left-0 top-96  flex flex-row">
-      <CustomButton
-          imageSrc={PurpleIcon}
-          text="CHECK OUT"
-          textColor="#FFFFFF"
-          onClick={handleTestClick}
-          borderColor="#4b00e3" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '35rem'
-          className="mb-8"
-      />
-      <div className="absolute left-0 top-3/4 flex flex-col">
-        <CustomButton
-          imageSrc={OrangeIcon}
-          text="CHECK IN"
-          textColor="#FFFFFF"
-          onClick={handleTestClick}
-          borderColor="#fa8804" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        <CustomButton
-          imageSrc={PinkIcon}
-          text={"POPULAR"}
-          textColor="#FFFFFF"
-          onClick={handleExploreByAge}
-          borderColor="#ff50df" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        <CustomButton
-          imageSrc={OrangeIcon}
-          text="BY AGE"
-          textColor="#FFFFFF"
-          onClick={handleExploreByAge}
-          borderColor="#fa8804" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        {showPulloutBar && <PullOutBar onClose={() => {setShowPulloutBar(false); }} />}
-      </div>
-      <div className="absolute left-96 top-3/4 flex flex-col">
-        <CustomButton
-          imageSrc={RedIcon}
-          text="Suggest A Book"
-          textColor="#FFFFFF"
-          onClick={handleSuggestBookNav}
-          borderColor="#e12502" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        <CustomButton
-          imageSrc={YellowIcon}
-          text={"NEW ARRIVALS"}
-          textColor="#FFFFFF"
-          onClick={handleTestClick}
-          borderColor="#FFD700" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        <CustomButton
-          imageSrc={BlueIcon}
-          text="BY GENRE"
-          textColor="#FFFFFF"
-          onClick={handleExploreByGenre}
-          borderColor="#669bff" 
-          bgColor="#110057"
-          layout='row'
-          textWidth= '12rem'
-        />
-        {showPulloutBarGenre && <PullOutBarGenre onClose={() => {setShowPulloutBarGenre(false); }} />}
-      </div>
-      <div className="flex flex-col">
-        <CustomTextBoxButton
-            text= "Manage Inventory" 
-            textColor = "#110057" 
-            onClick={handleTestClick} 
-            borderColor = "#110057" 
-            bgColor= "#FFFFFF" 
-        />
-        <CustomTextBoxButton
-            text= "Manage Inventory" 
-            textColor = "#110057" 
-            onClick={handleTestClick} 
-            borderColor = "#110057" 
-            bgColor= "#FFFFFF" 
-        />
-        <CustomTextBoxButton
-            text= "Manage Inventory" 
-            textColor = "#110057" 
-            onClick={handleTestClick} 
-            borderColor = "#110057" 
-            bgColor= "#FFFFFF" 
-        />
-      </div>
-      
-      
-
-    </div>
+<div className={`h-screen w-screen pb-5 flex flex-col items-center`}>
+  <svg
+    className="-z-10 absolute left-0 top-0"
+    width="100vw"
+    height="100%"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+  >
+    <path className="fill-darkBlue" d="M 75,0 C 55,30 105,40 65,100  L 0,100 L 0,00"></path>
+  </svg>
+  <AdminNavBar useDarkTheme={true} showTitle={false} bgColor={"#FFFFFF"} textColor={"#110057"} />
+  <div className="pt-32 ">
+    <AdminMainMenu />
   </div>
+  <AdminSideBar
+    buttons = {sideButtons}
+    />
+</div>
 
   );
 }
