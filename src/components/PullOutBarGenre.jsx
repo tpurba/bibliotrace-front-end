@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import BarButton from "./BarButtons";
 import { useNavigate } from "react-router-dom";
-const PullOutBarGenre = ({ onClose }) => {
+const PullOutBarGenre = ({ onClose, buttons}) => {
   const navigate = useNavigate(); 
 
   const handleSearch = () => {
@@ -13,7 +13,7 @@ const PullOutBarGenre = ({ onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-start backdrop-blur-sm">
       {/* PullOutBar Container */}
       <div
-        className={`fixed top-30 right-0 h-128 w-72 bg-white border-4 border-skyBlue shadow-lg rounded-tl-3xl rounded-bl-3xl z-40 transition-transform translate-x-0`}
+        className={`fixed top-30 right-0 h-auto w-auto bg-white border-4 border-skyBlue shadow-lg rounded-tl-3xl rounded-bl-3xl z-40 transition-transform translate-x-0`}
       >
         {/* Header with Close Icon */}
         <div className="flex items-center justify-between p-2 bg-orange-500 text-white">
@@ -24,76 +24,16 @@ const PullOutBarGenre = ({ onClose }) => {
           
         </div>
         <ul>
-          <BarButton
-            text={"Fantasy"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Science Fiction"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Dystopian"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Historical Fiction"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Mystery/Thriller"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Fiction"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Graphic Novels"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Non-Fiction"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Poetry"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
-          <BarButton
-            text={"Romance"}
-            textColor="#110057"
-            onClick={handleSearch}
-            borderColor="#669bff" 
-            bgColor="#FFFFFF"
-          />
+        {buttons.map((button, index) => (
+            <BarButton
+              key={index}
+              text={button.text}
+              textColor={button.textColor || "#110057"}
+              onClick={() => handleSearch(button.text)}
+              borderColor={button.borderColor || "#669bff"}
+              bgColor={button.bgColor || "#FFFFFF"}
+            />
+          ))}
         </ul>
       </div>
     </div>

@@ -10,6 +10,21 @@ import CustomButton from "../components/ButtonComponent";
 import PullOutBar from "../components/PullOutBar";
 import PullOutBarGenre from "../components/PullOutBarGenre";
 
+//TODO will be pulled from backend 
+const genres = [
+  { text: "Fantasy" },
+  { text: "Science Fiction" },
+  { text: "Dystopian" },
+  { text: "Historical Fiction" },
+  { text: "Mystery/Thriller" },
+  { text: "Fiction" },
+  { text: "Graphic Novels" },
+  { text: "Non-Fiction" },
+  { text: "Poetry" },
+  {text: "Romance" },
+  {text: "Crazy Frog" },
+];
+
 const Home = () => {
   
   const [searchInput, setSearchInput] = useState('')
@@ -92,7 +107,13 @@ const Home = () => {
           bgColor="#110057"
           className="mt-12"
         />
-        {showPulloutBarGenre && <PullOutBarGenre onClose={() => {setShowPulloutBarGenre(false); }} />}
+        {showPulloutBarGenre && (
+          <PullOutBarGenre 
+            onClose={() => setShowPulloutBarGenre(false)} 
+            buttons={genres} 
+          />
+        )}
+
         <CustomButton
           imageSrc={SuggestBook}
           text="Suggest a Book"
