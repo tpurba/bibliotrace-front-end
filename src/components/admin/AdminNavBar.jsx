@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import NavBar from "./NavBar.jsx";
-
-const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor }) => {
+import NavBar from "../NavBar.jsx";
+import { useNavigate } from "react-router-dom";
+const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor}) => {
+  const navigate = useNavigate(); 
   const [searchInput, setSearchInput] = useState("");
 
   const handleSearch = () => {
@@ -17,10 +18,10 @@ const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor }) => {
   };
 
   return (
-<div className="relative w-full bg-[#110057] h-32 px-4">
+<div className="relative w-full bg-[#FFFFFFF] h-32 px-4 ">
       {/* Navigation Icon and Title */}
       <div className="flex items-center space-x-4">
-        <NavBar useDarkTheme={false} showTitle={false} bgColor={"#110057"} textColor={"#FFFFFF"} />
+        <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" />
       </div>
 
       {/* Search Bar */}

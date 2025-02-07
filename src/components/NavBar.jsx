@@ -7,12 +7,12 @@ import HomeLogoDark from "../assets/home-black.svg?react";
 import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
 
-const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor }) => {
+const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/' }) => {
   const navigate = useNavigate();
 
   const navigateHome = () => {
     console.log('Home Button was pressed');
-    navigate("/");
+    navigate(homeNavOnClick);
   };
   const navigateLogOut = () => {
     console.log('TODO add logout functionality');
