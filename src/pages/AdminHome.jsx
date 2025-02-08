@@ -22,10 +22,10 @@ export default function AdminHome({}) {
   };
 
   const sideButtons =[
-    {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleManageInventory, className: "mt-12 pr-16"},
-    {text: "Settings", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
-    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
-    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
+    {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleManageInventory, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Settings", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
   ];
 
 

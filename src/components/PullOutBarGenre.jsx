@@ -32,6 +32,9 @@ const PullOutBarGenre = ({ onClose, buttons}) => {
               onClick={() => handleSearch(button.text)}
               borderColor={button.borderColor || "#669bff"}
               bgColor={button.bgColor || "#FFFFFF"}
+              buttonBgColor = "#FFFFFF"
+              width = "14vw"
+              height="8vh"
             />
           ))}
         </ul>

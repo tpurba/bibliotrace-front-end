@@ -23,7 +23,6 @@ const genres = [
   { text: "Non-Fiction" },
   { text: "Poetry" },
   {text: "Romance" },
-  {text: "Crazy Frog" },
 ];
 
 export default function MainMenu() {
@@ -100,3 +99,24 @@ export default function MainMenu() {
     
   );
 }
+
+
+
+
+
+  // { label: 'Check In', color: 'bg-pink-500',  },
+  // { label: 'Popular', color: 'bg-red-500' },
+  // { label: 'New Arrivals', color: 'bg-yellow-500' },
+  // { label: 'By Age', color: 'bg-orange-500' },
+  // { label: 'By Genre', color: 'bg-blue-500' },
+
+
+
+
+
+  // <button
+  //           key={item.label}
+  //           className={`p-4 rounded-full text-white ${item.color} hover:opacity-80`}
+  //         >
+  //           {item.label}
+  //         </button>

@@ -12,6 +12,8 @@ export default function Sidebar({buttons}) {
             bgColor={button.bgColor} 
             buttonBgColor = {button.buttonBgColor}
             className={button.className}
+            width = {button.width}
+            height = {button.height}
           />
         ))}
       </div>
