@@ -18,10 +18,10 @@ export default function AdminHome({}) {
   };
 
   const sideButtons =[
-    {text: "Manage Inventory", textColor: "white", bgColor: "darkBlue", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
-    {text: "Settings", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
-    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
-    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16"},
+    {text: "Manage Inventory", textColor: "white", bgColor: "darkBlue", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Settings", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
   ];
 
 
@@ -43,9 +43,9 @@ export default function AdminHome({}) {
   
   <div className="pt-32 ">
     <h1 className="absolute left-1/4 text-white">Manage Inventory</h1>
-  </div>
-  <div className="pt-16 ">
-    <AdminManageMenu/>
+    <div className="pt-16 ">
+      <AdminManageMenu/>
+    </div>
   </div>
   <AdminSideBar
     buttons = {sideButtons}
