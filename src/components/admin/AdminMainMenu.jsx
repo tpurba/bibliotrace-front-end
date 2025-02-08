@@ -49,7 +49,7 @@ export default function MainMenu() {
   };
 
   const menuItems = [
-    { label: 'CHECK IN', imageSrc: OrangeIcon, onclick: handleTestClick, borderColor: "#fa8804", textWidth: '35rem'},
+    { label: 'Check In', imageSrc: OrangeIcon, onclick: handleTestClick, borderColor: "#fa8804", textWidth: '35rem'},
     { label: 'Suggest A Book', imageSrc: RedIcon, onclick: handleSuggestBookNav, borderColor: "#4b00e3", textWidth: '35rem'},
     { label: 'Popular', imageSrc: PinkIcon, onclick: handleTestClick, borderColor: "#ff50df", textWidth: '35rem'},
     { label: 'New Arrivals', imageSrc: YellowIcon, onclick: handleTestClick, borderColor: "#FFD700", textWidth: '35rem'},
@@ -100,24 +100,3 @@ export default function MainMenu() {
     
   );
 }
-
-
-
-
-
-  // { label: 'Check In', color: 'bg-pink-500',  },
-  // { label: 'Popular', color: 'bg-red-500' },
-  // { label: 'New Arrivals', color: 'bg-yellow-500' },
-  // { label: 'By Age', color: 'bg-orange-500' },
-  // { label: 'By Genre', color: 'bg-blue-500' },
-
-
-
-
-
-  // <button
-  //           key={item.label}
-  //           className={`p-4 rounded-full text-white ${item.color} hover:opacity-80`}
-  //         >
-  //           {item.label}
-  //         </button>

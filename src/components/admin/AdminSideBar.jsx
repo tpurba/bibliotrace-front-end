@@ -10,6 +10,7 @@ export default function Sidebar({buttons}) {
             onClick={button.onClick} 
             borderColor={button.borderColor} 
             bgColor={button.bgColor} 
+            buttonBgColor = {button.buttonBgColor}
             className={button.className}
           />
         ))}
