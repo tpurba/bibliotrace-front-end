@@ -10,13 +10,14 @@ function CustomButton({
   imageWidth = '6rem', 
   imageHeight = '6rem', 
   textWidth = '7rem', 
-  textHeight = '3rem' 
+  textHeight = '3rem' ,
+  textSize = '1rem'
 }) {
     return (
       <button
         className={`flex ${layout === 'col' ? 'flex-col' : 'flex-row'}
                     items-center justify-center  
-                    shadow-lg transition-transform duration-200 hover:scale-105 ${className}`}
+                    transition-transform duration-200 hover:scale-105 ${className}`}
         onClick={onClick}
         style={{ background: bgColor }}
       >
@@ -31,14 +32,15 @@ function CustomButton({
         
         {/* Container for text */}
         <div
-          className="border-2 rounded-lg flex items-center justify-center font-bold"
+          className="border-4 rounded-lg flex items-center justify-center font-bold"
           style={{ 
             borderColor: borderColor, 
             background: bgColor, 
             color: textColor, 
             whiteSpace: 'pre-wrap',
             width: textWidth, 
-            height: textHeight
+            height: textHeight,
+            fontSize: textSize
           }}
         >
           {text}

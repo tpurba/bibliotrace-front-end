@@ -6,8 +6,8 @@ function BarButton({
   bgColor, 
   className, 
   buttonBgColor, 
-  width = "14vw",
-  height = "11vh",
+  width,
+  height,
 }) {
     return (
       <button
