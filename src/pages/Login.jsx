@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useAuth } from '../components/AuthContext'
+import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config.js";
 
 export default function Login({ loginType }) {
-  const { jwt, setJwt } = useAuth()
   const location = useLocation()
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  // On page setup, check if we're already logged in...
+  useEffect(() => {
+    const jwt = Cookies.get('authToken')
+    if (jwt) {
+      navigate('/')
+    }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +39,7 @@ export default function Login({ loginType }) {
       const jsonResult = await response.json()
       if (jsonResult != null && jsonResult.message === 'success') {
         console.log(jsonResult.token)
-        setJwt(jsonResult.token)
+        Cookies.set('authToken', jsonResult.token, { expires: 7, secure: true })
         navigate("/");
       } else {
         // TODO: Set a prompt to try creds again...

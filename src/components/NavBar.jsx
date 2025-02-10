@@ -6,19 +6,18 @@ import HomeLogo from "../assets/home-white.svg?react";
 import HomeLogoDark from "../assets/home-black.svg?react";
 import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
-import { useAuth } from "./AuthContext";
+import Cookies from "js-cookie";
 
 const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/' }) => {
   const navigate = useNavigate();
-  const { jwt, setJwt } = useAuth()
 
   const navigateHome = () => {
     console.log('Home Button was pressed');
     navigate(homeNavOnClick);
   };
   const navigateLogOut = () => {
-    setJwt(null)
-    navigate('login', { state: { loginType: 'User Login' }})
+    Cookies.remove('authToken')
+    navigate('/login', { state: { loginType: 'User Login' }})
   };
 
   let title;

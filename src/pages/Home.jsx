@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '../components/AuthContext'
+import Cookies from "js-cookie";
 import NavBar from "../components/NavBar";
 import ExploreByAge from "../assets/ExploreByAge.jpg";
 import ExploreByGenre from "../assets/ExploreByGenre.jpg";
@@ -27,7 +27,6 @@ const genres = [
 ];
 
 const Home = () => {
-  const { jwt, setJwt } = useAuth()
   const [searchInput, setSearchInput] = useState('')
   const [isBlurred, setIsBlurred] = useState(false);
   const [showPulloutBar, setShowPulloutBar] = useState(false);
@@ -60,6 +59,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    const jwt = Cookies.get('authToken')
     if (jwt == null) {
       navigate('login', { state: { loginType: 'User Login' }})
     }

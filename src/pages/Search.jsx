@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
-import { useAuth } from '../components/AuthContext.jsx'
+import Cookies from 'js-cookie';
 import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
@@ -10,7 +10,6 @@ import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const Search = () => {
   const location = useLocation()
-  const { jwt, setJwt } = useAuth()
   const rowHeight = 160
   const headerHeight = 450
   const [rowCount, setRowCount] = useState(0)
@@ -37,6 +36,7 @@ const Search = () => {
     setLoading(true)
 
     try {
+      const jwt = Cookies.get('authToken')
       fetch(`http://localhost:8080/search/${searchInput}`, {
         headers: {
           "Authorization": `Bearer ${jwt}`
