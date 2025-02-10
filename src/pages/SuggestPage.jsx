@@ -9,26 +9,25 @@ function SuggestPage() {
 
   const submitSuggestion = async (event) => {
     event.preventDefault();
-    submittedDialog.current.showModal();
     const data = new FormData(event.target);
 
-    // try {
-    //   for (const pair of data.entries()) {
-    //     console.log("suggestion: ", pair[1]);
+    try {
+      for (const pair of data.entries()) {
+        console.log("suggestion: ", pair[1]);
 
-    //     const res = await fetch("/suggest", {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: { location: location, suggestion: pair[1] },
-    //     }).then((r) => r.json());
+        const res = await fetch("/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: { campus: campus, suggestion: pair[1] },
+        }).then((r) => r.json());
 
-    //     if (res == 200) {
-    //       submittedDialog.current.showModal();
-    //     } else {
-    //       //error
-    //     }
-    //   }
-    // } catch (e) {}
+        if (res == 200) {
+          submittedDialog.current.showModal();
+        } else {
+          //error
+        }
+      }
+    } catch (e) {}
   };
 
   return (
