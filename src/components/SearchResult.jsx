@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import defaultBook from '../assets/generic-book.png'
+import Cookies from 'js-cookie'
 
 const SearchResult = ({ isbn, title, author, genre, series }) => {
     const [image, setImage] = useState(defaultBook)
@@ -15,8 +16,15 @@ const SearchResult = ({ isbn, title, author, genre, series }) => {
                 return
             }
 
+            const jwt = Cookies.get('authToken')
+
             try {
-                const response = await fetch(`http://localhost:8080/cover/${isbn}`)
+                const response = await fetch(`http://localhost:8080/api/search/cover/${isbn}`, {
+                    method: 'GET', 
+                    headers: {
+                        Authorization: `Bearer ${jwt}`
+                    }
+                })
                 if (response.ok) {
                     const blob = await response.blob()
                     if (blob.size >= 100) {

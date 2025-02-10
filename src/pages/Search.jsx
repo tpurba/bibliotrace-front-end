@@ -37,7 +37,7 @@ const Search = () => {
 
     try {
       const jwt = Cookies.get('authToken')
-      fetch(`http://localhost:8080/search/${searchInput}`, {
+      fetch(`http://localhost:8080/api/search/${searchInput}`, {
         headers: {
           "Authorization": `Bearer ${jwt}`
         }

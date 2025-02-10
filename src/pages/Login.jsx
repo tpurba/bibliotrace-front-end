@@ -24,7 +24,7 @@ export default function Login({ loginType }) {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default function Login({ loginType }) {
             <div className="mb-5 ">
               <label className="text-white">Username: </label>
               <input
-                className="border border-black border-solid rounded-md h-10 w-full"
+                className="border border-black border-solid rounded-md h-10 w-full p-4"
                 type="text"
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
@@ -77,7 +77,7 @@ export default function Login({ loginType }) {
             <div className="mb-5 ">
               <label className="text-white">Password: </label>
               <input
-                className="border border-black border-solid rounded-md h-10 w-full"
+                className="border border-black border-solid rounded-md h-10 w-full p-4"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
