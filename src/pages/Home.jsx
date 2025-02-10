@@ -8,8 +8,8 @@ import NewArrivalsIcon from "../assets/NewArrivalsIcon.jpg";
 import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
-import PullOutBar from "../components/PullOutBar";
-import PullOutBarGenre from "../components/PullOutBarGenre";
+import PopUpBar from "../components/PopUpSideBar";
+
 
 //TODO will be pulled from backend 
 const genres = [
@@ -23,14 +23,23 @@ const genres = [
   { text: "Non-Fiction" },
   { text: "Poetry" },
   {text: "Romance" },
-  {text: "Crazy Frog" },
 ];
+
+const ages = [
+  { text: "Board Books\n(0-2 Years)" },
+  { text: "Picture Books\n(2-8 Years)" },
+  { text: "Early Chapter Books\n(6-9 Years)" },
+  { text: "Middle Grade\n(8-12 Years)" },
+  { text: "Young Adult\n(12-18 Years)" },
+];
+
+
 
 const Home = () => {
   const [searchInput, setSearchInput] = useState('')
   const [isBlurred, setIsBlurred] = useState(false);
-  const [showPulloutBar, setShowPulloutBar] = useState(false);
-  const [showPulloutBarGenre, setShowPulloutBarGenre] = useState(false);
+  const [showPopupBarAge, setShowPopupBarAge] = useState(false);
+  const [showPopupBarGenre, setShowPopupBarGenre] = useState(false);
   const navigate = useNavigate(); 
   
   //handle routes
@@ -44,11 +53,11 @@ const Home = () => {
   };
 
   const handleExploreByAge = () => {
-    setShowPulloutBar(!showPulloutBar)
+    setShowPopupBarAge(!showPopupBarAge)
   };
 
   const handleExploreByGenre = () => {
-    setShowPulloutBarGenre(!showPulloutBarGenre)
+    setShowPopupBarGenre(!showPopupBarGenre)
   };
 
   //event 
@@ -80,23 +89,43 @@ const Home = () => {
       <div className="flex flex-row">
         <CustomButton
           imageSrc={WhatsPopular}
-          text="What's Popular"
+          text={"What's\nPopular"}
           textColor="#FFFFFF"
           onClick={handleSearch}
           borderColor="#ff50df" 
           bgColor="#110057"
+          imageWidth = '12em' 
+          imageHeight = '12rem'
+          textWidth = '12rem' 
+          textHeight = '6rem' 
+          textSize = "1.5rem"
         />
         <CustomButton
           imageSrc={ExploreByAge}
-          text="Explore By Age"
+          text={"Explore By\nAge"}
           textColor="#FFFFFF"
           onClick={handleExploreByAge}
           borderColor="#fa8804" 
           bgColor="#110057"
-          className="mt-12"
+          className="mt-24"
+          imageWidth = '12em' 
+          imageHeight = '12rem'
+          textWidth = '12rem' 
+          textHeight = '6rem' 
+          textSize = "1.5rem"
         />
-        {showPulloutBar && <PullOutBar onClose={() => {setShowPulloutBar(false); }} />}
-
+        {/* {showPulloutBar && <PullOutBar onClose={() => {setShowPulloutBar(false); }} />} */}
+        {showPopupBarAge && (
+          <PopUpBar 
+            onClose={() => setShowPopupBarAge(false)} 
+            buttons={ages} 
+            side={"left"}
+            uniformColor={"#fa8804"}
+            titleText={"Explore ByAge"}    
+            buttonWidth={'14vw'}
+            buttonHeight={"10vh"}      
+          />
+        )}
         <CustomButton
           imageSrc={NewArrivalsIcon}
           text={"New\nArrivals"}
@@ -104,30 +133,50 @@ const Home = () => {
           onClick={handleSearch}
           borderColor="#FFD700" 
           bgColor="#110057"
+          imageWidth = '12em' 
+          imageHeight = '12rem'
+          textWidth = '12rem' 
+          textHeight = '6rem' 
+          textSize = "1.5rem"
         />
         <CustomButton
           imageSrc={ExploreByGenre}
-          text="Explore By Genre"
+          text={"Explore By\nGenre"}
           textColor="#FFFFFF"
           onClick={handleExploreByGenre}
           borderColor="#669bff" 
           bgColor="#110057"
-          className="mt-12"
+          className="mt-24"
+          imageWidth = '12em' 
+          imageHeight = '12rem'
+          textWidth = '12rem' 
+          textHeight = '6rem' 
+          textSize = "1.5rem"
         />
-        {showPulloutBarGenre && (
-          <PullOutBarGenre 
-            onClose={() => setShowPulloutBarGenre(false)} 
+        {showPopupBarGenre && (
+          <PopUpBar 
+            onClose={() => setShowPopupBarGenre(false)} 
             buttons={genres} 
+            side={"right"}
+            uniformColor={"#669bff"}
+            titleText={"Explore By Genre"}
+            buttonWidth={'14vw'}
+            buttonHeight={"8vh"}   
           />
         )}
 
         <CustomButton
           imageSrc={SuggestBook}
-          text="Suggest a Book"
+          text={"Suggest a\nBook"}
           textColor="#FFFFFF"
           onClick={handleSuggestBookNav}
           borderColor="#e12502" 
           bgColor="#110057"
+          imageWidth = '12em' 
+          imageHeight = '12rem'
+          textWidth = '12rem' 
+          textHeight = '6rem' 
+          textSize = "1.5rem"
         />
       </div>
     </div>
