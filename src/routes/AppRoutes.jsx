@@ -10,6 +10,7 @@ import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
 import AddScannedBooks from "../pages/AddScannedBooks";
 import ManageInventory from "../pages/ManageInventory";
+import RemoveBook from "../pages/RemoveBook.jsx";
 
 const AppRoutes = () => {
   const [token, setToken] = useState();
@@ -41,6 +42,7 @@ const AppRoutes = () => {
           <Route path="/add" element={<AddBooks />} />
           <Route path="/admin" element={<AdminHome />} />
           <Route path="/add-scanned" element={<AddScannedBooks />} />
+          <Route path="/remove-book" element={<RemoveBook/>} />
           <Route path="/manage" element={<ManageInventory />} />
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}

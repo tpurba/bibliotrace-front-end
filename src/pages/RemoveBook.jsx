@@ -2,7 +2,7 @@ import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config";
 import { useRef, useState } from "react";
 
-export default function AddScannedBooks() {
+export default function RemoveBook() {
   const bulkAddDialog = useRef(null);
   const [thumbnail, setThumbnail] = useState("");
   const [title, setTitle] = useState(null);
@@ -43,26 +43,26 @@ export default function AddScannedBooks() {
     <>
       <NavBar useDarkTheme={true} showTitle={true} bgColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
-      <h1 className="text-center my-10">Add Scanned Books</h1>
+      <h1 className="text-center my-10">Remove Books</h1>
       <div className="flex flex-row ">
         <section className="p-20 flex-1 flex flex-col justify-around">
           <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook}>
             Scan Barcode
           </button>
-          <p>1. Click the 'Scan Barcode' button</p>
-          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
+          <p>1. Click the 'Scan Barcode' box</p>
+          <p>2. Scan the barcode on the book (book information will appear if scan is successful)</p>
           <p>3. All done! The book is in the inventory</p>
           <p
             className="self-center mt-10 underline text-lightBlue hover:cursor-pointer hover:opacity-80 active:text-darkBlue"
             onClick={() => bulkAddDialog.current.showModal()}
           >
-            Bulk Add
+            Bulk Remove
           </p>
         </section>
 
         <section className="p-20 flex-1">
           <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-lightBlue  text-center text-darkBlue text-lg p-2">Book Added: </h4>
+            <h4 className="bg-lightBlue  text-center text-darkBlue text-lg p-2">Book Removed: </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">

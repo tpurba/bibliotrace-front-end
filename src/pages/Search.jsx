@@ -6,11 +6,12 @@ import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult.jsx"
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
-
+import FilterBox from "../components/FilterBox.jsx";
 const Search = () => {
   const location = useLocation()
   const rowHeight = 160
   const headerHeight = 450
+  const [showFilter, setShowFilter] = useState(false);
   const [rowCount, setRowCount] = useState(0)
   const [pageOffset, setPageOffset] = useState(0)
   const [isLoading, setLoading] = useState(false)
@@ -101,6 +102,11 @@ const Search = () => {
     }
   }
 
+  const handleFilterPress = () => {
+    console.log("Buttons been pressed");
+    setShowFilter(!showFilter)
+  };
+
   return (
     <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ minHeight: "100vh" }}>
       <NavBar useDarkTheme={true} showTitle={false} bgColor={'none'} />
@@ -113,12 +119,17 @@ const Search = () => {
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
         <div className="w-full flex justify-between my-4"> {/* Buttons Above Results */}
-          <button className="bg-transparent border-none">
+          <button className="bg-transparent border-none " onClick={handleFilterPress}>
             <Filter />
           </button>
           <p className="flex items-center">{(inputQuery != '') ? `Showing search results for "${inputQuery}"` : ""}</p>
           <div className="w-10"></div> {/* placeholder to put above p element in the center */}
         </div>
+        {showFilter && (
+          <FilterBox 
+            onClose={() => setShowFilter(false)} 
+          />
+        )}
         <div className=""> {/* Results Table */}
           <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl"> {/* Table Header */}
             <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
