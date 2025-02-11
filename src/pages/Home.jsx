@@ -121,7 +121,7 @@ const Home = () => {
             buttons={ages} 
             side={"left"}
             uniformColor={"#fa8804"}
-            titleText={"Explore ByAge"}    
+            titleText={"Explore By Age"}    
             buttonWidth={'14vw'}
             buttonHeight={"10vh"}      
           />
