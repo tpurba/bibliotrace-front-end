@@ -14,17 +14,19 @@ function SuggestPage() {
     try {
       for (const pair of data.entries()) {
         console.log("suggestion: ", pair[1]);
+        //delete later
+        const campus = "lehi";
 
-        const res = await fetch("/suggest", {
+        const res = await fetch("http://localhost:8080/api/suggest", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: { campus: campus, suggestion: pair[1] },
+          body: JSON.stringify({ campus: campus, suggestion: pair[1] }),
         }).then((r) => r.json());
 
-        if (res == 200) {
+        if (res.status == 200) {
           submittedDialog.current.showModal();
         } else {
-          //error
+          console.log(res.message);
         }
       }
     } catch (e) {}
