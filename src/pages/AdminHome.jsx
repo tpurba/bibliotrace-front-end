@@ -41,7 +41,18 @@ export default function AdminHome({}) {
     viewBox="0 0 100 100"
     preserveAspectRatio="none"
   >
-    <path className="fill-darkBlue" d="M 75,0 C 55,30 105,40 65,100  L 0,100 L 0,00"></path>
+    <path
+      className="fill-darkBlue "
+      d="
+        M0,30
+        C12.5,25 25,40 37.5,40
+        S62.5,25 75,30
+        S87.5,40 100,40
+        L100,0
+        L0,0
+        Z"
+      transform="rotate(270, 50, 50) scale(1, 2)"
+  />
   </svg>
   <AdminNavBar useDarkTheme={true} showTitle={false} bgColor={"#FFFFFF"} textColor={"#110057"} />
   <div className="pt-32 ">
