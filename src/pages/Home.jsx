@@ -12,7 +12,7 @@ import PopUpBar from "../components/PopUpSideBar";
 
 //TODO will be pulled from backend 
 const genres = [
-  { text: "Fantasy" },
+  { text: "Fantasy"},
   { text: "Science Fiction" },
   { text: "Dystopian" },
   { text: "Historical Fiction" },
@@ -20,8 +20,8 @@ const genres = [
   { text: "Fiction" },
   { text: "Graphic Novels" },
   { text: "Non-Fiction" },
-  { text: "Poetry" },
-  {text: "Romance" },
+  { text: "Poetry"},
+  {text: "Romance"},
 ];
 
 const ages = [
@@ -60,13 +60,21 @@ const Home = () => {
     setShowPopupBarGenre(!showPopupBarGenre)
   };
 
+  const handlePopular = (filterInput) => {
+    navigate("/search", { state: { initFilterInput: "Popular" }});
+  };
+
+  const handleNewest = (filterInput) => {
+    navigate("/search", { state: { initFilterInput: "Newest" }});
+  };
+
   //event 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       handleSearch()
     }
   };
-
+  
   
 
   return (
@@ -84,7 +92,7 @@ const Home = () => {
           imageSrc={WhatsPopular}
           text={"What's\nPopular"}
           textColor="#FFFFFF"
-          onClick={handleSearch}
+          onClick={handlePopular}
           borderColor="#ff50df" 
           bgColor="#110057"
           imageWidth = '12em' 
@@ -123,7 +131,7 @@ const Home = () => {
           imageSrc={NewArrivalsIcon}
           text={"New\nArrivals"}
           textColor="#FFFFFF"
-          onClick={handleSearch}
+          onClick={handleNewest}
           borderColor="#FFD700" 
           bgColor="#110057"
           imageWidth = '12em' 

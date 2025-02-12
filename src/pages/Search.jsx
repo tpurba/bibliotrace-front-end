@@ -17,6 +17,7 @@ const Search = () => {
   const [isLoading, setLoading] = useState(false)
   const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '') // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
   // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
+  const [filterInput, setFilterInput] = useState(location.state?.initFilterInput ?? '')
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch', 
@@ -124,14 +125,23 @@ const Search = () => {
           <button className="bg-transparent border-none " onClick={handleFilterPress}>
             <Filter />
           </button>
+          {/* Filter Box (Overlay) */}
+          {showFilter && (
+            <div className="fixed top-5 left-52 w-full h-full flex justify-center items-center z-50
+                          sm:w-80 md:w-96 lg:w-[30vw] xl:w-[50vw] max-w-full p-4">
+              <FilterBox 
+                onClose={(selectedFilters) => {
+                  setShowFilter(false);
+                  setFilterInput(selectedFilters);
+                }} 
+                prevSelectedItems={filterInput}
+              />
+            </div>
+          )}
           <p className="flex items-center">{(inputQuery != '') ? `Showing search results for "${inputQuery}"` : ""}</p>
           <div className="w-10"></div> {/* placeholder to put above p element in the center */}
         </div>
-        {showFilter && (
-          <FilterBox 
-            onClose={() => setShowFilter(false)} 
-          />
-        )}
+        
         <div className=""> {/* Results Table */}
           <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl"> {/* Table Header */}
             <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
