@@ -54,6 +54,7 @@ export default function AdminHome({}) {
       transform="rotate(270, 50, 50) scale(1, 2)"
   />
   </svg>
+  
   <AdminNavBar useDarkTheme={true} showTitle={false} bgColor={"#FFFFFF"} textColor={"#110057"} />
   <div className="pt-32 ">
     <AdminMainMenu />
