@@ -55,12 +55,20 @@ export default function MainMenu() {
   const handleExploreByGenre = () => {
     setShowPopupBarGenre(!showPopupBarGenre)
   };
+  
+  const handlePopular = (filterInput) => {
+    navigate("/search", { state: { initFilterInput: "Popular" }});
+  };
+
+  const handleNewest = (filterInput) => {
+    navigate("/search", { state: { initFilterInput: "Newest" }});
+  };
 
   const menuItems = [
     { label: 'Check In', imageSrc: PeachColorIcon, onclick: handleTestClick, borderColor: "#fbb7a4", textWidth: '35rem'},
     { label: 'Suggest A Book', imageSrc: RedIcon, onclick: handleSuggestBookNav, borderColor: "#4b00e3", textWidth: '35rem'},
-    { label: 'Popular', imageSrc: PinkIcon, onclick: handleTestClick, borderColor: "#ff50df", textWidth: '35rem'},
-    { label: 'New Arrivals', imageSrc: YellowIcon, onclick: handleTestClick, borderColor: "#FFD700", textWidth: '35rem'},
+    { label: 'Popular', imageSrc: PinkIcon, onclick: handlePopular, borderColor: "#ff50df", textWidth: '35rem'},
+    { label: 'New Arrivals', imageSrc: YellowIcon, onclick: handleNewest, borderColor: "#FFD700", textWidth: '35rem'},
     { label: 'By Age', imageSrc: OrangeIcon, onclick: handleExploreByAge, borderColor: "#fa8804", textWidth: '35rem'},
     { label: 'By Genre', imageSrc: BlueIcon, onclick: handleExploreByGenre, borderColor: "#669bff", textWidth: '35rem'},
   ];
