@@ -5,8 +5,9 @@ import { useNavigate } from "react-router-dom";
 const PullOutBarGenre = ({ onClose, buttons, side, titleText, uniformColor, buttonWidth, buttonHeight}) => {
   const navigate = useNavigate(); 
 
-  const handleSearch = () => {
-    navigate("/search");
+  const handleSearch = (filterInput) => {
+    console.log("Whats in the filter: " . filterInput);
+    navigate("/search", { state: { initFilterInput: filterInput }});
   };
 
   return (
