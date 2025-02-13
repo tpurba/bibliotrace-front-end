@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
+import Cookies from 'js-cookie';
 import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
@@ -20,9 +21,8 @@ const Search = () => {
   const [filterInput, setFilterInput] = useState(location.state?.initFilterInput ?? '')
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
-    key: 'helloSearch', 
-    selfLink: 'none', 
-    imgLink: 'Unknown', 
+    key: 'helloSearch',
+    selfLink: 'none',
     title: '',
     author: '',
     isbn: 'none',
@@ -31,41 +31,73 @@ const Search = () => {
   }])
 
   const conductSearch = () => {
-    if (searchInput == '') {
+    if (searchInput == '' || searchInput == null) {
       return
     }
 
     setLoading(true)
 
-    fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
-    .then((result) => result.json())
-    .then((response) => {
-      const bookItems = response.items || []
-      const bookResults = bookItems.map((item) => { return convertBooksObjToBook(item) })
-      // console.log(bookResults)
-      setSearchResults(bookResults)
+    try {
+      const jwt = Cookies.get('authToken')
+      fetch(`http://localhost:8080/api/search/${searchInput}`, {
+        headers: {
+          "Authorization": `Bearer ${jwt}`
+        }
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const bookItems = data.results
+              console.log('I GOT THE RESULTS!!')
+              console.log(bookItems)
+              setSearchResults(bookItems)
+              setPageOffset(0)
+              setInputQuery(searchInput)
+              setLoading(false)
+            })
+          } else {
+            setSearchResults([
+              {
+                author: `Error: ${response.status} Code Received`,
+                key: 'Error Code'
+              },
+              {
+                author: `Error Address: ${response.url}`,
+                key: 'Error Addy'
+              }
+            ])
+            setPageOffset(0)
+            setInputQuery(searchInput)
+            setLoading(false)
+          }
+
+        })
+        .catch((error) => {
+          setSearchResults([
+            {
+              author: `Error: ${error}`,
+              key: 'errorResult'
+            }
+          ])
+          setPageOffset(0)
+          setInputQuery(searchInput)
+          setLoading(false)
+        })
+    } catch (error) {
+      setSearchResults([
+        {
+          author: `Error: ${error}`
+        }
+      ])
       setPageOffset(0)
       setInputQuery(searchInput)
       setLoading(false)
-    })
+    }
   }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       conductSearch()
-    }
-  }
-
-  const convertBooksObjToBook = (bookObj) => {
-    // console.log(bookObj)
-    return {
-      selfLink: bookObj.selfLink,
-      imgLink: bookObj.volumeInfo.imageLinks?.smallThumbnail ?? 'Unknown',
-      title: bookObj.volumeInfo.title ?? 'Unknown',
-      author: (bookObj.volumeInfo.authors != null && bookObj.volumeInfo.authors.length > 0) ? bookObj.volumeInfo.authors[0] : 'Unknown',
-      isbn: bookObj.volumeInfo.industryIdentifiers,
-      genre: bookObj.volumeInfo.categories ?? ['unkonwn'],
-      series: 'Not Available'
     }
   }
 
@@ -89,7 +121,7 @@ const Search = () => {
     return () => {
       window.removeEventListener('resize', calculateRowCount);
     };
-  }, []);  
+  }, []);
 
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
@@ -117,7 +149,7 @@ const Search = () => {
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
         <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>
-          {isLoading ? <LoadingSpinner size={'3rem'}/> : "Go!"}
+          {isLoading ? <LoadingSpinner size={'3rem'} /> : "Go!"}
         </button>
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
@@ -167,14 +199,14 @@ const Search = () => {
             }
             const bookData = searchResults[index + pageOffset]
             return bookData ? (
-              <SearchResult 
+              <SearchResult
                 key={bookData.selfLink}
-                imageUrl={bookData.imgLink} 
-                title={bookData.title} 
-                author={bookData.author} 
-                genre={bookData.genre} 
-                series={bookData.series}/>
-              ) : null
+                isbn={bookData.isbn}
+                title={bookData.title}
+                author={bookData.author}
+                genre={bookData.genre}
+                series={bookData.series} />
+            ) : null
           })}
         </div>
         <div className="flex align-middle items-center justify-center py-4"> {/* Pagination Buttons */}

@@ -1,5 +1,6 @@
-import React, { useState} from "react"
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import NavBar from "../components/NavBar";
 import ExploreByAge from "../assets/ExploreByAge.jpg";
 import ExploreByGenre from "../assets/ExploreByGenre.jpg";
@@ -35,7 +36,6 @@ const ages = [
 
 
 const Home = () => {
-  
   const [searchInput, setSearchInput] = useState('')
   const [isBlurred, setIsBlurred] = useState(false);
   const [showPopupBarAge, setShowPopupBarAge] = useState(false);
@@ -74,7 +74,14 @@ const Home = () => {
       handleSearch()
     }
   };
-  
+
+  useEffect(() => {
+    const jwt = Cookies.get('authToken')
+    if (jwt == null) {
+      navigate('login', { state: { loginType: 'User Login' }})
+    }
+  }, [])
+
   
 
   return (

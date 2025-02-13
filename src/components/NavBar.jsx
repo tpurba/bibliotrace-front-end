@@ -6,6 +6,7 @@ import HomeLogo from "../assets/home-white.svg?react";
 import HomeLogoDark from "../assets/home-black.svg?react";
 import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
+import Cookies from "js-cookie";
 
 const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/' }) => {
   const navigate = useNavigate();
@@ -15,7 +16,8 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
     navigate(homeNavOnClick);
   };
   const navigateLogOut = () => {
-    console.log('TODO add logout functionality');
+    Cookies.remove('authToken')
+    navigate('/login', { state: { loginType: 'User Login' }})
   };
 
   let title;

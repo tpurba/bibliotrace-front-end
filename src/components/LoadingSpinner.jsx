@@ -6,8 +6,6 @@ const LoadingSpinner = ({ size }) => {
   if (size == null || size == '') {
     size = 10;
   }
-
-  console.log(size)
   
   return (
     <div>

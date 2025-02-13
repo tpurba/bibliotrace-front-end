@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import defaultBook from '../assets/generic-book.png'
+import Cookies from 'js-cookie'
 
-const SearchResult = ({ imageUrl, title, author, genre, series }) => {
+const SearchResult = ({ isbn, title, author, genre, series }) => {
     const [image, setImage] = useState(defaultBook)
 
     const bookTitle = <p id='book-title' className="text-center">{title}</p>
@@ -11,24 +12,35 @@ const SearchResult = ({ imageUrl, title, author, genre, series }) => {
 
     useEffect(() => {
         const fetchImage = async () => {
-            if (imageUrl === 'Unknown') {
+            if (isbn == null) {
                 return
             }
 
+            const jwt = Cookies.get('authToken')
+
             try {
-                const response = await fetch('https://cors-anywhere.herokuapp.com/' + imageUrl) // TODO: Swap this out with backend API calls or use a blob objectURL from upstream.
+                const response = await fetch(`http://localhost:8080/api/search/cover/${isbn}`, {
+                    method: 'GET', 
+                    headers: {
+                        Authorization: `Bearer ${jwt}`
+                    }
+                })
                 if (response.ok) {
                     const blob = await response.blob()
-                    const objectURL = URL.createObjectURL(blob)
-                    console.log(objectURL)
-                    setImage(objectURL)
+                    if (blob.size >= 100) {
+                        const objectURL = URL.createObjectURL(blob)
+                        setImage(objectURL)
+                    }
+                } else {
+                    setImage(defaultBook)
                 }
             } catch (e) {
                 console.log(e)
+                setImage(defaultBook)
             }
         }
         fetchImage()
-    }, []) // Effect only runs once during component rendering
+    }, [isbn]) 
 
     return (
         <div className="flex justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90 text-xl">
