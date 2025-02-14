@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import tailwindConfig from "../../tailwind.config";
 
 function SuggestPage() {
   const submittedDialog = useRef(null);
@@ -8,13 +9,30 @@ function SuggestPage() {
 
   const submitSuggestion = async (event) => {
     event.preventDefault();
-    submittedDialog.current.showModal();
     const data = new FormData(event.target);
 
-    for (const pair of data.entries()) {
-      console.log("suggestion: ", pair[1]);
-    }
+    try {
+      for (const pair of data.entries()) {
+        //delete later
+        console.log("suggestion: ", pair[1]);
+        const campus = "lehi";
+
+        const res = await fetch("http://localhost:8080/api/suggest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ campus: campus, suggestion: pair[1] }),
+        });
+
+        if (res.status == 200) {
+          submittedDialog.current.showModal();
+          event.target.reset();
+        } else {
+          console.log(res.message);
+        }
+      }
+    } catch (e) {}
   };
+
   return (
     <>
       <div className="bg-lightBlue w-full h-full relative z-10">
@@ -28,7 +46,12 @@ function SuggestPage() {
           <path className="fill-darkBlue" d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"></path>
         </svg>
 
-        <NavBar useDarkTheme={true} showTitle={true} bgColor={"#649cff"} textColor={"#FFFFFF"}/>
+        <NavBar
+          useDarkTheme={false}
+          showTitle={true}
+          bgColor={tailwindConfig.theme.colors.lightBlue}
+          textColor={tailwindConfig.theme.colors.white}
+        />
 
         <dialog className="rounded-md p-8" ref={submittedDialog}>
           <h1 className="text-xl text-center mb-5">Thank you for your suggestion!</h1>
