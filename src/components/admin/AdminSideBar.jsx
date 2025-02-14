@@ -1,5 +1,27 @@
 import BarButton from "../BarButtons";
-export default function Sidebar({buttons}) {
+import { useNavigate } from "react-router-dom";
+export default function Sidebar() {
+  const navigate = useNavigate(); 
+  //handle routes
+  const handleTestClick = () => {
+    console.log('Button pressed');
+  };
+
+  const handleManageInventory = () => {
+    navigate("/manage");
+  };
+
+  const handleSettingsNav = () => {
+    navigate("/settings")
+  }
+  
+  const buttons =[
+    {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleManageInventory, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Settings", textColor: "white", bgColor: "darkBlue", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleSettingsNav, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+    {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
+  ];
+
     return (
       <div className="ml-auto flex flex-col">
         {buttons.map((button, index) => (
