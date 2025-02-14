@@ -20,6 +20,16 @@ export default function Login({ loginType }) {
     }
   }, [])
 
+  function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return jsonPayload;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -40,6 +50,9 @@ export default function Login({ loginType }) {
       if (jsonResult != null && jsonResult.message === 'success') {
         console.log(jsonResult.token)
         Cookies.set('authToken', jsonResult.token, { expires: 7, secure: true })
+        const jwtData = parseJwt(jsonResult.token)
+        Cookies.set('jwtData', jwtData)
+        console.log(jwtData)
         navigate("/");
       } else {
         // TODO: Set a prompt to try creds again...
