@@ -9,8 +9,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    # outputs:
-    #   version: ${{ steps.set_version.outputs.version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -20,12 +18,9 @@ jobs:
         with:
           node-version: '22.x'
 
-    #   - name: set version
-    #     id: set_version
-    #     run: |
-    #       version=$(date +'%Y%m%d.%H%M%S')
-    #       echo "version=$version" >> "$GITHUB_OUTPUT"
-    #       printf '{"version": "%s" }' "$version" > public/version.json
+      # - name: set back-end url
+      #   run: |
+      #     find ./ -type f -exec sed -i 's|http://localhost:8080|https://TODO-SET THIS URL UP LATER.URL|g' {} +
 
       - name: Build
         run: |

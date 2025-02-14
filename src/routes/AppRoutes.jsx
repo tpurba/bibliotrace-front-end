@@ -5,9 +5,13 @@ import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
 import AddBooks from "../pages/AddBooks";
+
 import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
-
+import AddScannedBooks from "../pages/AddScannedBooks";
+import ManageInventory from "../pages/ManageInventory";
+import RemoveBook from "../pages/RemoveBook.jsx";
+import AdminSettings from "../pages/AdminSettings.jsx";
 const AppRoutes = () => {
   const [token, setToken] = useState();
   const saveToken = (userToken) => {
@@ -37,6 +41,10 @@ const AppRoutes = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/add" element={<AddBooks />} />
           <Route path="/admin" element={<AdminHome />} />
+          <Route path="/add-scanned" element={<AddScannedBooks />} />
+          <Route path="/remove-book" element={<RemoveBook/>} />
+          <Route path="/manage" element={<ManageInventory />} />
+          <Route path="/settings" element={<AdminSettings/>} />
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
       </Routes>

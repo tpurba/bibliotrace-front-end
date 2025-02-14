@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react"
 import { useLocation } from "react-router-dom";
+import Cookies from 'js-cookie';
 import NavBar from "../components/NavBar.jsx"
 import Filter from "../assets/filter.svg?react"
 import Next from "../assets/next.svg?react"
 import Prev from "../assets/prev.svg?react"
 import SearchResult from "../components/SearchResult.jsx"
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
-
+import FilterBox from "../components/FilterBox.jsx";
 const Search = () => {
   const location = useLocation()
   const rowHeight = 160
   const headerHeight = 450
+  const [showFilter, setShowFilter] = useState(false);
   const [rowCount, setRowCount] = useState(0)
   const [pageOffset, setPageOffset] = useState(0)
   const [isLoading, setLoading] = useState(false)
   const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '') // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
   // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
+  const [filterInput, setFilterInput] = useState(location.state?.initFilterInput ?? '')
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
-    key: 'helloSearch', 
-    selfLink: 'none', 
-    imgLink: 'Unknown', 
+    key: 'helloSearch',
+    selfLink: 'none',
     title: '',
     author: '',
     isbn: 'none',
@@ -29,41 +31,73 @@ const Search = () => {
   }])
 
   const conductSearch = () => {
-    if (searchInput == '') {
+    if (searchInput == '' || searchInput == null) {
       return
     }
 
     setLoading(true)
 
-    fetch(`https://www.googleapis.com/books/v1/volumes?q={${searchInput}}&maxResults=40`)
-    .then((result) => result.json())
-    .then((response) => {
-      const bookItems = response.items || []
-      const bookResults = bookItems.map((item) => { return convertBooksObjToBook(item) })
-      // console.log(bookResults)
-      setSearchResults(bookResults)
+    try {
+      const jwt = Cookies.get('authToken')
+      fetch(`http://localhost:8080/api/search/query/${searchInput}`, {
+        headers: {
+          "Authorization": `Bearer ${jwt}`
+        }
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            response.json().then((data) => {
+              const bookItems = data.results
+              console.log('I GOT THE RESULTS!!')
+              console.log(bookItems)
+              setSearchResults(bookItems)
+              setPageOffset(0)
+              setInputQuery(searchInput)
+              setLoading(false)
+            })
+          } else {
+            setSearchResults([
+              {
+                author: `Error: ${response.status} Code Received`,
+                key: 'Error Code'
+              },
+              {
+                author: `Error Address: ${response.url}`,
+                key: 'Error Addy'
+              }
+            ])
+            setPageOffset(0)
+            setInputQuery(searchInput)
+            setLoading(false)
+          }
+
+        })
+        .catch((error) => {
+          setSearchResults([
+            {
+              author: `Error: ${error}`,
+              key: 'errorResult'
+            }
+          ])
+          setPageOffset(0)
+          setInputQuery(searchInput)
+          setLoading(false)
+        })
+    } catch (error) {
+      setSearchResults([
+        {
+          author: `Error: ${error}`
+        }
+      ])
       setPageOffset(0)
       setInputQuery(searchInput)
       setLoading(false)
-    })
+    }
   }
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       conductSearch()
-    }
-  }
-
-  const convertBooksObjToBook = (bookObj) => {
-    // console.log(bookObj)
-    return {
-      selfLink: bookObj.selfLink,
-      imgLink: bookObj.volumeInfo.imageLinks?.smallThumbnail ?? 'Unknown',
-      title: bookObj.volumeInfo.title ?? 'Unknown',
-      author: (bookObj.volumeInfo.authors != null && bookObj.volumeInfo.authors.length > 0) ? bookObj.volumeInfo.authors[0] : 'Unknown',
-      isbn: bookObj.volumeInfo.industryIdentifiers,
-      genre: bookObj.volumeInfo.categories ?? ['unkonwn'],
-      series: 'Not Available'
     }
   }
 
@@ -87,7 +121,7 @@ const Search = () => {
     return () => {
       window.removeEventListener('resize', calculateRowCount);
     };
-  }, []);  
+  }, []);
 
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
@@ -103,6 +137,11 @@ const Search = () => {
     }
   }
 
+  const handleFilterPress = () => {
+    console.log("Buttons been pressed");
+    setShowFilter(!showFilter)
+  };
+
   return (
     <div className="w-screen pb-5 search-bg flex flex-col items-center" style={{ minHeight: "100vh" }}>
       <NavBar useDarkTheme={true} showTitle={false} bgColor={'none'} />
@@ -110,17 +149,31 @@ const Search = () => {
       <div className="h-16 my-6 flex w-7/12 justify-center"> {/* Search Bar */}
         <input className="m-2 px-3 w-10/12 border-2 border-[#110057] rounded-2xl" type="text" placeholder="Search For Books" value={searchInput} onInput={e => setSearchInput(e.target.value)} onKeyDown={handleKeyDown}></input>
         <button className="flex items-center m-2 border-[#110057] border-2 bg-white rounded-2xl" onClick={conductSearch}>
-          {isLoading ? <LoadingSpinner size={'3rem'}/> : "Go!"}
+          {isLoading ? <LoadingSpinner size={'3rem'} /> : "Go!"}
         </button>
       </div>
       <div className="w-10/12"> {/* Search Results Table */}
         <div className="w-full flex justify-between my-4"> {/* Buttons Above Results */}
-          <button className="bg-transparent border-none">
+          <button className="bg-transparent border-none " onClick={handleFilterPress}>
             <Filter />
           </button>
+          {/* Filter Box (Overlay) */}
+          {showFilter && (
+            <div className="fixed top-5 left-52 w-full h-full flex justify-center items-center z-50
+                          sm:w-80 md:w-96 lg:w-[30vw] xl:w-[50vw] max-w-full p-4">
+              <FilterBox 
+                onClose={(selectedFilters) => {
+                  setShowFilter(false);
+                  setFilterInput(selectedFilters);
+                }} 
+                prevSelectedItems={filterInput}
+              />
+            </div>
+          )}
           <p className="flex items-center">{(inputQuery != '') ? `Showing search results for "${inputQuery}"` : ""}</p>
           <div className="w-10"></div> {/* placeholder to put above p element in the center */}
         </div>
+        
         <div className=""> {/* Results Table */}
           <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl"> {/* Table Header */}
             <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
@@ -146,14 +199,14 @@ const Search = () => {
             }
             const bookData = searchResults[index + pageOffset]
             return bookData ? (
-              <SearchResult 
+              <SearchResult
                 key={bookData.selfLink}
-                imageUrl={bookData.imgLink} 
-                title={bookData.title} 
-                author={bookData.author} 
-                genre={bookData.genre} 
-                series={bookData.series}/>
-              ) : null
+                isbn={bookData.isbn}
+                title={bookData.title}
+                author={bookData.author}
+                genre={bookData.genre}
+                series={bookData.series} />
+            ) : null
           })}
         </div>
         <div className="flex align-middle items-center justify-center py-4"> {/* Pagination Buttons */}
