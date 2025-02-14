@@ -3,32 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BarButton from "../BarButtons";
 import React, { useState} from "react"
 
-export default function MainMenu() {
-  const navigate = useNavigate(); 
-
-  const handleTestClick = () => {
-    console.log('Button pressed');
-  };
-
-  const handleAddBookNav = () => {
-    navigate("/add-scanned");
-  };
-
-  const handleRemoveBookNav = () => {
-    navigate("/remove-book");
-  };
-
-  const menuButtons =[
-    {text: "Add Books", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleAddBookNav, width : "20vw", height : "10vh"},
-    {text: "Audit", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Remove Books", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleRemoveBookNav, width : "20vw", height : "10vh"},
-    {text: "Edit Genres", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Add Title", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Generate QR Codes", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Set Locations", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-  ];
-    
-
+export default function AdminMainMenu({menuButtons}) {
   
   return (
     <div className="absolute left-64 top-auto ">
