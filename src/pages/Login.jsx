@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config.js";
-
+import loginBackground from "../assets/login-background.png";
 export default function Login({ loginType }) {
   const location = useLocation()
   const [username, setUsername] = useState("");
@@ -53,12 +53,16 @@ export default function Login({ loginType }) {
 
   return (
     <>
-      <div className="bg-darkBlue h-full vw-100">
+      <div 
+        className="h-screen w-screen bg-cover bg-center bg-no-repeat "
+        style={{ backgroundImage: `url(${loginBackground})` }}
+      >
         <NavBar
           useDarkTheme={false}
           showTitle={true}
-          bgColor={tailwindConfig.theme.colors.darkBlue}
+          bgColor={"#ff50e0"}
           textColor={"white"}
+          showNavButtons = {false}
         />
 
         <div className="h-[calc(100%-64px)] flex flex-col items-center">

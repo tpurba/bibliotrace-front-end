@@ -8,7 +8,7 @@ import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
 import Cookies from "js-cookie";
 
-const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/' }) => {
+const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/',  showNavButtons = true}) => {
   const navigate = useNavigate();
 
   const navigateHome = () => {
@@ -39,25 +39,28 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
         <Logo className="h-16 w-48" />
         <span>{title}</span>
       </div>
-      <div className="flex items-center">
-        <button
-          style={{ background: bgColor, color: textColor }}
-          className="flex flex-col justify-center items-center"
-          onClick={navigateHome}
-        >
-          <Home />
-          <p>Home</p>
-        </button>
+      {showNavButtons &&( 
+        <div className="flex items-center">
+          <button
+            style={{ background: bgColor, color: textColor }}
+            className="flex flex-col justify-center items-center"
+            onClick={navigateHome}
+          >
+            <Home />
+            <p>Home</p>
+          </button>
 
-        <button
-          style={{ background: bgColor, color: textColor }}
-          className="flex flex-col justify-center items-center"
-          onClick={navigateLogOut}
-        >
-          <Logout />
-          <p>Logout</p>
-        </button>
-      </div>
+          <button
+            style={{ background: bgColor, color: textColor }}
+            className="flex flex-col justify-center items-center"
+            onClick={navigateLogOut}
+          >
+            <Logout />
+            <p>Logout</p>
+          </button>
+        </div>
+      )}
+      
     </div>
   );
 };
