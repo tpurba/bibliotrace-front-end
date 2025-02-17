@@ -22,33 +22,17 @@ export default function FilterBox({ onClose, prevSelectedItems = [] }) {
   };
 
   const fetchGenres = () => {
-    fetch('http://localhost:8080/api/search/genres', {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${Cookies.get('authToken')}`
-      }
-    }).then((response) => {
-      response.json().then((data) => {
-        if (data.results) {
-          setGenreList(data.results)
-        }
-      })
-    })
+    const genresDelimited = Cookies.get('genreList')
+    const genresListSplit = genresDelimited.split(",")
+
+    setGenreList(genresListSplit)
   }
 
   const fetchAudiences = () => {
-    fetch('http://localhost:8080/api/search/audiences', {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${Cookies.get('authToken')}`
-      }
-    }).then((response) => {
-      response.json().then((data) => {
-        if (data.results) {
-          setAudienceList(data.results)
-        }
-      })
-    })
+    const audiencesDelimited = Cookies.get('audienceList')
+    const audiencesListSplit = audiencesDelimited.split(",")
+  
+    setAudienceList(audiencesListSplit)
   }
 
   const categories = [
@@ -59,11 +43,7 @@ export default function FilterBox({ onClose, prevSelectedItems = [] }) {
     {
       title: "Age Groups",
       items: audienceList
-    },
-    {
-      title: "Other",
-      items: ["Fiction", "Non-Fiction", "Poetry", "Graphic Novels", "History", "Popular", "Newest"],
-    },
+    }
   ];
 
   useEffect(() => {

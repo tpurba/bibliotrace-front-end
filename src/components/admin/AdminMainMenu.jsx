@@ -10,29 +10,16 @@ import PeachColorIcon from "../../assets/CheckInIcon.jpg";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../ButtonComponent";
 import React, { useState} from "react"
-import PopUpBar from "../PopUpSideBar";
+import PopUpBar from "../../modals/PopUpSideBar";
+import Cookies from 'js-cookie';
 
-const genres = [
-  { text: "Fantasy" },
-  { text: "Science Fiction" },
-  { text: "Dystopian" },
-  { text: "Historical Fiction" },
-  { text: "Mystery/Thriller" },
-  { text: "Fiction" },
-  { text: "Graphic Novels" },
-  { text: "Non-Fiction" },
-  { text: "Poetry" },
-  {text: "Romance" },
-];
+const genreListString = Cookies.get('genreList')
+const genreList = genreListString.split(',')
+const genres = genreList.map((genre) => {return {text: genre}})
 
-const ages = [
-  { text: "Board Books\n(0-2 Years)" },
-  { text: "Picture Books\n(2-8 Years)" },
-  { text: "Early Chapter Books\n(6-9 Years)" },
-  { text: "Middle Grade\n(8-12 Years)" },
-  { text: "Young Adult\n(12-18 Years)" },
-];
-
+const agesListString = Cookies.get('audienceList')
+const agesList = agesListString.split(",")
+const ages = agesList.map((age) => {return {text: age}})
 
 export default function MainMenu() {
   const navigate = useNavigate(); 

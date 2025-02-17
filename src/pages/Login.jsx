@@ -53,6 +53,49 @@ export default function Login({ loginType }) {
     return jsonPayload;
   }
 
+  async function setUpCookies(authToken) {
+    Cookies.set('authToken', authToken, { expires: 7, secure: true })
+    const jwtDataString = parseJwt(authToken)
+    const jwtData = JSON.parse(jwtDataString)
+    Cookies.set('jwtData', jwtDataString)
+
+    // Get Genre List
+    let response = await fetch('http://localhost:8080/api/search/genres', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    if (!response.ok) {
+      const responseText = await response.text()
+      setMessage(`Error Fetching Metadata: ${responseText}`)
+    } else {
+      const jsonResult = await response.json()
+      if (jsonResult != null && jsonResult.results != null) {
+        const genres = jsonResult.results
+        Cookies.set('genreList', genres)
+      }
+    }
+
+    // Get Audience List
+    response = await fetch('http://localhost:8080/api/search/audiences', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`
+      }
+    })
+    if (!response.ok) {
+      const responseText = await response.text()
+      setMessage(`Error Fetching Metadata: ${responseText}`)
+    } else {
+      const jsonResult = await response.json()
+      if (jsonResult != null && jsonResult.results != null) {
+        const genres = jsonResult.results
+        Cookies.set('audienceList', genres)
+      }
+    }
+
+    return jwtData
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -77,13 +120,7 @@ export default function Login({ loginType }) {
         } else {
           const jsonResult = await response.json()
           if (jsonResult != null && jsonResult.message === 'success') {
-            console.log(jsonResult.token)
-            Cookies.set('authToken', jsonResult.token, { expires: 7, secure: true })
-            const jwtDataString = parseJwt(jsonResult.token)
-            const jwtData = JSON.parse(jwtDataString)
-            Cookies.set('jwtData', jwtData)
-            console.log(jwtData)
-            console.log(jwtData.userRole.roleType)
+            const jwtData = await setUpCookies(jsonResult.token)
 
             if (jwtData.userRole.roleType === 'Admin') {
               navigate("/admin")
