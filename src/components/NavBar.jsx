@@ -16,7 +16,9 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
     navigate(homeNavOnClick);
   };
   const navigateLogOut = () => {
-    Cookies.remove('authToken')
+    Object.keys(Cookies.get()).forEach((item) => {
+      Cookies.remove(item)
+    })
     navigate('/login', { state: { loginType: 'User Login' }})
   };
 

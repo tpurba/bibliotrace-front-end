@@ -1,6 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
-import BarButton from "./BarButtons";
+import BarButton from "../components/BarButtons";
 import { useNavigate } from "react-router-dom";
 const PullOutBarGenre = ({ onClose, buttons, side, titleText, uniformColor, buttonWidth, buttonHeight}) => {
   const navigate = useNavigate(); 
@@ -11,7 +11,7 @@ const PullOutBarGenre = ({ onClose, buttons, side, titleText, uniformColor, butt
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-start backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-start backdrop-blur-sm" onClick={onClose}>
       {/* PullOutBar Container */}
       <div
         className={`fixed top-${side === "left" ? "30 left-0" : "30 right-0"} h-auto w-auto bg-white 

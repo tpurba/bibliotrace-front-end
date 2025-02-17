@@ -8,32 +8,15 @@ import NewArrivalsIcon from "../assets/NewArrivalsIcon.jpg";
 import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
-import PopUpBar from "../components/PopUpSideBar";
+import PopUpBar from "../modals/PopUpSideBar";
 
+const genreListString = Cookies.get('genreList')
+const genreList = genreListString.split(',')
+const genres = genreList.map((genre) => {return {text: genre}})
 
-//TODO will be pulled from backend 
-const genres = [
-  { text: "Fantasy"},
-  { text: "Science Fiction" },
-  { text: "Dystopian" },
-  { text: "Historical Fiction" },
-  { text: "Mystery/Thriller" },
-  { text: "Fiction" },
-  { text: "Graphic Novels" },
-  { text: "Non-Fiction" },
-  { text: "Poetry"},
-  {text: "Romance"},
-];
-
-const ages = [
-  { text: "Board Books\n(0-2 Years)" },
-  { text: "Picture Books\n(2-8 Years)" },
-  { text: "Early Chapter Books\n(6-9 Years)" },
-  { text: "Middle Grade\n(8-12 Years)" },
-  { text: "Young Adult\n(12-18 Years)" },
-];
-
-
+const agesListString = Cookies.get('audienceList')
+const agesList = agesListString.split(",")
+const ages = agesList.map((age) => {return {text: age}})
 
 const Home = () => {
   const [searchInput, setSearchInput] = useState('')

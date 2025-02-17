@@ -1,2 +1,0 @@
-// This modal will be the popup that allows users to search for books by Genre. This will always be on the left side of the page, and it's
-// the blue one. The buttons in the modal will navigate users to the Search page and pass through the location state the genre to search.
