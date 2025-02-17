@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 export default function ErrorModal ({ description, message, onExit }) {
   return (
