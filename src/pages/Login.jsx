@@ -48,7 +48,12 @@ export default function Login({ loginType }) {
       })
 
       if (!response.ok) {
-        setMessage(`Error: ${await response.text()}`)
+        const responseText = await response.text()
+        if (responseText.indexOf('Invalid Login Credentials') != -1) {
+          setMessage(`Invalid Login Credentials Provided. Please Modify Your Username and/or Password.`)
+        } else {
+          setMessage(`Error: ${responseText}`)
+        }
       } else {
         const jsonResult = await response.json()
         if (jsonResult != null && jsonResult.message === 'success') {
