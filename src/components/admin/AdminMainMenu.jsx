@@ -14,12 +14,19 @@ import PopUpBar from "../../modals/PopUpSideBar";
 import Cookies from 'js-cookie';
 
 const genreListString = Cookies.get('genreList')
-const genreList = genreListString.split(',')
-const genres = genreList.map((genre) => {return {text: genre}})
+let genres = []
+if (genreListString) {
+  const genreList = genreListString.split(',')
+  genres = genreList.map((genre) => {return {text: genre}})
+}
+
 
 const agesListString = Cookies.get('audienceList')
-const agesList = agesListString.split(",")
-const ages = agesList.map((age) => {return {text: age}})
+let ages= []
+if (agesListString) {
+  const agesList = agesListString.split(",")
+  ages = agesList.map((age) => {return {text: age}})
+}
 
 export default function MainMenu() {
   const navigate = useNavigate(); 
