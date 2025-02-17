@@ -11,12 +11,19 @@ import CustomButton from "../components/ButtonComponent";
 import PopUpBar from "../modals/PopUpSideBar";
 
 const genreListString = Cookies.get('genreList')
-const genreList = genreListString.split(',')
-const genres = genreList.map((genre) => {return {text: genre}})
+let genres = []
+if (genreListString) {
+  const genreList = genreListString.split(',')
+  genres = genreList.map((genre) => {return {text: genre}})
+}
+
 
 const agesListString = Cookies.get('audienceList')
-const agesList = agesListString.split(",")
-const ages = agesList.map((age) => {return {text: age}})
+let ages= []
+if (agesListString) {
+  const agesList = agesListString.split(",")
+  ages = agesList.map((age) => {return {text: age}})
+}
 
 const Home = () => {
   const [searchInput, setSearchInput] = useState('')
