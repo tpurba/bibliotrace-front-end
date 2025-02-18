@@ -9,6 +9,7 @@ export default {
       orange: "#fa8804",
       skyBlue: "#669bff",
       black: "#000000",
+      purple: "#4a00e2",
     },
     extend: {},
   },
