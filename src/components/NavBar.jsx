@@ -25,7 +25,7 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
   let title;
   if (showTitle) {
     title = (
-      <h1 className="h-16 absolute top-0 right-0 left-0 flex text-center text-xl items-center justify-center p-2 pointer-events-none">
+      <h1 className="hidden h-16 absolute top-0 right-0 left-0 md:flex text-center md:text-3xl items-center justify-center p-2 pointer-events-none">
         BiblioTrace 3.0
       </h1>
     );
@@ -36,7 +36,7 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
   const Logout = useDarkTheme ? LogoutLogoDark :  LogoutLogo;
 
   return (
-    <div className="flex flex-row w-full top-0 z-50 h-16 items-center justify-between" style={{ color: textColor }}>
+    <div className="flex flex-col sm:flex-row w-full  items-center justify-between" style={{ color: textColor }}>
       <div className="flex items-center">
         <Logo className="h-16 w-48" />
         <span>{title}</span>
