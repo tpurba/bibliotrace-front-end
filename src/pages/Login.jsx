@@ -140,7 +140,7 @@ export default function Login({ loginType }) {
   return (
     <>
       <div
-        className="h-screen w-screen bg-cover bg-center bg-no-repeat "
+        className="size-full bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: `url(${loginBackground})` }}
       >
         <NavBar
@@ -150,14 +150,14 @@ export default function Login({ loginType }) {
           textColor={"white"}
           showNavButtons={false}
         />
-
         <div className="h-[calc(100%-64px)] flex flex-col items-center">
           <h1 className="text-white mb-10 mt-20">{location.state?.loginType ?? ''}</h1>
           <form className="flex flex-col w-1/2 items-center" onSubmit={handleSubmit}>
             <div className="mb-5 ">
               <label className="text-white">Username: </label>
               <input
-                className="border border-black border-solid rounded-md h-10 w-full p-4"
+                className="border-2 border-[#ff78e6] border-solid rounded-md h-14 w-full p-4 placeholder-[#ff78e6] placeholder:font-bold text-lg"
+                placeholder="Username"
                 type="text"
                 onChange={(e) => setUsername(e.target.value)}
               ></input>
@@ -165,12 +165,13 @@ export default function Login({ loginType }) {
             <div className="mb-5 ">
               <label className="text-white">Password: </label>
               <input
-                className="border border-black border-solid rounded-md h-10 w-full p-4"
+                className="border-2 border-[#ff78e6] border-solid rounded-md h-14 w-full p-4 placeholder-[#ff78e6] placeholder:font-bold text-lg"
+                placeholder="Password"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
             </div>
-            <button type="submit">Login</button>
+            <button className = "border-2 border-[#ff78e6]" type="submit">Login</button>
           </form>
           <div id='error-modal'>
             {message ?
