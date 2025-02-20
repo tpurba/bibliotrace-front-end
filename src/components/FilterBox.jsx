@@ -2,23 +2,28 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 
-export default function FilterBox({ onClose, prevSelectedItems = [] }) {
+export default function FilterBox({ onClose, prevSelectedItems = { Audiences: [], Genres: [] } }) {
   const navigate = useNavigate();
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState({ Audiences: [], Genres: [] });
   const [audienceList, setAudienceList] = useState([]);
   const [genreList, setGenreList] = useState([])
 
   const handleSubmit = () => {
-    console.log("Selected items:", selectedItems);
     onClose(selectedItems); // Pass selected filters back to parent
   };
 
-  const handleToggleSelection = (text) => {
-    setSelectedItems((prevSelectedItems) =>
-      prevSelectedItems.includes(text)
-        ? prevSelectedItems.filter((item) => item !== text)
-        : [...prevSelectedItems, text]
-    );
+  const handleToggleSelection = (category, text) => {
+    setSelectedItems((prevSelectedItems) => {
+      const updatedCategory = prevSelectedItems[category] || [];
+  
+      return {
+        ...prevSelectedItems,
+        [category]: updatedCategory.includes(text)
+          ? updatedCategory.filter(item => item !== text)
+          : [...updatedCategory, text]
+      };
+    });
+    
   };
 
   const fetchGenres = () => {
@@ -31,7 +36,7 @@ export default function FilterBox({ onClose, prevSelectedItems = [] }) {
   const fetchAudiences = () => {
     const audiencesDelimited = Cookies.get('audienceList')
     const audiencesListSplit = audiencesDelimited.split(",")
-  
+
     setAudienceList(audiencesListSplit)
   }
 
@@ -41,7 +46,7 @@ export default function FilterBox({ onClose, prevSelectedItems = [] }) {
       items: genreList,
     },
     {
-      title: "Age Groups",
+      title: "Audiences",
       items: audienceList
     }
   ];
@@ -63,8 +68,8 @@ export default function FilterBox({ onClose, prevSelectedItems = [] }) {
                 <input
                   type="checkbox"
                   className="h-6 w-6 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  checked={selectedItems.includes(text)}
-                  onChange={() => handleToggleSelection(text)}
+                  checked={selectedItems[category.title]?.includes(text)}
+                  onChange={() => handleToggleSelection(category.title, text)}
                 />
                 <span className="text-darkBlue text-xl">{text}</span>
               </label>

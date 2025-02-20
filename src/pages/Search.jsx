@@ -18,7 +18,7 @@ const Search = () => {
   const [isLoading, setLoading] = useState(false)
   const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? '') // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
   // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||" 
-  const [filterInput, setFilterInput] = useState(location.state?.initFilterInput ?? '')
+  const [filterInput, setFilterInput] = useState(location.state?.initFilterInput ?? { Audiences: [], Genres: [] })
   const [inputQuery, setInputQuery] = useState('')
   const [searchResults, setSearchResults] = useState([{
     key: 'helloSearch',
@@ -31,15 +31,37 @@ const Search = () => {
   }])
 
   const conductSearch = () => {
-    if (searchInput == '' || searchInput == null) {
+    if ((searchInput == '' || searchInput == null) && (filterInput == '' || filterInput == null)) {
       return
     }
-
     setLoading(true)
+
+    // Generate Filter String
+    let filterString = ""
+    if (filterInput.Audiences.length > 0) {
+      filterString += '||Audience:'
+      for (let i = 0; i < filterInput.Audiences.length; i++) {
+        filterString += filterInput.Audiences[i]
+        if (i < filterInput.Audiences.length - 1) {
+          filterString += ','
+        }
+      }
+      filterString += "||"
+    }
+    if (filterInput.Genres.length > 0) {
+      filterString += '||Genre:'
+      for (let i = 0; i < filterInput.Genres.length; i++) {
+        filterString += filterInput.Genres[i]
+        if (i < filterInput.Genres.length - 1) {
+          filterString += ','
+        }
+      }
+      filterString += "||"
+    }
 
     try {
       const jwt = Cookies.get('authToken')
-      fetch(`http://localhost:8080/api/search/query/${searchInput}`, {
+      fetch(`http://localhost:8080/api/search/query/${filterString}${searchInput}`, {
         headers: {
           "Authorization": `Bearer ${jwt}`
         }
@@ -123,6 +145,12 @@ const Search = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (searchInput != '' || filterInput.Audiences.length > 0 || filterInput.Genres.length > 0) {
+      conductSearch()
+    }
+  }, [filterInput])
+
   const incrementPage = () => {
     if ((pageOffset + rowCount) < searchResults.length - 1) {
       setPageOffset(pageOffset + rowCount)
@@ -200,7 +228,7 @@ const Search = () => {
             const bookData = searchResults[index + pageOffset]
             return bookData ? (
               <SearchResult
-                key={bookData.selfLink}
+                key={bookData.id}
                 isbn={bookData.isbn}
                 title={bookData.title}
                 author={bookData.author}
