@@ -6,8 +6,15 @@ const PullOutBarGenre = ({ onClose, buttons, side, titleText, uniformColor, butt
   const navigate = useNavigate(); 
 
   const handleSearch = (filterInput) => {
-    console.log("Whats in the filter: " . filterInput);
-    navigate("/search", { state: { initFilterInput: filterInput }});
+    console.log("Whats in the filter: ", filterInput);
+    console.log("What is the titleText:", titleText)
+    const filterBody = { Audiences: [], Genres: [] }
+    if (titleText === 'Explore By Genre') {
+      filterBody.Genres.push(filterInput)
+    } else {
+      filterBody.Audiences.push(filterInput)
+    }
+    navigate("/search", { state: { initFilterInput: filterBody }});
   };
 
   return (
