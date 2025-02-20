@@ -8,6 +8,7 @@ export default function Sidebar() {
   };
 
   const handleManageInventory = () => {
+    console.log('manage pressed');
     navigate("/manage");
   };
 

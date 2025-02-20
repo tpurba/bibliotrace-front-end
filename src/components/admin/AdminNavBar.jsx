@@ -18,19 +18,23 @@ const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor}) => {
   };
 
   return (
-<div className="relative w-full bg-[#FFFFFFF] h-32 px-4 ">
-      {/* Navigation Icon and Title */}
-      <div className="flex items-center space-x-4">
-        <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" />
-      </div>
+  <div className="relative w-full bg-[#FFFFFFF] h-32 px-4 ">
+    {/* Navigation Icon and Title */}
+    <div className="flex items-center space-x-4">
+      <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" />
+    </div>
 
-      {/* Search Bar */}
-      <div className="mt-6 flex w-1/2 justify-start">
-        <h1 className="text-5xl lg:text-4xl md:text-3xl sm:text-2xl text-white lg:ml-80 md:ml-20 sm:ml-10">Bibliotrace 3.0</h1>
-      </div>
-      <div className="mt-6 flex w-1/2 justify-start">
+    {/* Search Bar */}
+    <div className="mt-6 flex flex-col w-1/2 justify-start">
+      {/* Header */}
+      <h1 className="text-5xl xl:text-4xl lg:text-3xl sm:text-2xl text-white xl:ml-80 lg:ml-60 sm:ml-10">
+        Bibliotrace 3.0
+      </h1>
+
+      {/* Search Bar & Button */}
+      <div className="flex items-center m-2 ml-32 w-10/12 max-w-4xl">
         <input
-          className="m-2 ml-32 px-3 w-10/12 max-w-4xl border-2 border-[#a49bc6] rounded-2xl placeholder-[#a49bc6] placeholder:font-bold"
+          className="px-4 py-3 flex-grow border-2 border-[#ff78e6] rounded-2xl placeholder-[#ff78e6] placeholder:font-bold text-lg"
           type="text"
           placeholder="Search"
           value={searchInput}
@@ -38,13 +42,15 @@ const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor}) => {
           onKeyDown={handleKeyDown}
         />
         <button
-          className="m-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]"
+          className="ml-2 px-4 py-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]"
           onClick={handleSearch}
         >
           Go!
         </button>
       </div>
     </div>
+
+  </div>
   );
 };
 
