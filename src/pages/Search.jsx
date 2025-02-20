@@ -230,6 +230,7 @@ const Search = () => {
               <SearchResult
                 key={bookData.id}
                 isbn={bookData.isbn}
+                coverImageId={bookData.coverImageId}
                 title={bookData.title}
                 author={bookData.author}
                 genre={bookData.genre}
