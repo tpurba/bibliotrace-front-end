@@ -8,7 +8,7 @@ import AdminSideBar from "../components/admin/AdminSideBar.jsx";
 
 export default function AdminHome({}) {
   return (
-    <div className={`h-screen w-screen pb-5 flex flex-col items-center`}>
+    <div className={`size-full pb-5 flex flex-col items-center`}>
       <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
@@ -19,10 +19,10 @@ export default function AdminHome({}) {
         <path
           className="fill-darkBlue "
           d="
-            M0,30
-            C12.5,25 25,40 37.5,40
-            S62.5,25 75,30
-            S87.5,40 100,40
+            M0,40
+            C12.5,38 25,40 37.5,42
+            C50,44 62.5,42 75,40
+            C87.5,38 93,39 100,40
             L100,0
             L0,0
             Z"
