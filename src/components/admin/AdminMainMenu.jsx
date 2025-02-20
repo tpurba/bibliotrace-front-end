@@ -71,7 +71,7 @@ export default function MainMenu() {
 
   
   return (
-    <div className="absolute left-0 top-auto ">
+    <div className="absolute left-0 top-auto pointer-events-none">
       <CustomButton
           imageSrc={PurpleIcon}
           text="CHECK OUT"
