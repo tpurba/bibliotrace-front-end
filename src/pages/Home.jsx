@@ -51,11 +51,11 @@ const Home = () => {
   };
 
   const handlePopular = (filterInput) => {
-    navigate("/search", { state: { initFilterInput: "Popular" }});
+    navigate("/search", { state: { initFilterInput: { Audiences: [], Genres: [], Special: ["Popular"] } }});
   };
 
   const handleNewest = (filterInput) => {
-    navigate("/search", { state: { initFilterInput: "Newest" }});
+    navigate("/search", { state: { initFilterInput: { Audiences: [], Genres: [], Special: ["Newest"] }  }});
   };
 
   //event 

@@ -19,7 +19,7 @@ const Search = () => {
   const [searchInput, setSearchInput] = useState(location.state?.initSearchInput ?? ""); // Arch idea: use the initSearchInput as a text-based passthrough for searches by Genre, Age group, date range, etc...
   // Maybe the string can be like "||GENRE:fantasy||" or "||AGE:board||" or "||DATE_START:01/02/0003 DATE_END:04/05/0006||" or "||IDENTIFIER:searchstring||"
   const [filterInput, setFilterInput] = useState(
-    location.state?.initFilterInput ?? { Audiences: [], Genres: [] }
+    location.state?.initFilterInput ?? { Audiences: [], Genres: [], Special: [] }
   );
   const [inputQuery, setInputQuery] = useState("");
   const [searchResults, setSearchResults] = useState([
@@ -60,6 +60,16 @@ const Search = () => {
       for (let i = 0; i < filterInput.Genres.length; i++) {
         filterString += filterInput.Genres[i];
         if (i < filterInput.Genres.length - 1) {
+          filterString += ",";
+        }
+      }
+      filterString += "||";
+    }
+    if (filterInput.Special.length > 0) {
+      filterString += "||Special:";
+      for (let i = 0; i < filterInput.Special.length; i++) {
+        filterString += filterInput.Special[i];
+        if (i < filterInput.Special.length - 1) {
           filterString += ",";
         }
       }
@@ -155,7 +165,8 @@ const Search = () => {
     if (
       searchInput != "" ||
       filterInput.Audiences.length > 0 ||
-      filterInput.Genres.length > 0
+      filterInput.Genres.length > 0 || 
+      filterInput.Special.length > 0
     ) {
       conductSearch();
     }
