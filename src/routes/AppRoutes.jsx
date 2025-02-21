@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
 import AddBooks from "../pages/AddBooks";
+import Cookies from 'js-cookie';
 
 import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
@@ -14,29 +15,32 @@ import RemoveBook from "../pages/RemoveBook.jsx";
 import AdminSettings from "../pages/AdminSettings.jsx";
 import Checkout from "../pages/BookCheckOut.jsx";
 import Checkin from "../pages/BookCheckinPage.jsx";
+
 const AppRoutes = () => {
-  const [token, setToken] = useState();
-  const saveToken = (userToken) => {
-    localStorage.setItem("token", JSON.stringify(userToken));
-    setToken(userToken);
-  };
 
   const getToken = () => {
-    const tokenString = localStorage.getItem("token");
+    const tokenString = Cookies.get("jwtData");
     const userToken = JSON.parse(tokenString);
     return userToken;
   };
 
   const PrivateRoute = () => {
-    return token || getToken() ? <Outlet /> : <Navigate to="/login" />;
+    const token = getToken()
+    if (token == null || token.userRole == null) {
+      return <Navigate to="/login" />
+    } else if (String(token.userRole.roleType) === 'Admin') {
+      return <Outlet />
+    } else {
+      return <Navigate to="/" />
+    }
   };
 
   return (
     <Router basename={"/bibliotrace-front-end"}>
       <Routes>
-        <Route path="/" element={<Home />} />
         {/*public pages*/}
-        <Route path="/login" element={<Login setToken={saveToken} />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/suggest" element={<SuggestPage />} />
         <Route path="/search" element={<SearchPage />} />
         {/*private pages*/}
