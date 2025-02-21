@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import tailwindConfig from "../../tailwind.config";
+import Cookies from "js-cookie";
 
 function SuggestPage() {
   const submittedDialog = useRef(null);
@@ -15,11 +16,12 @@ function SuggestPage() {
       for (const pair of data.entries()) {
         //delete later
         console.log("suggestion: ", pair[1]);
-        const campus = "lehi";
+        const campus = "Lehi";
 
+        const jwt = Cookies.get("authToken");
         const res = await fetch("http://localhost:8080/api/suggest", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${jwt}` },
           body: JSON.stringify({ campus: campus, suggestion: pair[1] }),
         });
 
@@ -43,7 +45,10 @@ function SuggestPage() {
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
-          <path className="fill-darkBlue" d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"></path>
+          <path
+            className="fill-darkBlue"
+            d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"
+          ></path>
         </svg>
 
         <NavBar
@@ -81,16 +86,21 @@ function SuggestPage() {
           <div className="basis-1/2 mb-10 md:mb-0 md:mr-20">
             <h1 className="mb-10 text-white">Have a book suggestion?</h1>
             <p className="text-white">
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-              fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum."
+              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+              non proident, sunt in culpa qui officia deserunt mollit anim id est
+              laborum."
             </p>
           </div>
           <div className="basis-1/2 flex flex-col items-center mb-10 md:mb-0">
             <h1 className="mb-10 text-white">Tell us about it!</h1>
-            <form className="flex flex-col items-center w-full flex-grow" onSubmit={(e) => submitSuggestion(e)}>
+            <form
+              className="flex flex-col items-center w-full flex-grow"
+              onSubmit={(e) => submitSuggestion(e)}
+            >
               <textarea
                 name="suggestion"
                 style={{ color: "black" }}
