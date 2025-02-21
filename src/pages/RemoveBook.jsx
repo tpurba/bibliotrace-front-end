@@ -41,10 +41,37 @@ export default function RemoveBook() {
 
   return (
     <>
-      <NavBar useDarkTheme={true} showTitle={true} bgColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
+      <svg
+          className="-z-10 absolute left-0 top-0"
+          width="100vw"
+          height="100%"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+        >
+          <path
+            className="fill-rubyRed"
+            d="
+              M-0.5,12
+              C7,10 12,14 17,16
+              C22,18 27,14 32,12
+              C37,10 42,14 47,16
+              C52,18 57,14 62,12
+              C67,10 72,14 77,16
+              C82,18 87,14 92,12
+              C97,10 102,14 107,16
+              C110,17.5 114,16 117,14
+              C120,12 124,10 127,11
+              L132,11
+              L132,0
+              L0,0
+              Z"
+            transform="rotate(0, 50, 50) scale(1, 2)"
+          />
+        </svg>
+      <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.rubyRed} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
-      <h1 className="text-center my-10">Remove Books</h1>
-      <div className="flex flex-row ">
+      <h1 className="text-center my-10 text-white font-rector ">Remove Books</h1>
+      <div className="flex flex-row my-52">
         <section className="p-20 flex-1 flex flex-col justify-around">
           <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook}>
             Scan Barcode
@@ -61,8 +88,8 @@ export default function RemoveBook() {
         </section>
 
         <section className="p-20 flex-1">
-          <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-lightBlue  text-center text-darkBlue text-lg p-2">Book Removed: </h4>
+          <div className="border-2 border-rubyRed rounded-md min-h-48 h-full">
+            <h4 className="bg-rubyRed  text-center text-white text-lg p-2">Book Removed: </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
