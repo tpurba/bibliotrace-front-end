@@ -20,8 +20,11 @@ const AppRoutes = () => {
 
   const getToken = () => {
     const tokenString = Cookies.get("jwtData");
-    const userToken = JSON.parse(tokenString);
-    return userToken;
+    if (tokenString == null) {
+      return null
+    } else {
+      return JSON.parse(tokenString);;
+    }
   };
 
   const PrivateRoute = () => {
