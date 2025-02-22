@@ -2,6 +2,19 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 
 export default function ErrorModal ({ description, message, onExit }) {
+  useEffect(() => {
+    const handleKeypress = (event) => {
+      event.stopPropagation()
+      onExit()
+    }
+
+    window.addEventListener('keypress', handleKeypress)
+    return () => {
+      window.removeEventListener('keypress', handleKeypress)
+    }
+  })
+
+
   return (
     <AnimatePresence>
       {
