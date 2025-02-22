@@ -70,10 +70,10 @@ export default function AddScannedBooks() {
       </svg>
       <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.lightBlue} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
-      <h1 className="text-center my-10 text-darkBlue font-rector">Add Scanned Books</h1>
-      <div className="flex flex-row my-52">
-        <section className="p-20 flex-1 flex flex-col justify-around">
-          <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook}>
+      <h1 className="text-center h-2xl:my-20 h-xl:my-0 lg:mb-4 2xl:text-[10rem] text-darkBlue font-rector">Add Books</h1>
+      <div className="flex flex-row h-3xl:my-96 2xl:my-64">
+        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 2xl:text-5xl">
+          <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook} >
             Scan Barcode
           </button>
           <p>1. Click the 'Scan Barcode' button</p>
@@ -87,15 +87,15 @@ export default function AddScannedBooks() {
           </p>
         </section>
 
-        <section className="p-20 flex-1">
+        <section className="2xl:p-20 p-10 flex-1">
           <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-lightBlue  text-center text-darkBlue text-lg p-2">Book Added: </h4>
+            <h4 className="bg-lightBlue  text-center text-darkBlue text-6xl p-2">Book Added: </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
                   <img className="h-72 w-auto" src={thumbnail}></img>
                 </section>
-                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-[4rem]">
                   <p className="">Title: {title}</p>
                   <p className="">Author: {author}</p>
                   <p className="">Series: {series}</p>

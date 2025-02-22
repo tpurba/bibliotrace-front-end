@@ -17,6 +17,14 @@ export default {
         rector: ['Rector Sans', 'sans-serif'],
         abc: ['ABC Social', 'cursive'],
       },
+      screens: {
+        'h-sm': { 'raw': '(min-height: 640px)' },
+        'h-md': { 'raw': '(min-height: 768px)' },
+        'h-lg': { 'raw': '(min-height: 1024px)' },
+        'h-xl': { 'raw': '(min-height: 1280px)' },
+        'h-2xl': { 'raw': '(min-height: 1536px)' },
+        'h-3xl': { 'raw': '(min-height: 1792px)' },
+      }
     },
   },
   plugins: [],
