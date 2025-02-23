@@ -71,7 +71,7 @@ export default function AddScannedBooks() {
       <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.lightBlue} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
       <h1 className="text-center 5xl:my-16 3xl:my-14 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-darkBlue font-rector">Add Books</h1>
-      <div className="flex flex-row 5xl:mt-52 3xl:mt-36 2xl:mt-28 xl:mt-20 lg:mt-36">
+      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
 
         <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
           <button className="self-center w-full mb-10 border-2 border1-darkBlue" onClick={scanBook} >
