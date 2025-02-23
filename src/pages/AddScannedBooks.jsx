@@ -70,10 +70,11 @@ export default function AddScannedBooks() {
       </svg>
       <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.lightBlue} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
-      <h1 className="text-center h-2xl:my-20 h-xl:my-0 lg:mb-4 2xl:text-[10rem] text-darkBlue font-rector">Add Books</h1>
-      <div className="flex flex-row h-3xl:my-96 2xl:my-64">
-        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 2xl:text-5xl">
-          <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook} >
+      <h1 className="text-center 5xl:my-16 3xl:my-14 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-darkBlue font-rector">Add Books</h1>
+      <div className="flex flex-row 5xl:mt-52 3xl:mt-36 2xl:mt-28 xl:mt-20 lg:mt-36">
+
+        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
+          <button className="self-center w-full mb-10 border-2 border1-darkBlue" onClick={scanBook} >
             Scan Barcode
           </button>
           <p>1. Click the 'Scan Barcode' button</p>
@@ -87,15 +88,15 @@ export default function AddScannedBooks() {
           </p>
         </section>
 
-        <section className="2xl:p-20 p-10 flex-1">
+        <section className="2xl:p-20 xl:p-5 flex-1">
           <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-lightBlue  text-center text-darkBlue text-6xl p-2">Book Added: </h4>
+            <h4 className="bg-lightBlue  text-center text-darkBlue 3xl:text-3xl xl:text-lg p-2">Book Added: </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                  <img className="h-72 w-auto" src={thumbnail}></img>
+                  <img className="5xl:h-[30rem] 3xl:h-60 2xl:h-54 xl:h-44 w-auto" src={thumbnail}></img>
                 </section>
-                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-[4rem]">
+                <div className="p-5 5xl:py-20 basis-1/2 flex-grow flex flex-col justify-evenly 5xl:text-[3rem] 3xl:text-[2rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
                   <p className="">Title: {title}</p>
                   <p className="">Author: {author}</p>
                   <p className="">Series: {series}</p>

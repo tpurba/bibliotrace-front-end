@@ -24,6 +24,10 @@ export default {
         'h-xl': { 'raw': '(min-height: 1280px)' },
         'h-2xl': { 'raw': '(min-height: 1536px)' },
         'h-3xl': { 'raw': '(min-height: 1792px)' },
+        '3xl': { 'raw': '(min-width: 1792px)' },
+        '4xl': { 'raw': '(min-width: 2048px)' },
+        '5xl': { 'raw': '(min-width: 2304px)' },
+        '6xl': { 'raw': '(min-width: 2816px)' },
       }
     },
   },
