@@ -18,7 +18,7 @@ import AdminHome from "../pages/AdminHome";
 import AddScannedBooks from "../pages/AddScannedBooks";
 import RemoveBook from "../pages/RemoveBook.jsx";
 import Checkout from "../pages/BookCheckOut.jsx";
-import Checkin from "../pages/BookCheckinPage.jsx";
+import CheckIn from "../pages/BookCheckIn.jsx";
 
 const AppRoutes = () => {
   const getToken = () => {
@@ -79,7 +79,7 @@ const AppRoutes = () => {
             <Route path="/add-scanned" element={<AddScannedBooks />} />
             <Route path="/remove-book" element={<RemoveBook />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/checkin" element={<Checkin />} />
+            <Route path="/checkin" element={<CheckIn />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}

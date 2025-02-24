@@ -1,58 +1,122 @@
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import defaultBook from "../assets/generic-book.png?react";
+
 
 export default function Checkout() {
-  const [thumbnail, setThumbnail] = useState("");
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
+  const [thumbnail, setThumbnail] = useState(defaultBook);
+  const [title, setTitle] = useState("Scan a book to see its details checked out");
+  const [author, setAuthor] = useState(" ");
   const [series, setSeries] = useState("");
+  const [location, setLocation] = useState('');
+  const inputRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const focusInput = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    focusInput(); // Initial focus on mount
+
+    // Listen for clicks and keypresses to refocus the input
+    document.addEventListener("click", focusInput);
+    document.addEventListener("keydown", focusInput);
+
+    // Cleanup event listeners on unmount
+    return () => {
+      document.removeEventListener("click", focusInput);
+      document.removeEventListener("keydown", focusInput);
+    };  }, []);
 
   async function scanBook(e) {
     if (e.key !== "Enter") {
       return;
     }
 
+    const qr_code = e.target.value;
+    if (qr_code == null || qr_code == '') {
+      return
+    }
+
     setTitle(null);
     setAuthor(null);
-    setThumbnail("");
+    setThumbnail(defaultBook);
     setSeries("");
+    setLocation("");
 
-    const qr_code = e.target.value;
-    //TODO: delete later
-    const campus = "Lehi";
+    const jwtDataString = Cookies.get("jwtData");
+    if (jwtDataString == null) {
+      navigate("/login");
+    }
+    const jwtDataObject = JSON.parse(jwtDataString);
+    const campus = jwtDataObject.userRole.campus;
 
     console.log("scanning: ", qr_code);
-    const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        qr_code: qr_code,
-        campus: campus,
-      }),
-    });
-
+    const jwt = Cookies.get("authToken");
+    try {
+      const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          qr_code,
+          campus,
+        }),
+      });
+    } catch (error) {
+      setTitle(`Error Occurred: ${error.message}`)
+      setAuthor('See the logs')
+    }
+    
     e.target.value = "";
     if (response.status == 200) {
       const book = await response.json();
       console.log(book);
       setTitle(book.title);
-      ß;
       setAuthor(book.author);
-      //TODO: add a call for the images from the isbndb
-      setThumbnail(
-        "https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg"
-      );
+
+      const isbn = "9780747532699";
+      await getCoverThumbnail(isbn);
     } else {
+      setTitle(`Error occurred: ${await response.text()}`)
       console.log(response);
     }
   }
 
+  async function getCoverThumbnail(isbn) {
+    const jwt = Cookies.get("authToken");
+    const response = await fetch(`http://localhost:8080/api/search/cover/${isbn}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      if (blob.size >= 100) {
+        const objectURL = URL.createObjectURL(blob);
+        setThumbnail(objectURL);
+      }
+    } else {
+      if (response.status === 401) {
+        navigate("/login");
+      }
+      setThumbnail(defaultBook);
+    }
+  }
+
   return (
-    <>
-    <svg
+    <div className="h-lvh">
+      <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
         height="100%"
@@ -80,53 +144,56 @@ export default function Checkout() {
         />
       </svg>
       <NavBar
-        useDarkTheme={true}
+        useDarkTheme={false}
         showTitle={true}
         bgColor={tailwindConfig.theme.colors.navyBlue}
         textColor={tailwindConfig.theme.colors.white}
         homeNavOnClick="/admin"
       />
 
-      <h1 className="text-center my-10 text-white font-rector">Book Check Out</h1>
-      <div className="flex flex-row ">
-        <section className="p-20 flex-1 flex flex-col">
-          <input
-            className="self-center w-full mb-10 border-2 border-purple text-purple p-1"
-            type="text"
-            onKeyDown={(e) => scanBook(e)}
-            placeholder="Click here to start scanning"
-          />
+      <div className="flex flex-col justify-between h-5/6">
+        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">Book Check Out</h1>
+        <div className="flex flex-row pb-20">
+          <section className="p-20 flex-1 flex flex-col">
+            <input
+              className="self-center w-full mb-10 border-2 border-purple text-purple p-4 rounded-lg text-2xl"
+              type="text"
+              onKeyDown={(e) => scanBook(e)}
+              placeholder="Start Scanning"
+              ref={inputRef}
+            />
 
-          <p>1. Click the 'Scan Barcode' button</p>
-          <p>
-            2. Scan the barcode on the book (book information will show up if scan is
-            successful)
-          </p>
-          <p>3. All done! The book is yours to keep</p>
-        </section>
+            <p>1. Use the scanner to scan a book's QR code on the back.</p>
+            <p>
+              2. Look for the book's information to pop up on the right.
+            </p>
+            <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+          </section>
 
-        <section className="p-20 flex-1">
-          <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-purple  text-center text-white text-lg p-2">
-              Checked Out:{" "}
-            </h4>
-            {title != null && author != null ? (
-              <div className="flex flex-row ">
-                <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                  <img className="h-72 w-auto" src={thumbnail}></img>
-                </section>
-                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
-                  <p className="">Title: {title}</p>
-                  <p className="">Author: {author}</p>
-                  <p className="">Series: {series}</p>
+          <section className="p-20 flex-1">
+            <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
+              <h4 className="bg-purple  text-center text-white text-2xl p-2">
+                Checked Out:{" "}
+              </h4>
+              {title != null && author != null ? (
+                <div className="flex flex-row ">
+                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                    <img className="h-72 w-auto" src={thumbnail}></img>
+                  </section>
+                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                    <p className="">Title: {title}</p>
+                    <p className="">Author: {author}</p>
+                    <p className="">Series: {series}</p>
+                    <p className="">Location: {location}</p>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-        </section>
+              ) : (
+                <></>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

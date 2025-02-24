@@ -58,7 +58,7 @@ const NavBar = ({
 
   return (
     <div
-      className="flex flex-col sm:flex-row w-full  items-center justify-between"
+      className="flex flex-col sm:flex-row w-full items-center justify-between px-4"
       style={{ color: textColor }}
     >
       <div className="flex items-center">

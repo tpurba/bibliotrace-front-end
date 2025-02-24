@@ -27,7 +27,7 @@ const AdminNavBar = ({ onMenuChange, setActiveButton, useDarkTheme, showTitle, b
   
 
   return (
-  <div className="relative w-full bg-[#FFFFFFF] h-32 px-4 ">
+  <div className="relative w-full bg-[#FFFFFFF] h-32">
     {/* Navigation Icon and Title */}
     <div className="flex items-center space-x-4">
       <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" onHomeClick={handleHomeClick} />
