@@ -8,26 +8,44 @@ export default function Checkout() {
   const [author, setAuthor] = useState(null);
   const [series, setSeries] = useState("");
 
-  async function scanBook() {
+  async function scanBook(e) {
+    if (e.key !== "Enter") {
+      return;
+    }
+
     setTitle(null);
     setAuthor(null);
     setThumbnail("");
     setSeries("");
-    console.log("scanning");
 
-    await new Promise((res) => setTimeout(res, 3000));
+    const qr_code = e.target.value;
+    //TODO: delete later
+    const campus = "lehi";
 
-    setTitle("Harry Potter");
-    setAuthor("JK Rowling");
-    setThumbnail("https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg");
-    // const isbn = fromScanner();
+    console.log("scanning: ", qr_code);
+    const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        qr_code: qr_code,
+        campus: campus,
+      }),
+    });
 
-    // const book = await fetch(`/api/${isbn}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // }).then(res => res.json())
+    e.target.value = "";
+    if (response.status == 200) {
+      const book = await response.json();
+      console.log(book);
+      setTitle(book.title);
+      ß;
+      setAuthor(book.author);
+      //TODO: add a call for the images from the isbndb
+      setThumbnail("https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg");
+    } else {
+      console.log(response);
+    }
   }
 
   return (
@@ -42,9 +60,13 @@ export default function Checkout() {
       <h1 className="text-center my-10">Book Check Out</h1>
       <div className="flex flex-row ">
         <section className="p-20 flex-1 flex flex-col">
-          <button className="self-center w-full mb-10 border-2 border-purple text-purple" onClick={scanBook}>
-            Scan Barcode
-          </button>
+          <input
+            className="self-center w-full mb-10 border-2 border-purple text-purple p-1"
+            type="text"
+            onKeyDown={(e) => scanBook(e)}
+            placeholder="Click here to start scanning"
+          />
+
           <p>1. Click the 'Scan Barcode' button</p>
           <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
           <p>3. All done! The book is yours to keep</p>
