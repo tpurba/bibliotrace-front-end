@@ -10,9 +10,7 @@ import Cookies from 'js-cookie';
 import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
 import AddScannedBooks from "../pages/AddScannedBooks";
-import ManageInventory from "../pages/ManageInventory";
 import RemoveBook from "../pages/RemoveBook.jsx";
-import AdminSettings from "../pages/AdminSettings.jsx";
 import Checkout from "../pages/BookCheckOut.jsx";
 import Checkin from "../pages/BookCheckinPage.jsx";
 
@@ -52,8 +50,6 @@ const AppRoutes = () => {
           <Route path="/admin" element={<AdminHome />} />
           <Route path="/add-scanned" element={<AddScannedBooks />} />
           <Route path="/remove-book" element={<RemoveBook />} />
-          <Route path="/manage" element={<ManageInventory />} />
-          <Route path="/settings" element={<AdminSettings />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/checkin" element={<Checkin />} />
         </Route>

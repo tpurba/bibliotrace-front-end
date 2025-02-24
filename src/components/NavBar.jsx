@@ -8,10 +8,13 @@ import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
 import Cookies from "js-cookie";
 
-const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/',  showNavButtons = true}) => {
+const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/',  showNavButtons = true,  onHomeClick }) => {
   const navigate = useNavigate();
 
   const navigateHome = () => {
+    if (onHomeClick) {
+      onHomeClick();
+    }
     console.log('Home Button was pressed');
     navigate(homeNavOnClick);
   };

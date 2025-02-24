@@ -34,21 +34,24 @@ const PullOutBarGenre = ({ onClose, buttons, side, titleText, uniformColor, butt
           <h2 className="text-xl font-bold" style={{ color: uniformColor}}>{titleText}</h2>
           
         </div>
-        <ul>
-        {buttons.map((button, index) => (
-            <BarButton
-              key={index}
-              text={button.text}
-              textColor={button.textColor || "#110057"}
-              onClick={() => handleSearch(button.text)}
-              borderColor={uniformColor}
-              bgColor={button.bgColor || "#FFFFFF"}
-              buttonBgColor = {"#FFFFFF"}
-              width = {buttonWidth}
-              height= {buttonHeight}
-            />
-          ))}
-        </ul>
+        <div className="overflow-y-auto max-h-[calc(80vh-50px)] p-2">
+          <ul>
+          {buttons.map((button, index) => (
+              <BarButton
+                key={index}
+                text={button.text}
+                textColor={button.textColor || "#110057"}
+                onClick={() => handleSearch(button.text)}
+                borderColor={uniformColor}
+                bgColor={button.bgColor || "#FFFFFF"}
+                buttonBgColor = {"#FFFFFF"}
+                width = {buttonWidth}
+                height= {buttonHeight}
+              />
+            ))}
+          </ul>
+        </div>
+        
       </div>
     </div>
   );

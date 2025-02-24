@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import NavBar from "../NavBar.jsx";
 import { useNavigate } from "react-router-dom";
-const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor}) => {
+const AdminNavBar = ({ onMenuChange, setActiveButton, useDarkTheme, showTitle, bgColor, textColor}) => {
   const navigate = useNavigate(); 
   const [searchInput, setSearchInput] = useState("");
 
@@ -10,18 +10,27 @@ const AdminNavBar = ({ useDarkTheme, showTitle, bgColor, textColor}) => {
     navigate("/search", { state: { initSearchInput: searchInput }});
   };
 
+  const handleHomeClick = () => {
+    onMenuChange("main"); // Update the menu
+    if(setActiveButton){
+      setActiveButton(null);
+    }
+    navigate("/admin");   // Navigate to admin home
+  };
+
   //event 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
       handleSearch()
     }
   };
+  
 
   return (
   <div className="relative w-full bg-[#FFFFFFF] h-32 px-4 ">
     {/* Navigation Icon and Title */}
     <div className="flex items-center space-x-4">
-      <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" />
+      <NavBar useDarkTheme={useDarkTheme} showTitle={showTitle} bgColor={bgColor} textColor={textColor} homeNavOnClick="/admin" onHomeClick={handleHomeClick} />
     </div>
 
     {/* Search Bar */}
