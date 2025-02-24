@@ -7,7 +7,7 @@ import defaultBook from "../assets/generic-book.png?react";
 
 export default function CheckIn() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
-  const [title, setTitle] = useState("Scan a book to see its details checked out");
+  const [title, setTitle] = useState("Scan a book to see its details checked in");
   const [author, setAuthor] = useState(" ");
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
@@ -61,7 +61,7 @@ export default function CheckIn() {
     console.log("scanning: ", qr_code);
     const jwt = Cookies.get("authToken");
     try {
-      const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
+      const response = await fetch(`http://localhost:8080/api/inventory/checkin`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +153,7 @@ export default function CheckIn() {
 
       <div className="flex flex-col justify-between h-5/6">
         <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
-          Book Check Out
+          Book Check In
         </h1>
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
@@ -173,7 +173,7 @@ export default function CheckIn() {
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
               <h4 className="bg-peachPink  text-center text-black text-2xl p-2">
-                Checked Out:{" "}
+                Checked In:{" "}
               </h4>
               {title != null && author != null ? (
                 <div className="flex flex-row ">
