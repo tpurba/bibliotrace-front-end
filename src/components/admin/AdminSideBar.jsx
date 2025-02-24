@@ -31,7 +31,7 @@ export default function Sidebar({onMenuChange, activeButton, setActiveButton}) {
           key={index}
           text={button.text}
           onClick={() => handleButtonClick(button.menu, button.text)}
-          className={`mt-12 px-10 w-[14vw] h-[7vh] transition-colors duration-300
+          className={`h-md:mt-12 mt-6 px-10 5xl:w-[20rem] 3xl:w-[15rem] 2xl:w-[8rem] xl:w-[8rem] w-[7rem]  5xl:h-[6rem] 3xl:h-[4rem] h-[3rem] transition-colors duration-300
             ${
               activeButton === button.text
                 ? "bg-darkBlue text-white" // Active style
