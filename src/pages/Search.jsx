@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import NavBar from "../components/NavBar.jsx";
 import Filter from "../assets/filter.svg?react";
@@ -10,6 +10,7 @@ import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import FilterBox from "../components/FilterBox.jsx";
 const Search = () => {
   const location = useLocation();
+  const navigate = useNavigate()
   const rowHeight = 160;
   const headerHeight = 450;
   const [showFilter, setShowFilter] = useState(false);
@@ -95,6 +96,9 @@ const Search = () => {
               setLoading(false);
             });
           } else {
+            if (response.status === 401) {
+              navigate('/login')
+            }
             setSearchResults([
               {
                 author: `Error: ${response.status} Code Received`,
@@ -277,12 +281,7 @@ const Search = () => {
             return bookData ? (
               <SearchResult
                 key={bookData.id}
-                isbn={bookData.isbn}
-                coverImageId={bookData.coverImageId}
-                title={bookData.title}
-                author={bookData.author}
-                genre={bookData.genre}
-                series={bookData.series}
+                bookData={bookData}
               />
             ) : null;
           })}

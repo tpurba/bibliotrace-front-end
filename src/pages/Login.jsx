@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,11 @@ export default function Login({ loginType }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+
+  const errorModalRef = useRef(null);
+  const inputRef1 = useRef(null);
+  const inputRef2 = useRef(null);
+  const loginButton = useRef(null)
 
   // On page setup, check if we're already logged in...
   useEffect(() => {
@@ -26,20 +31,26 @@ export default function Login({ loginType }) {
       }
     }
     const handleKeyDown = (event) => {
-      if (event.key == "Enter") {
-        if (message != null) {
-          setMessage(null);
-        }
+      console.log('KEYDOWN')
+      if (message != null) {
+        setMessage(null)
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
   }, []);
 
   useEffect(() => {
-    const errorModal = document.getElementById("error-modal");
-    if (errorModal) {
-      errorModal.focus();
+    if (message && errorModalRef.current && inputRef1.current && inputRef2.current && loginButton.current) {
+      inputRef1.current.blur();
+      inputRef2.current.blur();
+      loginButton.current.blur();
+
+      errorModalRef.current.focus();
     }
   }, [message]);
 
@@ -167,6 +178,7 @@ export default function Login({ loginType }) {
             <div className="mb-5 ">
               <label className="text-white">Username: </label>
               <input
+                ref={inputRef1}
                 className="border-2 border-[#ff78e6] border-solid rounded-md h-14 w-full p-4 placeholder-[#ff78e6] placeholder:font-bold text-lg"
                 placeholder="Username"
                 type="text"
@@ -176,20 +188,22 @@ export default function Login({ loginType }) {
             <div className="mb-5 ">
               <label className="text-white">Password: </label>
               <input
+                ref={inputRef2}
                 className="border-2 border-[#ff78e6] border-solid rounded-md h-14 w-full p-4 placeholder-[#ff78e6] placeholder:font-bold text-lg"
                 placeholder="Password"
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
               ></input>
             </div>
-            <button className="border-2 border-[#ff78e6]" type="submit">
+            <button className="border-2 border-[#ff78e6]" type="submit" ref={loginButton}>
               Login
             </button>
           </form>
-          <div id="error-modal">
+          <div id="error-modal" ref={errorModalRef}>
             {message ? (
               <ErrorModal
                 id="error-modal"
+                tabIndex="-1"
                 description={"Error during Login"}
                 message={message}
                 onExit={() => {
