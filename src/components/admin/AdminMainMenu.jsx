@@ -37,6 +37,14 @@ export default function MainMenu() {
   const handleTestClick = () => {
     console.log('Button pressed');
   };
+  
+  const handleCheckout = () => {
+    navigate("/checkout");
+  }
+
+  const handleCheckIn = () => {
+    navigate("/checkin");
+  }
 
   const handleSuggestBookNav = () => {
     navigate("/suggest");
@@ -59,7 +67,7 @@ export default function MainMenu() {
   };
 
   const menuItems = [
-    { label: 'Check In', imageSrc: PeachColorIcon, onclick: handleTestClick, borderColor: "#fbb7a4", textWidth: '35rem'},
+    { label: 'Check In', imageSrc: PeachColorIcon, onclick: handleCheckIn, borderColor: "#fbb7a4", textWidth: '35rem'},
     { label: 'Suggest A Book', imageSrc: RedIcon, onclick: handleSuggestBookNav, borderColor: "#4b00e3", textWidth: '35rem'},
     { label: 'Popular', imageSrc: PinkIcon, onclick: handlePopular, borderColor: "#ff50df", textWidth: '35rem'},
     { label: 'New Arrivals', imageSrc: YellowIcon, onclick: handleNewest, borderColor: "#FFD700", textWidth: '35rem'},
@@ -74,12 +82,11 @@ export default function MainMenu() {
           imageSrc={PurpleIcon}
           text="CHECK OUT"
           textColor="#FFFFFF" //same 
-          onClick={handleTestClick}
+          onClick={handleCheckout}
           borderColor="#4b00e3" 
           bgColor="#110057"//same
           layout='row'//same
           textWidth= '42vw'
-          
           textSize="1.25rem"
     />
       <div className="grid grid-cols-2 w-2/3 justify-start">

@@ -8,9 +8,11 @@ export default {
       white: "#ffffff",
       orange: "#fa8804",
       skyBlue: "#669bff",
+      navyBlue: '#4a00e2',
       black: "#000000",
       purple: "#4a00e2",
       rubyRed: "#e12502",
+      peachPink: '#fcb7a4',
     },
     extend: {
       fontFamily: {
