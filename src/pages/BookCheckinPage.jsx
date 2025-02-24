@@ -62,7 +62,7 @@ export default function Checkin() {
       <NavBar
         useDarkTheme={true}
         showTitle={true}
-        bgColor={tailwindConfig.theme.colors.white}
+        bgColor={tailwindConfig.theme.colors.peachPink}
         homeNavOnClick="/admin"
       />
 
