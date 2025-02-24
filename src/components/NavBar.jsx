@@ -8,21 +8,39 @@ import LogoutLogo from "../assets/logout-white.svg?react";
 import LogoutLogoDark from "../assets/logout-black.svg?react";
 import Cookies from "js-cookie";
 
-const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = '/',  showNavButtons = true,  onHomeClick }) => {
+const NavBar = ({
+  useDarkTheme,
+  showTitle,
+  bgColor,
+  textColor,
+  showNavButtons = true,
+  onHomeClick,
+}) => {
   const navigate = useNavigate();
+
+  const jwtDataString = Cookies.get("jwtData");
+  let isAdmin = false
+  if (jwtDataString != null) {
+    const jwtDataObject = JSON.parse(jwtDataString);
+    isAdmin = jwtDataObject.userRole.roleType === "Admin";
+  }
 
   const navigateHome = () => {
     if (onHomeClick) {
       onHomeClick();
     }
-    console.log('Home Button was pressed');
-    navigate(homeNavOnClick);
+    console.log("Home Button was pressed");
+    if (isAdmin) {
+      navigate("/admin");
+    } else {
+      navigate("/");
+    }
   };
   const navigateLogOut = () => {
     Object.keys(Cookies.get()).forEach((item) => {
-      Cookies.remove(item)
-    })
-    navigate('/login', { state: { loginType: 'User Login' }})
+      Cookies.remove(item);
+    });
+    navigate("/login", { state: { loginType: "User Login" } });
   };
 
   let title;
@@ -36,15 +54,18 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
   //TODO change the LOGO so that it isnt the dark theme or not and its actually a logo that we pass in or this wont work
   const Logo = useDarkTheme ? IhLogoDark : IhLogo;
   const Home = useDarkTheme ? HomeLogoDark : HomeLogo;
-  const Logout = useDarkTheme ? LogoutLogoDark :  LogoutLogo;
+  const Logout = useDarkTheme ? LogoutLogoDark : LogoutLogo;
 
   return (
-    <div className="flex flex-col sm:flex-row w-full  items-center justify-between" style={{ color: textColor }}>
+    <div
+      className="flex flex-col sm:flex-row w-full  items-center justify-between"
+      style={{ color: textColor }}
+    >
       <div className="flex items-center">
         <Logo className="h-16 w-48" />
         <span>{title}</span>
       </div>
-      {showNavButtons &&( 
+      {showNavButtons && (
         <div className="flex items-center">
           <button
             style={{ background: bgColor, color: textColor }}
@@ -65,7 +86,6 @@ const NavBar = ({ useDarkTheme, showTitle, bgColor, textColor, homeNavOnClick = 
           </button>
         </div>
       )}
-      
     </div>
   );
 };
