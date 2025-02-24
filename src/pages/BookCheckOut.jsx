@@ -20,7 +20,7 @@ export default function Checkout() {
 
     const qr_code = e.target.value;
     //TODO: delete later
-    const campus = "lehi";
+    const campus = "Lehi";
 
     console.log("scanning: ", qr_code);
     const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
@@ -42,7 +42,9 @@ export default function Checkout() {
       ß;
       setAuthor(book.author);
       //TODO: add a call for the images from the isbndb
-      setThumbnail("https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg");
+      setThumbnail(
+        "https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg"
+      );
     } else {
       console.log(response);
     }
@@ -68,13 +70,18 @@ export default function Checkout() {
           />
 
           <p>1. Click the 'Scan Barcode' button</p>
-          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
+          <p>
+            2. Scan the barcode on the book (book information will show up if scan is
+            successful)
+          </p>
           <p>3. All done! The book is yours to keep</p>
         </section>
 
         <section className="p-20 flex-1">
           <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-purple  text-center text-white text-lg p-2">Checked Out: </h4>
+            <h4 className="bg-purple  text-center text-white text-lg p-2">
+              Checked Out:{" "}
+            </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
