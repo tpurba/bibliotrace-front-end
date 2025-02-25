@@ -4,36 +4,42 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import defaultBook from "../assets/generic-book.png?react";
-
+import BulkQrOnlyDump from "../modals/BulkQrOnlyDump";
 
 export default function Checkout() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
   const [title, setTitle] = useState("Scan a book to see its details checked out");
   const [author, setAuthor] = useState(" ");
   const [series, setSeries] = useState("");
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState("");
+  const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const focusInput = () => {
-      if (inputRef.current) {
+    const handleFocus = (event) => {
+      if (!bulkModalShow && inputRef.current) {
         inputRef.current.focus();
       }
     };
 
-    focusInput(); // Initial focus on mount
+    if (bulkModalShow) {
+      // Remove event listeners when modal is open
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
+    } else {
+      // Add event listeners when modal is closed
+      document.addEventListener("click", handleFocus);
+      document.addEventListener("keydown", handleFocus);
+    }
 
-    // Listen for clicks and keypresses to refocus the input
-    document.addEventListener("click", focusInput);
-    document.addEventListener("keydown", focusInput);
-
-    // Cleanup event listeners on unmount
+    // Cleanup function to prevent multiple bindings
     return () => {
-      document.removeEventListener("click", focusInput);
-      document.removeEventListener("keydown", focusInput);
-    };  }, []);
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
+    };
+  }, [bulkModalShow]);
 
   async function scanBook(e) {
     if (e.key !== "Enter") {
@@ -41,8 +47,8 @@ export default function Checkout() {
     }
 
     const qr_code = e.target.value;
-    if (qr_code == null || qr_code == '') {
-      return
+    if (qr_code == null || qr_code == "") {
+      return;
     }
 
     setTitle(null);
@@ -72,11 +78,17 @@ export default function Checkout() {
           campus,
         }),
       });
+      if (response.ok) {
+        // TODO: set the Title, Author, Series, and Location from the returned value
+      } else {
+        setTitle(`Error Occurred: ${await response.text()}`);
+        setAuthor("See the logs");
+      }
     } catch (error) {
-      setTitle(`Error Occurred: ${error.message}`)
-      setAuthor('See the logs')
+      setTitle(`Error Occurred: ${error.message}`);
+      setAuthor("See the logs");
     }
-    
+
     e.target.value = "";
     if (response.status == 200) {
       const book = await response.json();
@@ -87,7 +99,7 @@ export default function Checkout() {
       const isbn = "9780747532699";
       await getCoverThumbnail(isbn);
     } else {
-      setTitle(`Error occurred: ${await response.text()}`)
+      setTitle(`Error occurred: ${await response.text()}`);
       console.log(response);
     }
   }
@@ -152,7 +164,9 @@ export default function Checkout() {
       />
 
       <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">Book Check Out</h1>
+        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">
+          Book Check Out
+        </h1>
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
             <input
@@ -164,10 +178,26 @@ export default function Checkout() {
             />
 
             <p>1. Use the scanner to scan a book's QR code on the back.</p>
-            <p>
-              2. Look for the book's information to pop up on the right.
-            </p>
+            <p>2. Look for the book's information to pop up on the right.</p>
             <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+            <button
+              className="w-fit mt-4"
+              onClick={() => {
+                setBulkModalShow(true);
+              }}
+            >
+              Scanner Data Dump
+            </button>
+            {bulkModalShow && (
+              <BulkQrOnlyDump
+                id="bulk-checkout-modal"
+                title="Bulk Checkout Scan Dump"
+                onExit={() => {
+                  setBulkModalShow(false);
+                }}
+                operationType="checkout"
+              />
+            )}
           </section>
 
           <section className="p-20 flex-1">

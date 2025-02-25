@@ -1,2 +1,0 @@
-// There are a few Admin operations that offer bulk quantity instead of individual actions. This modal may need a redesign depending on how
-// we handle bulk operations. What I'm thinking is that it will be an interface to scan multiple barcodes into a list with a complete operation button.

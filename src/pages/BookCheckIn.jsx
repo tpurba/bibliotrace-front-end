@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import defaultBook from "../assets/generic-book.png?react";
+import BulkQrOnlyDump from "../modals/BulkQrOnlyDump";
 
 export default function CheckIn() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
@@ -11,29 +12,34 @@ export default function CheckIn() {
   const [author, setAuthor] = useState(" ");
   const [series, setSeries] = useState("");
   const [location, setLocation] = useState("");
+  const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const focusInput = () => {
-      if (inputRef.current) {
+    const handleFocus = (event) => {
+      if (!bulkModalShow && inputRef.current) {
         inputRef.current.focus();
       }
     };
 
-    focusInput(); // Initial focus on mount
+    if (bulkModalShow) {
+      // Remove event listeners when modal is open
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
+    } else {
+      // Add event listeners when modal is closed
+      document.addEventListener("click", handleFocus);
+      document.addEventListener("keydown", handleFocus);
+    }
 
-    // Listen for clicks and keypresses to refocus the input
-    document.addEventListener("click", focusInput);
-    document.addEventListener("keydown", focusInput);
-
-    // Cleanup event listeners on unmount
+    // Cleanup function to prevent multiple bindings
     return () => {
-      document.removeEventListener("click", focusInput);
-      document.removeEventListener("keydown", focusInput);
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
     };
-  }, []);
+  }, [bulkModalShow]);
 
   async function scanBook(e) {
     if (e.key !== "Enter") {
@@ -72,6 +78,12 @@ export default function CheckIn() {
           campus,
         }),
       });
+      if (response.ok) {
+        // TODO: set the Title, Author, Series, and Location from the returned value
+      } else {
+        setTitle(`Error Occurred: ${await response.text()}`);
+        setAuthor("See the logs");
+      }
     } catch (error) {
       setTitle(`Error Occurred: ${error.message}`);
       setAuthor("See the logs");
@@ -168,6 +180,24 @@ export default function CheckIn() {
             <p>1. Use the scanner to scan a book's QR code on the back.</p>
             <p>2. Look for the book's information to pop up on the right.</p>
             <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+            <button
+              className="w-fit mt-4"
+              onClick={() => {
+                setBulkModalShow(true);
+              }}
+            >
+              Scanner Data Dump
+            </button>
+            {bulkModalShow && (
+              <BulkQrOnlyDump
+                id="bulk-checkin-modal"
+                title="Bulk Check In Scan Dump"
+                onExit={() => {
+                  setBulkModalShow(false);
+                }}
+                operationType="checkin"
+              />
+            )}
           </section>
 
           <section className="p-20 flex-1">

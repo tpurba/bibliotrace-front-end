@@ -1,46 +1,126 @@
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config";
-import { useRef, useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import defaultBook from "../assets/generic-book.png?react";
+import BulkQrAndISBNDump from "../modals/BulkQrAndISBNDump";
 
 export default function AddScannedBooks() {
-  const bulkAddDialog = useRef(null);
-  const [thumbnail, setThumbnail] = useState("");
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
+  const [thumbnail, setThumbnail] = useState(defaultBook);
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [isbn_list, setIsbn_list] = useState("");
+  const [primary_genre, setPrimaryGenre] = useState("");
+  const [audience, setAudience] = useState("");
+  const [pages, setPages] = useState("");
   const [series, setSeries] = useState("");
+  const [publish_date, setPublish_date] = useState("");
+  const [short_description, setShort_description] = useState("");
+  const [location, setLocation] = useState("");
+  const [bulkModalShow, setBulkModalShow] = useState(false);
+  const isbnInputRef = useRef(null);
+  const qrInputRef = useRef(null);
 
-  async function scanBook() {
-    setTitle(null);
-    setAuthor(null);
-    setThumbnail("");
-    setSeries("");
-    console.log("scanning");
+  const navigate = useNavigate();
 
-    await new Promise((res) => setTimeout(res, 3000));
+  useEffect(() => {
+    isbnInputRef.current.focus();
+  }, []);
 
-    setTitle("Harry Potter");
-    setAuthor("JK Rowling");
-    setThumbnail("https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg");
-    // const isbn = fromScanner();
+  async function scanBook(e) {
+    if (e.key !== "Enter") {
+      return;
+    }
+    e.preventDefault()
 
-    // const book = await fetch(`/api/${isbn}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // }).then(res => res.json())
+    const qr_code = e.target.value;
+    if (qr_code == null || qr_code == "") {
+      return;
+    }
+
+    const jwtDataString = Cookies.get("jwtData");
+    if (jwtDataString == null) {
+      navigate("/login");
+    }
+    const jwtDataObject = JSON.parse(jwtDataString);
+    const campus = jwtDataObject.userRole.campus;
+
+    console.log("scanning: ", qr_code);
+    const jwt = Cookies.get("authToken");
+    try {
+      const response = await fetch(`http://localhost:8080/api/inventory/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          isbn_list,
+          title,
+          author,
+          primary_genre,
+          audience,
+          series,
+          publish_date,
+          short_description,
+          
+        }),
+      });
+      if (response.ok) {
+        // TODO: set the Title, Author, Series, and Location from the returned value
+      } else {
+        setTitle(`Error Occurred: ${await response.text()}`);
+        setAuthor("See the logs");
+      }
+    } catch (error) {
+      setTitle(`Error Occurred: ${error.message}`);
+      setAuthor("See the logs");
+    }
+
+    e.target.value = "";
+    if (response.status == 200) {
+      const book = await response.json();
+      console.log(book);
+      setTitle(book.title);
+      setAuthor(book.author);
+
+      const isbn = "9780747532699";
+      await getCoverThumbnail(isbn);
+    } else {
+      setTitle(`Error occurred: ${await response.text()}`);
+      console.log(response);
+    }
   }
 
-  function bulkAdd(e) {
+  async function getBookInformation(e) {
     e.preventDefault();
-    const data = new FormData(e.target);
-    for (const pair of data.entries()) {
-      console.log("quantity: ", pair[1]);
+  }
+
+  async function getCoverThumbnail(isbn) {
+    const jwt = Cookies.get("authToken");
+    const response = await fetch(`http://localhost:8080/api/search/cover/${isbn}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      if (blob.size >= 100) {
+        const objectURL = URL.createObjectURL(blob);
+        setThumbnail(objectURL);
+      }
+    } else {
+      if (response.status === 401) {
+        navigate("/login");
+      }
+      setThumbnail(defaultBook);
     }
   }
 
   return (
-    <>
+    <div className="h-lvh">
       <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
@@ -68,76 +148,216 @@ export default function AddScannedBooks() {
           transform="rotate(0, 50, 50) scale(1, 2)"
         />
       </svg>
-      <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.lightBlue} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
+      <NavBar
+        useDarkTheme={true}
+        showTitle={true}
+        bgColor={tailwindConfig.theme.colors.lightBlue}
+        textColor={tailwindConfig.theme.colors.black}
+        homeNavOnClick="/admin"
+      />
 
-      <h1 className="text-center 5xl:my-16 3xl:my-14 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-darkBlue font-rector">Add Books</h1>
-      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
+      <div className="flex flex-col justify-between h-5/6">
+        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
+          Add New Books
+        </h1>
+        <div className="flex flex-row pb-20">
+          <section className="p-20 flex-1 flex flex-col">
+            <h4>ISBN Number</h4>
+            <form
+              className="flex rounded-xl items-center"
+              onSubmit={(e) => {
+                getBookInformation(e);
+              }}
+            >
+              <input
+                className="self-center border-2 w-full p-4 m-2 mx-0 rounded-lg text-2xl"
+                type="text"
+                placeholder="Start Scanning Here"
+                ref={isbnInputRef}
+              />
+              <button className="m-4">Grab Book Information</button>
+            </form>
 
-        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
-          <button className="self-center w-full mb-10 border-2 border1-darkBlue" onClick={scanBook} >
-            Scan Barcode
-          </button>
-          <p>1. Click the 'Scan Barcode' button</p>
-          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
-          <p>3. All done! The book is in the inventory</p>
-          <p
-            className="self-center mt-10 underline text-lightBlue hover:cursor-pointer hover:opacity-80 active:text-darkBlue"
-            onClick={() => bulkAddDialog.current.showModal()}
-          >
-            Bulk Add
-          </p>
-        </section>
+            <h4>QR Code</h4>
+            <form
+              className="flex rounded-xl items-center"
+              onSubmit={(e) => {
+                scanBook(e);
+              }}
+            >
+              <input
+                className="self-center border-2 w-full p-4 m-2 mx-0 rounded-lg text-2xl"
+                type="text"
+                placeholder="Scan Above, Then Scan Here"
+                ref={qrInputRef}
+              />
+              <button className="m-4">Add To Inventory</button>
+            </form>
 
-        <section className="2xl:p-20 xl:p-5 flex-1">
-          <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-lightBlue  text-center text-darkBlue 3xl:text-3xl xl:text-lg p-2">Book Added: </h4>
-            {title != null && author != null ? (
-              <div className="flex flex-row ">
-                <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                  <img className="5xl:h-[30rem] 3xl:h-60 2xl:h-54 xl:h-44 w-auto" src={thumbnail}></img>
-                </section>
-                <div className="p-5 5xl:py-20 basis-1/2 flex-grow flex flex-col justify-evenly 5xl:text-[3rem] 3xl:text-[2rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
-                  <p className="">Title: {title}</p>
-                  <p className="">Author: {author}</p>
-                  <p className="">Series: {series}</p>
-                </div>
-              </div>
-            ) : (
-              <></>
+            <p>1. Use the scanner to scan a book's ISBN Number, usually on the back.</p>
+            <p>2. Verify the information in the details to the right, updating it as needed.</p>
+            <p>3. Click the QR code field above then scan a new QR code in.</p>
+            <p>4. Scanning the new code should add the book, click the Add to Inventory button if it doesn't.</p>
+            <button
+              className="w-fit mt-4"
+              onClick={() => {
+                setBulkModalShow(true);
+              }}
+            >
+              Scanner Data Dump
+            </button>
+            {bulkModalShow && (
+              <BulkQrAndISBNDump
+                id="bulk-add-modal"
+                title="Bulk Add Scan Dump"
+                onExit={() => {
+                  setBulkModalShow(false);
+                }}
+                operationType="add"
+              />
             )}
-          </div>
-        </section>
-      </div>
+          </section>
 
-      <dialog className="border-2 border-darkBlue rounded-md min-h-48" ref={bulkAddDialog}>
-        <h4 className="bg-lightBlue  text-center text-darkBlue text-lg p-2">Bulk Add</h4>
-        <span
-          className="top-0 right-0 z-10 absolute mx-5 my-2 hover:cursor-pointer"
-          onClick={() => bulkAddDialog.current.close()}
-        >
-          &#x2715;
-        </span>
-        <form
-          className="flex flex-col mx-10 my-5"
-          onSubmit={(e) => {
-            bulkAdd(e);
-          }}
-        >
-          <button className=" w-full mb-5 border-2 border-darkBlue" onClick={scanBook}>
-            Scan Barcode
-          </button>
-          <input
-            autofocus="true"
-            className="mb-5 p-2 border-2 border-darkBlue rounded-lg"
-            type="number"
-            name="quantity"
-            placeholder="Quantity"
-          ></input>
-          <button className="self-center bg-lightBlue text-white" type="submit">
-            Add
-          </button>
-        </form>
-      </dialog>
-    </>
+          <section className="p-20 flex-1">
+            <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
+              <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
+                Book Selected:
+              </h4>
+              {title != null && author != null ? (
+                <div className="flex flex-row ">
+                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                    <img className="h-72 w-auto" src={thumbnail}></img>
+                  </section>
+                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                    <form method="post" onSubmit={() => {}} className="flex flex-col">
+                      <label>
+                        ISBN List:
+                        <input
+                          type="text"
+                          value={isbn_list}
+                          onChange={(e) => setIsbn_list(e.target.value)}
+                          placeholder="e.g.,(123456, 123457)"
+                        />
+                      </label>
+
+                      <label>
+                        Title:
+                        <input
+                          type="text"
+                          value={title}
+                          onChange={(e) => setTitle(e.target.value)}
+                          placeholder="e.g., Harry Potter"
+                        />
+                      </label>
+
+                      <label>
+                        Author:
+                        <input
+                          type="text"
+                          value={author}
+                          onChange={(e) => setAuthor(e.target.value)}
+                          placeholder="e.g., Takuns the best"
+                        />
+                      </label>
+
+                      <label>
+                        Primary Genre:
+                        <select
+                          value={primary_genre}
+                          onChange={(e) => setPrimaryGenre(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            -- Choose an option --
+                          </option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Action/Adventure">Action/Adventure</option>
+                          <option value="Dystopian">Dystopian</option>
+                          <option value="Fantasy">Fantasy</option>
+                          <option value="Fiction">Fiction</option>
+                          <option value="Graphic Novel">Graphic Novel</option>
+                          <option value="History Fiction">History Fiction</option>
+                          <option value="Mystery/Thriller">Mystery/Thriller</option>
+                          <option value="Non-Fiction">Non-Fiction</option>
+                          <option value="Paranormal">Paranormal</option>
+                          <option value="Poetry">Poetry</option>
+                          <option value="Romance">Romance</option>
+                          <option value="Science Fiction">Science Fiction</option>
+                          <option value="Spanish">Spanish</option>
+                        </select>
+                        <p>Selected Value: {primary_genre || "None"}</p>
+                      </label>
+
+                      <label>
+                        Audience:
+                        <select
+                          value={audience}
+                          onChange={(e) => setAudience(e.target.value)}
+                        >
+                          <option value="" disabled>
+                            -- Choose an option --
+                          </option>
+                          <option value="Board (0-2)">Board (0-2)</option>
+                          <option value="Picture (2-8)">Picture (2-8)</option>
+                          <option value="Early Chapter (6-9)">Early Chapter (6-9)</option>
+                          <option value="Middle Grade (8-12)">Middle Grade (8-12)</option>
+                          <option value="Young Adult (12-18+)">
+                            Young Adult (12-18+)
+                          </option>
+                          <option value="Advanced (16+)">Advanced (16+)</option>
+                        </select>
+                        <p>Selected Value: {audience || "None"}</p>
+                      </label>
+
+                      <label>
+                        Page Count:
+                        <input
+                          type="number"
+                          value={pages}
+                          onChange={(e) => setPages(e.target.value)}
+                          placeholder="eg. 240"
+                        />
+                      </label>
+
+                      <label>
+                        Series:
+                        <input
+                          type="text"
+                          value={series}
+                          onChange={(e) => setSeries(e.target.value)}
+                          placeholder="eg. Harry Potter"
+                        />
+                      </label>
+
+                      <label>
+                        Publish Date:
+                        <input
+                          type="number"
+                          value={publish_date}
+                          onChange={(e) => setPublish_date(e.target.value)}
+                          placeholder="eg. 2024"
+                        />
+                      </label>
+                      
+                      <label>
+                        Short Description or Synopsis:
+                        <input
+                          type="text"
+                          value={short_description}
+                          onChange={(e) => setShort_description(e.target.value)}
+                          placeholder="eg. Your a wizard Harry"
+                        />
+                      </label>
+                      <button type="submit">Update Book Details</button>
+                    </form>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
   );
 }
