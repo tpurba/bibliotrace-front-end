@@ -15,37 +15,45 @@ export default function Login({ loginType }) {
   const errorModalRef = useRef(null);
   const inputRef1 = useRef(null);
   const inputRef2 = useRef(null);
-  const loginButton = useRef(null)
+  const loginButton = useRef(null);
 
   // On page setup, check if we're already logged in...
   useEffect(() => {
     const jwt = Cookies.get("authToken");
-    if (jwt) {
+    if (jwt != null) {
       const jwtDataString = Cookies.get("jwtData");
-      const jwtData = JSON.parse(jwtDataString);
+      if (jwtDataString != null) {
+        const jwtData = JSON.parse(jwtDataString);
 
-      if (jwtData.userRole.userType === "Admin") {
-        navigate("/admin");
-      } else {
-        navigate("/");
+        if (jwtData.userRole.userType === "Admin") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       }
     }
     const handleKeyDown = (event) => {
-      console.log('KEYDOWN')
+      console.log("KEYDOWN");
       if (message != null) {
-        setMessage(null)
+        setMessage(null);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-    }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
-    if (message && errorModalRef.current && inputRef1.current && inputRef2.current && loginButton.current) {
+    if (
+      message &&
+      errorModalRef.current &&
+      inputRef1.current &&
+      inputRef2.current &&
+      loginButton.current
+    ) {
       inputRef1.current.blur();
       inputRef2.current.blur();
       loginButton.current.blur();
