@@ -44,7 +44,7 @@ export default function BulkQrOnlyDump({ title, onExit, operationType }) {
 
   const onCheckAndValidate = async () => {
     const jwt = Cookies.get("authToken");
-    const result = await fetch("http://localhost:8080/api/inventory/bulk/${operationType}", {
+    const result = await fetch(`http://localhost:8080/api/inventory/bulk/${operationType}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -64,7 +64,7 @@ export default function BulkQrOnlyDump({ title, onExit, operationType }) {
 
   const onSubmitAndProcess = async () => {
     const jwt = Cookies.get("authToken");
-    const result = await fetch("http://localhost:8080/api/inventory/bulk/${operationType}", {
+    const result = await fetch(`http://localhost:8080/api/inventory/bulk/${operationType}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,

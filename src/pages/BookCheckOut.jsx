@@ -78,6 +78,12 @@ export default function Checkout() {
           campus,
         }),
       });
+      if (response.ok) {
+        // TODO: set the Title, Author, Series, and Location from the returned value
+      } else {
+        setTitle(`Error Occurred: ${await response.text()}`);
+        setAuthor("See the logs");
+      }
     } catch (error) {
       setTitle(`Error Occurred: ${error.message}`);
       setAuthor("See the logs");
@@ -182,7 +188,7 @@ export default function Checkout() {
             >
               Scanner Data Dump
             </button>
-            {bulkModalShow ? (
+            {bulkModalShow && (
               <BulkQrOnlyDump
                 id="bulk-checkout-modal"
                 title="Bulk Checkout Scan Dump"
@@ -191,7 +197,7 @@ export default function Checkout() {
                 }}
                 operationType="checkout"
               />
-            ) : null}
+            )}
           </section>
 
           <section className="p-20 flex-1">
