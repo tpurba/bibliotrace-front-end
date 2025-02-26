@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
@@ -31,26 +25,26 @@ const AppRoutes = () => {
   };
 
   const checkJwtIsExpired = (expirationString) => {
-    const currentTime = Math.floor(Date.now() / 1000)
+    const currentTime = Math.floor(Date.now() / 1000);
     if (Number(expirationString) < currentTime) {
-      Cookies.remove('jwtData')
-      Cookies.remove('authToken')
-      return true
+      Cookies.remove("jwtData");
+      Cookies.remove("authToken");
+      return true;
     } else {
-      console.log(expirationString)
-      console.log(currentTime)
-      return false
+      // console.log(expirationString);
+      // console.log(currentTime);
+      return false;
     }
-  }
+  };
 
   const PublicRoute = () => {
     const token = getToken();
     if (token == null || token.userRole == null || checkJwtIsExpired(token.exp)) {
       return <Navigate to="/login" />;
     } else {
-      return <Outlet />
+      return <Outlet />;
     }
-  }
+  };
 
   const PrivateRoute = () => {
     const token = getToken();
@@ -66,7 +60,7 @@ const AppRoutes = () => {
   return (
     <Router basename={"/bibliotrace-front-end"}>
       <Routes>
-      <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route element={<PublicRoute />}>
           {/*public pages*/}
           <Route path="/" element={<Home />} />

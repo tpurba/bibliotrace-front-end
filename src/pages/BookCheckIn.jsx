@@ -1,17 +1,17 @@
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config";
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useEffect, useRef, useState } from "react";
 import defaultBook from "../assets/generic-book.png?react";
+import { useNavigate } from "react-router-dom";
 import BulkQrOnlyDump from "../modals/BulkQrOnlyDump";
+import Cookies from "js-cookie";
 
-export default function CheckIn() {
+export default function Checkin() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
-  const [title, setTitle] = useState("Scan a book to see its details checked in");
-  const [author, setAuthor] = useState(" ");
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
   const [series, setSeries] = useState("");
-  const [location, setLocation] = useState("");
+  const [message, setMessage] = useState("");
   const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
 
@@ -45,17 +45,13 @@ export default function CheckIn() {
     if (e.key !== "Enter") {
       return;
     }
-
     const qr_code = e.target.value;
-    if (qr_code == null || qr_code == "") {
-      return;
-    }
 
-    setTitle(null);
-    setAuthor(null);
+    setTitle("");
+    setAuthor("");
     setThumbnail(defaultBook);
     setSeries("");
-    setLocation("");
+    setMessage("");
 
     const jwtDataString = Cookies.get("jwtData");
     if (jwtDataString == null) {
@@ -64,7 +60,6 @@ export default function CheckIn() {
     const jwtDataObject = JSON.parse(jwtDataString);
     const campus = jwtDataObject.userRole.campus;
 
-    console.log("scanning: ", qr_code);
     const jwt = Cookies.get("authToken");
     try {
       const response = await fetch(`http://localhost:8080/api/inventory/checkin`, {
@@ -78,30 +73,22 @@ export default function CheckIn() {
           campus,
         }),
       });
+      const data = await response.json();
+
       if (response.ok) {
-        // TODO: set the Title, Author, Series, and Location from the returned value
+        console.log(data);
+        setTitle(data.object.title);
+        setAuthor(data.object.author);
+
+        const isbn = data.object.isbn.split("|")[0];
+        await getCoverThumbnail(isbn);
       } else {
-        setTitle(`Error Occurred: ${await response.text()}`);
-        setAuthor("See the logs");
+        setMessage(`Error Occurred: ${data.message}`);
       }
     } catch (error) {
-      setTitle(`Error Occurred: ${error.message}`);
-      setAuthor("See the logs");
+      setMessage(`Error Occurred: ${error.message}`);
     }
-
     e.target.value = "";
-    if (response.status == 200) {
-      const book = await response.json();
-      console.log(book);
-      setTitle(book.title);
-      setAuthor(book.author);
-
-      const isbn = "9780747532699";
-      await getCoverThumbnail(isbn);
-    } else {
-      setTitle(`Error occurred: ${await response.text()}`);
-      console.log(response);
-    }
   }
 
   async function getCoverThumbnail(isbn) {
@@ -127,7 +114,7 @@ export default function CheckIn() {
   }
 
   return (
-    <div className="h-lvh">
+    <>
       <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
@@ -159,71 +146,60 @@ export default function CheckIn() {
         useDarkTheme={true}
         showTitle={true}
         bgColor={tailwindConfig.theme.colors.peachPink}
-        textColor={tailwindConfig.theme.colors.black}
         homeNavOnClick="/admin"
       />
 
-      <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
-          Book Check In
-        </h1>
-        <div className="flex flex-row pb-20">
-          <section className="p-20 flex-1 flex flex-col">
-            <input
-              className="self-center w-full mb-10 border-2 border-black text-black p-4 rounded-lg text-2xl"
-              type="text"
-              onKeyDown={(e) => scanBook(e)}
-              placeholder="Start Scanning"
-              ref={inputRef}
-            />
-
-            <p>1. Use the scanner to scan a book's QR code on the back.</p>
-            <p>2. Look for the book's information to pop up on the right.</p>
-            <p>3. If the book matches, you're all done! The book is yours to keep.</p>
-            <button
-              className="w-fit mt-4"
-              onClick={() => {
-                setBulkModalShow(true);
+      <h1 className="text-center my-10 text-darkBlue font-rector pb-20 text-5xl">Book Check In</h1>
+      <p className="text-center text-lg text-rubyRed">{message}</p>
+      <div className="flex flex-row">
+        <section className="p-20 pt-10 flex-1 flex flex-col">
+          <input
+            className="self-center w-full mb-10 border-2 border-black text-black p-4 rounded-lg text-2xl"
+            type="text"
+            onKeyDown={(e) => scanBook(e)}
+            placeholder="Start Scanning"
+            ref={inputRef}
+          />
+          <p>1. Click the 'Scan Barcode' button</p>
+          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
+          <p>3. All done! The book is checked in</p>
+          <button
+            className="w-fit mt-4"
+            onClick={() => {
+              setBulkModalShow(true);
+            }}
+          >
+            Scanner Data Dump
+          </button>
+          {bulkModalShow && (
+            <BulkQrOnlyDump
+              id="bulk-checkin-modal"
+              title="Bulk Check In Scan Dump"
+              onExit={() => {
+                setBulkModalShow(false);
               }}
-            >
-              Scanner Data Dump
-            </button>
-            {bulkModalShow && (
-              <BulkQrOnlyDump
-                id="bulk-checkin-modal"
-                title="Bulk Check In Scan Dump"
-                onExit={() => {
-                  setBulkModalShow(false);
-                }}
-                operationType="checkin"
-              />
-            )}
-          </section>
+              operationType="checkin"
+            />
+          )}
+        </section>
 
-          <section className="p-20 flex-1">
-            <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-              <h4 className="bg-peachPink  text-center text-black text-2xl p-2">
-                Checked In:{" "}
-              </h4>
-              {title != null && author != null ? (
-                <div className="flex flex-row ">
-                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                    <img className="h-72 w-auto" src={thumbnail}></img>
-                  </section>
-                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
-                    <p className="">Title: {title}</p>
-                    <p className="">Author: {author}</p>
-                    <p className="">Series: {series}</p>
-                    <p className="">Location: {location}</p>
-                  </div>
-                </div>
-              ) : (
-                <></>
-              )}
+        <section className="p-20 pt-10 flex-1">
+          <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
+            <h4 className="bg-darkBlue  text-center text-white 3xl:text-3xl xl:text-lg p-2">Checked In: </h4>
+
+            <div className="flex flex-row ">
+              <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                <img className="h-72 w-auto" src={thumbnail}></img>
+              </section>
+              <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                <p className="">Title: {title}</p>
+                <p className="">Author: {author}</p>
+                <p className="">Series: {series}</p>
+              </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>
-    </div>
+    </>
   );
 }
