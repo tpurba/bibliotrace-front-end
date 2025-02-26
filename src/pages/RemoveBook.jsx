@@ -70,10 +70,10 @@ export default function RemoveBook() {
         </svg>
       <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.rubyRed} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
-      <h1 className="text-center my-10 text-white font-rector ">Remove Books</h1>
-      <div className="flex flex-row my-52">
-        <section className="p-20 flex-1 flex flex-col justify-around">
-          <button className="self-center w-full mb-10 border-2 border-darkBlue" onClick={scanBook}>
+      <h1 className="text-center 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-white font-rector">Remove Books</h1>
+      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
+        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
+          <button className="self-center w-full mb-10 border-2 border-darkBlue text-darkBlue" onClick={scanBook}>
             Scan Barcode
           </button>
           <p>1. Click the 'Scan Barcode' box</p>
@@ -87,15 +87,15 @@ export default function RemoveBook() {
           </p>
         </section>
 
-        <section className="p-20 flex-1">
+        <section className="2xl:p-20 xl:p-5 flex-1">
           <div className="border-2 border-rubyRed rounded-md min-h-48 h-full">
-            <h4 className="bg-rubyRed  text-center text-white text-lg p-2">Book Removed: </h4>
+            <h4 className="bg-rubyRed  text-center text-white 3xl:text-3xl xl:text-lg p-2">Book Removed: </h4>
             {title != null && author != null ? (
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                  <img className="h-72 w-auto" src={thumbnail}></img>
+                  <img className="5xl:h-[30rem] 3xl:h-60 2xl:h-54 xl:h-44 w-auto" src={thumbnail}></img>
                 </section>
-                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly 5xl:text-[3rem] 3xl:text-[2rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
                   <p className="">Title: {title}</p>
                   <p className="">Author: {author}</p>
                   <p className="">Series: {series}</p>

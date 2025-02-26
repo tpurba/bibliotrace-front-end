@@ -49,9 +49,17 @@ function SuggestPage() {
           preserveAspectRatio="none"
         >
           <path
-            className="fill-darkBlue"
-            d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"
-          ></path>
+            className="fill-darkBlue "
+            d="
+              M0,20
+              C12.5,18 25,20 37.5,22
+              C50,24 62.5,22 75,20
+              C87.5,18 93,19 100,20
+              L100,-20
+              L0,-20
+              Z"
+            transform="rotate(270, 50, 50) scale(1, 2)"
+          />
         </svg>
 
         <NavBar
@@ -86,20 +94,14 @@ function SuggestPage() {
         </dialog>
 
         <div className="flex flex-col md:flex-row m-20">
-          <div className="basis-1/2 mb-10 md:mb-0 md:mr-20">
-            <h1 className="mb-10 text-white">Have a book suggestion?</h1>
-            <p className="text-white">
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-              non proident, sunt in culpa qui officia deserunt mollit anim id est
-              laborum."
+          <div className="basis-1/2 mb-10 md:mb-0 md:mr-20 md:max-w-[40%]">
+            <h1 className="mb-10 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem] text-white">Have a book suggestion?</h1>
+            <p className="text-white 3xl:text-3xl xl:text-lg">
+              Please give as much detail of the book you want to suggest and we will do our best to find it! We love to hear your voice. Just remember our suggestions are checked every week.
             </p>
           </div>
-          <div className="basis-1/2 flex flex-col items-center mb-10 md:mb-0">
-            <h1 className="mb-10 text-white">Tell us about it!</h1>
+          <div className="basis-1/2 flex flex-col items-center ml-12 mb-10 md:mb-0">
+            <h1 className="mb-10 text-white 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem]">Tell us about it!</h1>
             <form
               className="flex flex-col items-center w-full flex-grow"
               onSubmit={(e) => submitSuggestion(e)}
@@ -110,7 +112,7 @@ function SuggestPage() {
                 className="p-1 w-full mb-5 flex-grow"
                 placeholder="Book info (title, author, etc.)"
               ></textarea>
-              <button className="w-48" type="submit">
+              <button className="w-48 3xl:text-3xl xl:text-lg" type="submit" >
                 Submit
               </button>
             </form>
