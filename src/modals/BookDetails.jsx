@@ -2,29 +2,51 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
 import AddIcon from "../assets/add.svg?react";
 import EditIcon from "../assets/edit.svg?react";
 
 export default function BookDetails({ bookData, imageSrc, onExit }) {
+  const [audience, setAudience] = useState('');
+  const [published, setPublished] = useState('');
+  const [tags, setTags] = useState('');
+  const [synopsis, setSynopsis] = useState('');
+
   console.log(bookData);
   const navigate = useNavigate();
-
-  const title = bookData.title;
-  const author = bookData.author;
-  const series = bookData.series;
-  const genre = bookData.genre; 
-  const audience = "Lorem Ipsum"; // bookData.audience; // TODO: Get this data from the back-end
-  const published = "Lorem Ipsum"; // bookData.published; // TODO: Get this data from the back-end
-  const tags = "Lorem Ipsum"; // bookData.tags; // TODO: Figure out how these will work for real
-  const synopsis =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-  // TODO: Set the above to bookData.synopsis eventually
 
   const jwtData = Cookies.get("jwtData");
   if (jwtData == null) {
     navigate("/login");
   }
   const isAdmin = JSON.parse(jwtData).userRole.roleType === "Admin";
+
+  const title = bookData.title;
+  const author = bookData.author;
+  const series = bookData.series;
+  const genre = bookData.genre;
+  const isbn = bookData.isbn;
+
+  const getExtraBookData = async () => {
+    const jwt = Cookies.get("authToken");
+    const result = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (result.ok) {
+      const dataResponse = await result.json();
+      const bookDataReturned = dataResponse.object;
+
+      setAudience(bookDataReturned.audience_id);
+      setPublished(bookDataReturned.publish_date);
+      setTags(""); // TODO: Once the back-end supplies this data, add this in here
+      setSynopsis(bookDataReturned.short_description);
+    }
+  };
+
+  getExtraBookData();
 
   if (isAdmin) {
     return (
@@ -145,7 +167,11 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                 </button>
               </div>
               <div className="flex flex-wrap justify-center">
-                <img src={imageSrc} alt="Cover Image" className="p-6 max-w-full w-1/3 max-h-fit min-w-60 " />
+                <img
+                  src={imageSrc}
+                  alt="Cover Image"
+                  className="p-6 max-w-full w-1/3 max-h-fit min-w-60 "
+                />
                 <div className="p-6">
                   <div className="flex text-xl">
                     <h6 className="font-bold pr-2">Author:</h6>

@@ -177,7 +177,7 @@ const Search = () => {
   }, [filterInput]);
 
   const incrementPage = () => {
-    if (pageOffset + rowCount < searchResults.length - 1) {
+    if (pageOffset + rowCount < searchResults.length) {
       setPageOffset(pageOffset + rowCount);
     }
   };
@@ -298,8 +298,7 @@ const Search = () => {
           </button>
           <p className="h-12">
             Showing {pageOffset + 1}-
-            {Math.min(pageOffset + rowCount, searchResults.length)} of{" "}
-            {searchResults.length}
+            {Math.min(pageOffset + rowCount, searchResults.length)} of {searchResults.length}
           </p>
           <button
             className="bg-transparent flex flex-col items-center"
