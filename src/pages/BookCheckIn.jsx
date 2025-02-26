@@ -12,6 +12,7 @@ export default function Checkin() {
   const [author, setAuthor] = useState("");
   const [series, setSeries] = useState("");
   const [message, setMessage] = useState("");
+  const [location, setLocation] = useState('');
   const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
 
@@ -114,7 +115,7 @@ export default function Checkin() {
   }
 
   return (
-    <>
+    <div className="h-lvh">
       <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
@@ -146,60 +147,71 @@ export default function Checkin() {
         useDarkTheme={true}
         showTitle={true}
         bgColor={tailwindConfig.theme.colors.peachPink}
+        textColor={tailwindConfig.theme.colors.black}
         homeNavOnClick="/admin"
       />
 
-      <h1 className="text-center my-10 text-darkBlue font-rector pb-20 text-5xl">Book Check In</h1>
-      <p className="text-center text-lg text-rubyRed">{message}</p>
-      <div className="flex flex-row">
-        <section className="p-20 pt-10 flex-1 flex flex-col">
-          <input
-            className="self-center w-full mb-10 border-2 border-black text-black p-4 rounded-lg text-2xl"
-            type="text"
-            onKeyDown={(e) => scanBook(e)}
-            placeholder="Start Scanning"
-            ref={inputRef}
-          />
-          <p>1. Click the 'Scan Barcode' button</p>
-          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
-          <p>3. All done! The book is checked in</p>
-          <button
-            className="w-fit mt-4"
-            onClick={() => {
-              setBulkModalShow(true);
-            }}
-          >
-            Scanner Data Dump
-          </button>
-          {bulkModalShow && (
-            <BulkQrOnlyDump
-              id="bulk-checkin-modal"
-              title="Bulk Check In Scan Dump"
-              onExit={() => {
-                setBulkModalShow(false);
-              }}
-              operationType="checkin"
+      <div className="flex flex-col justify-between h-5/6">
+        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
+          Book Check In
+        </h1>
+        <div className="flex flex-row pb-20">
+          <section className="p-20 flex-1 flex flex-col">
+            <input
+              className="self-center w-full mb-10 border-2 border-black text-black p-4 rounded-lg text-2xl"
+              type="text"
+              onKeyDown={(e) => scanBook(e)}
+              placeholder="Start Scanning"
+              ref={inputRef}
             />
-          )}
-        </section>
 
-        <section className="p-20 pt-10 flex-1">
-          <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-            <h4 className="bg-darkBlue  text-center text-white 3xl:text-3xl xl:text-lg p-2">Checked In: </h4>
+            <p>1. Use the scanner to scan a book's QR code on the back.</p>
+            <p>2. Look for the book's information to pop up on the right.</p>
+            <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+            <button
+              className="w-fit mt-4"
+              onClick={() => {
+                setBulkModalShow(true);
+              }}
+            >
+              Scanner Data Dump
+            </button>
+            {bulkModalShow && (
+              <BulkQrOnlyDump
+                id="bulk-checkin-modal"
+                title="Bulk Check In Scan Dump"
+                onExit={() => {
+                  setBulkModalShow(false);
+                }}
+                operationType="checkin"
+              />
+            )}
+          </section>
 
-            <div className="flex flex-row ">
-              <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                <img className="h-72 w-auto" src={thumbnail}></img>
-              </section>
-              <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
-                <p className="">Title: {title}</p>
-                <p className="">Author: {author}</p>
-                <p className="">Series: {series}</p>
-              </div>
+          <section className="p-20 flex-1">
+            <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
+              <h4 className="bg-peachPink  text-center text-black text-2xl p-2">
+                Checked In:
+              </h4>
+              {title != null && author != null ? (
+                <div className="flex flex-row ">
+                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                    <img className="h-72 w-auto" src={thumbnail}></img>
+                  </section>
+                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                    <p className="">Title: {title}</p>
+                    <p className="">Author: {author}</p>
+                    <p className="">Series: {series}</p>
+                    <p className="">Location: {location}</p>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
