@@ -95,7 +95,7 @@ function SuggestPage() {
 
         <div className="flex flex-col md:flex-row m-20">
           <div className="basis-1/2 mb-10 md:mb-0 md:mr-20 md:max-w-[40%]">
-            <h1 className="mb-10 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem] text-white">Have a book suggestion?</h1>
+            <h1 className="mb-10 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem] text-white">Have a book suggestion?</h1>
             <p className="text-white 3xl:text-3xl xl:text-lg">
               Please give as much detail of the book you want to suggest and we will do our best to find it! We love to hear your voice. Just remember our suggestions are checked every week.
             </p>
@@ -109,10 +109,10 @@ function SuggestPage() {
               <textarea
                 name="suggestion"
                 style={{ color: "black" }}
-                className="p-1 w-full mb-5 flex-grow"
+                className="p-4 w-full mb-5 flex-grow 3xl:text-3xl xl:text-lg rounded-2xl"
                 placeholder="Book info (title, author, etc.)"
               ></textarea>
-              <button className="w-48 3xl:text-3xl xl:text-lg" type="submit" >
+              <button className="w-48 3xl:text-3xl xl:text-lg text-darkBlue border-3 border-darkBlue" type="submit" >
                 Submit
               </button>
             </form>
