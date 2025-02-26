@@ -29,6 +29,9 @@ function SuggestPage() {
           submittedDialog.current.showModal();
           event.target.reset();
         } else {
+          if (response.status === 401) {
+            navigate('/login')
+          }
           console.log(res.message);
         }
       }

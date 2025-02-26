@@ -1,38 +1,134 @@
 import NavBar from "../components/NavBar";
 import tailwindConfig from "../../tailwind.config";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import defaultBook from "../assets/generic-book.png?react";
+import BulkQrOnlyDump from "../modals/BulkQrOnlyDump";
 
 export default function Checkout() {
-  const [thumbnail, setThumbnail] = useState("");
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
+  const [thumbnail, setThumbnail] = useState(defaultBook);
+  const [title, setTitle] = useState("Scan a book to see its details checked out");
+  const [author, setAuthor] = useState(" ");
   const [series, setSeries] = useState("");
+  const [location, setLocation] = useState("");
+  const [bulkModalShow, setBulkModalShow] = useState(false);
+  const inputRef = useRef(null);
 
-  async function scanBook() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleFocus = (event) => {
+      if (!bulkModalShow && inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    if (bulkModalShow) {
+      // Remove event listeners when modal is open
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
+    } else {
+      // Add event listeners when modal is closed
+      document.addEventListener("click", handleFocus);
+      document.addEventListener("keydown", handleFocus);
+    }
+
+    // Cleanup function to prevent multiple bindings
+    return () => {
+      document.removeEventListener("click", handleFocus);
+      document.removeEventListener("keydown", handleFocus);
+    };
+  }, [bulkModalShow]);
+
+  async function scanBook(e) {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    const qr_code = e.target.value;
+    if (qr_code == null || qr_code == "") {
+      return;
+    }
+
     setTitle(null);
     setAuthor(null);
-    setThumbnail("");
+    setThumbnail(defaultBook);
     setSeries("");
-    console.log("scanning");
+    setLocation("");
 
-    await new Promise((res) => setTimeout(res, 3000));
+    const jwtDataString = Cookies.get("jwtData");
+    if (jwtDataString == null) {
+      navigate("/login");
+    }
+    const jwtDataObject = JSON.parse(jwtDataString);
+    const campus = jwtDataObject.userRole.campus;
 
-    setTitle("Harry Potter");
-    setAuthor("JK Rowling");
-    setThumbnail("https://m.media-amazon.com/images/I/91wKDODkgWL._AC_UF1000,1000_QL80_.jpg");
-    // const isbn = fromScanner();
+    console.log("scanning: ", qr_code);
+    const jwt = Cookies.get("authToken");
+    try {
+      const response = await fetch(`http://localhost:8080/api/inventory/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({
+          qr_code,
+          campus,
+        }),
+      });
+      if (response.ok) {
+        // TODO: set the Title, Author, Series, and Location from the returned value
+      } else {
+        setTitle(`Error Occurred: ${await response.text()}`);
+        setAuthor("See the logs");
+      }
+    } catch (error) {
+      setTitle(`Error Occurred: ${error.message}`);
+      setAuthor("See the logs");
+    }
 
-    // const book = await fetch(`/api/${isbn}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // }).then(res => res.json())
+    e.target.value = "";
+    if (response.status == 200) {
+      const book = await response.json();
+      console.log(book);
+      setTitle(book.title);
+      setAuthor(book.author);
+
+      const isbn = "9780747532699";
+      await getCoverThumbnail(isbn);
+    } else {
+      setTitle(`Error occurred: ${await response.text()}`);
+      console.log(response);
+    }
+  }
+
+  async function getCoverThumbnail(isbn) {
+    const jwt = Cookies.get("authToken");
+    const response = await fetch(`http://localhost:8080/api/search/cover/${isbn}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      if (blob.size >= 100) {
+        const objectURL = URL.createObjectURL(blob);
+        setThumbnail(objectURL);
+      }
+    } else {
+      if (response.status === 401) {
+        navigate("/login");
+      }
+      setThumbnail(defaultBook);
+    }
   }
 
   return (
-    <>
-    <svg
+    <div className="h-lvh">
+      <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
         height="100%"
@@ -67,38 +163,67 @@ export default function Checkout() {
         homeNavOnClick="/admin"
       />
 
-      <h1 className="text-center 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-white font-rector">Book Check Out</h1>
-      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
-        
-        <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
-          <button className="self-center w-full mb-10 border-2 border-purple text-purple" onClick={scanBook}>
-            Scan Barcode
-          </button>
-          <p>1. Click the 'Scan Barcode' button</p>
-          <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
-          <p>3. All done! The book is yours to keep</p>
-        </section>
+      <div className="flex flex-col justify-between h-5/6">
+        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">
+          Book Check Out
+        </h1>
+        <div className="flex flex-row pb-20">
+          <section className="p-20 flex-1 flex flex-col">
+            <input
+              className="self-center w-full mb-10 border-2 border-purple text-purple p-4 rounded-lg text-2xl"
+              type="text"
+              onKeyDown={(e) => scanBook(e)}
+              placeholder="Start Scanning"
+              ref={inputRef}
+            />
 
-        <section className="2xl:p-20 xl:p-5 flex-1">
-          <div className="border-2 border-darkBlue rounded-md min-h-48 h-full">
-            <h4 className="bg-purple  text-center text-white 3xl:text-3xl xl:text-lg p-2">Checked Out: </h4>
-            {title != null && author != null ? (
-              <div className="flex flex-row ">
-                <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                  <img className="5xl:h-[30rem] 3xl:h-60 2xl:h-54 xl:h-44 w-auto" src={thumbnail}></img>
-                </section>
-                <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly 5xl:text-[3rem] 3xl:text-[2rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
-                  <p className="">Title: {title}</p>
-                  <p className="">Author: {author}</p>
-                  <p className="">Series: {series}</p>
-                </div>
-              </div>
-            ) : (
-              <></>
+            <p>1. Use the scanner to scan a book's QR code on the back.</p>
+            <p>2. Look for the book's information to pop up on the right.</p>
+            <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+            <button
+              className="w-fit mt-4"
+              onClick={() => {
+                setBulkModalShow(true);
+              }}
+            >
+              Scanner Data Dump
+            </button>
+            {bulkModalShow && (
+              <BulkQrOnlyDump
+                id="bulk-checkout-modal"
+                title="Bulk Checkout Scan Dump"
+                onExit={() => {
+                  setBulkModalShow(false);
+                }}
+                operationType="checkout"
+              />
             )}
-          </div>
-        </section>
+          </section>
+
+          <section className="p-20 flex-1">
+            <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
+              <h4 className="bg-purple  text-center text-white text-2xl p-2">
+                Checked Out:{" "}
+              </h4>
+              {title != null && author != null ? (
+                <div className="flex flex-row ">
+                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                    <img className="h-72 w-auto" src={thumbnail}></img>
+                  </section>
+                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                    <p className="">Title: {title}</p>
+                    <p className="">Author: {author}</p>
+                    <p className="">Series: {series}</p>
+                    <p className="">Location: {location}</p>
+                  </div>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
-    </>
+    </div>
   );
 }
