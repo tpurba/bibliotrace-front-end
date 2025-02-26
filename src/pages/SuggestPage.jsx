@@ -46,9 +46,17 @@ function SuggestPage() {
           preserveAspectRatio="none"
         >
           <path
-            className="fill-darkBlue"
-            d="M 50,0 C 30,30 80,50 40,100  L 0,100 L 0,00"
-          ></path>
+            className="fill-darkBlue "
+            d="
+              M0,20
+              C12.5,18 25,20 37.5,22
+              C50,24 62.5,22 75,20
+              C87.5,18 93,19 100,20
+              L100,-20
+              L0,-20
+              Z"
+            transform="rotate(270, 50, 50) scale(1, 2)"
+          />
         </svg>
 
         <NavBar
@@ -83,16 +91,10 @@ function SuggestPage() {
         </dialog>
 
         <div className="flex flex-col md:flex-row m-20">
-          <div className="basis-1/2 mb-10 md:mb-0 md:mr-20">
+          <div className="basis-1/2 mb-10 md:mb-0 md:mr-20 max-w-[40%]">
             <h1 className="mb-10 text-white">Have a book suggestion?</h1>
             <p className="text-white">
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-              quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-              non proident, sunt in culpa qui officia deserunt mollit anim id est
-              laborum."
+              Please give as much detail of the book you want to suggest and we will do our best to find it! We love to hear your voice. Just remember our suggestions are checked every week.
             </p>
           </div>
           <div className="basis-1/2 flex flex-col items-center mb-10 md:mb-0">

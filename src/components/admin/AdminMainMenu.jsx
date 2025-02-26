@@ -68,7 +68,7 @@ export default function MainMenu() {
 
   const menuItems = [
     { label: 'Check In', imageSrc: PeachColorIcon, onclick: handleCheckIn, borderColor: "#fbb7a4", textWidth: '35rem'},
-    { label: 'Suggest A Book', imageSrc: RedIcon, onclick: handleSuggestBookNav, borderColor: "#4b00e3", textWidth: '35rem'},
+    { label: 'Suggest A Book', imageSrc: RedIcon, onclick: handleSuggestBookNav, borderColor: "#e12502", textWidth: '35rem'},
     { label: 'Popular', imageSrc: PinkIcon, onclick: handlePopular, borderColor: "#ff50df", textWidth: '35rem'},
     { label: 'New Arrivals', imageSrc: YellowIcon, onclick: handleNewest, borderColor: "#FFD700", textWidth: '35rem'},
     { label: 'By Age', imageSrc: OrangeIcon, onclick: handleExploreByAge, borderColor: "#fa8804", textWidth: '35rem'},

@@ -75,7 +75,7 @@ const Home = () => {
   
 
   return (
-    <div className={`h-screen w-screen pb-5 start-bg flex flex-col items-center ${isBlurred ? 'blur-sm' : ''}`}>
+    <div className={`size-full pb-5 start-bg flex flex-col items-center ${isBlurred ? 'blur-sm' : ''}`}>
       <NavBar useDarkTheme={false} showTitle={false} bgColor={"#110057"} textColor={"#FFFFFF"} />
       <h1 className="mt-16 text-5xl text-white">Bibliotrace 3.0</h1>
       {/* Search Bar */}
