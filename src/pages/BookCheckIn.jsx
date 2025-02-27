@@ -82,7 +82,7 @@ export default function Checkin() {
         },
         body: JSON.stringify({
           qr_code: qr_code,
-          location: location,
+          location_id: location,
         }),
       });
       const data = await response.json();
