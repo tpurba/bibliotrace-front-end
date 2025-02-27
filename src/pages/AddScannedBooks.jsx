@@ -5,20 +5,30 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import defaultBook from "../assets/generic-book.png?react";
 import BulkQrAndISBNDump from "../modals/BulkQrAndISBNDump";
+import ErrorModal from "../modals/ErrorModal.jsx";
+
+const MAX_LINE_WIDTH_CH = 30; // this can be refactored into a function that dynamically scales max line width based on window size
 
 export default function AddScannedBooks() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
-  const [isbn_list, setIsbn_list] = useState("");
+  const [isbn_list, setIsbn_list] = useState(""); // this stores what comes back from the db
+  const [isbn, setIsbn] = useState(""); // this stores what the user types in
   const [primary_genre, setPrimaryGenre] = useState("");
   const [audience, setAudience] = useState("");
   const [pages, setPages] = useState("");
-  const [series, setSeries] = useState("");
+  const [series_name, setSeries_name] = useState("");
+  const [series_number, setSeries_number] = useState("");
   const [publish_date, setPublish_date] = useState("");
   const [short_description, setShort_description] = useState("");
   const [location, setLocation] = useState("");
+  const [language, setLanguage] = useState("");
+  const [qr, setQr] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [error, setError] = useState("");
   const [bulkModalShow, setBulkModalShow] = useState(false);
+  const [successType, setSuccessType] = useState("");
   const isbnInputRef = useRef(null);
   const qrInputRef = useRef(null);
 
@@ -28,73 +38,50 @@ export default function AddScannedBooks() {
     isbnInputRef.current.focus();
   }, []);
 
-  async function scanBook(e) {
-    if (e.key !== "Enter") {
-      return;
+  useEffect(() => {
+    if (error) {
+      isbnInputRef.current.blur();
+      qrInputRef.current.blur();
     }
-    e.preventDefault()
+  }, [error]);
 
-    const qr_code = e.target.value;
-    if (qr_code == null || qr_code == "") {
-      return;
-    }
-
-    const jwtDataString = Cookies.get("jwtData");
-    if (jwtDataString == null) {
-      navigate("/login");
-    }
-    const jwtDataObject = JSON.parse(jwtDataString);
-    const campus = jwtDataObject.userRole.campus;
-
-    console.log("scanning: ", qr_code);
-    const jwt = Cookies.get("authToken");
-    try {
-      const response = await fetch(`http://localhost:8080/api/inventory/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({
-          isbn_list,
-          title,
-          author,
-          primary_genre,
-          audience,
-          series,
-          publish_date,
-          short_description,
-          
-        }),
-      });
-      if (response.ok) {
-        // TODO: set the Title, Author, Series, and Location from the returned value
-      } else {
-        setTitle(`Error Occurred: ${await response.text()}`);
-        setAuthor("See the logs");
-      }
-    } catch (error) {
-      setTitle(`Error Occurred: ${error.message}`);
-      setAuthor("See the logs");
-    }
-
-    e.target.value = "";
-    if (response.status == 200) {
-      const book = await response.json();
-      console.log(book);
-      setTitle(book.title);
-      setAuthor(book.author);
-
-      const isbn = "9780747532699";
-      await getCoverThumbnail(isbn);
-    } else {
-      setTitle(`Error occurred: ${await response.text()}`);
-      console.log(response);
-    }
-  }
-
-  async function getBookInformation(e) {
+  async function getBookInformationFromIsbn(e) {
     e.preventDefault();
+    setError("");
+    setSuccessType(false);
+    if (!isbn) {
+      setError("Please enter an ISBN number.");
+      isbnInputRef.current.focus();
+      return;
+    }
+
+    const jwt = Cookies.get("authToken");
+    const response = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    if (response.ok) {
+      const book = (await response.json()).object;
+      console.log(book);
+      setTitle(book.book_title);
+      setAuthor(book.author);
+      setIsbn_list(book.isbn_list);
+      setPages(book.pages);
+      setPublish_date(book.publish_date);
+      setShort_description(book.short_description);
+      setImageUrl(book.img_callback);
+      setLanguage(book.language);
+      await getCoverThumbnail(isbn);
+      console.log("Book successfully imported");
+      qrInputRef.current.focus();
+    } else {
+      if (response.status === 401) {
+        navigate("/login");
+      }
+      setError(`${JSON.parse(await response.text()).message}`);
+    }
   }
 
   async function getCoverThumbnail(isbn) {
@@ -119,6 +106,68 @@ export default function AddScannedBooks() {
     }
   }
 
+  async function onSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setSuccessType(false);
+    if (!qr) {
+      setError("Please enter a QR code.");
+      qrInputRef.current.focus();
+      return;
+    }
+    const jwt = Cookies.get("authToken");
+    const jwtData = JSON.parse(Cookies.get("jwtData"));
+
+    // these fields should already be included from the ISBN call
+    // fields that can be modified by the user should check to see if something is still in the state variable
+    const bookData = {
+      book_title: title.length > 0 ? title : null,
+      author: author.length > 0 ? author : null,
+      isbn: isbn_list,
+      pages: pages,
+      publish_date: publish_date,
+      short_description: short_description,
+      img_callback: imageUrl,
+      campus: jwtData.userRole.campus,
+      language: language,
+    };
+
+    // these fields are required for the API
+    if (qr !== "") bookData.qr = qr;
+    if (primary_genre !== "") bookData.primary_genre = primary_genre;
+    if (audience !== "") bookData.audience = audience;
+    if (location !== "") bookData.location = location;
+
+    // these fields are optional
+    if (series_name !== "") bookData.series_name = series_name;
+    if (series_number !== "") bookData.series_number = series_number;
+
+    const response = await fetch("http://localhost:8080/api/inventory/insert", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+      },
+      body: JSON.stringify(bookData),
+    });
+    if (response.ok) {
+      const message = JSON.parse(await response.text()).message;
+      if (message.includes("update")) {
+        setSuccessType("update");
+      } else if (message.includes("create")) {
+        setSuccessType("create");
+      } else {
+        setSuccessType("unknown");
+      }
+    } else {
+      if (response.status === 401) {
+        navigate("/login");
+      }
+      setError(`${JSON.parse(await response.text()).message}`);
+    }
+  }
+
+  // TODO: Audiences and genres should not be hardcoded
   return (
     <div className="h-lvh">
       <svg
@@ -165,8 +214,10 @@ export default function AddScannedBooks() {
             <h4>ISBN Number</h4>
             <form
               className="flex rounded-xl items-center"
-              onSubmit={(e) => {
-                getBookInformation(e);
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  getBookInformationFromIsbn(e);
+                }
               }}
             >
               <input
@@ -174,15 +225,26 @@ export default function AddScannedBooks() {
                 type="text"
                 placeholder="Start Scanning Here"
                 ref={isbnInputRef}
+                value={isbn}
+                onChange={(e) => setIsbn(e.target.value)}
               />
-              <button className="m-4">Grab Book Information</button>
+              <button
+                className="m-4"
+                onClick={(e) => {
+                  getBookInformationFromIsbn(e);
+                }}
+              >
+                Grab Book Information
+              </button>
             </form>
 
             <h4>QR Code</h4>
             <form
               className="flex rounded-xl items-center"
-              onSubmit={(e) => {
-                scanBook(e);
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  onSubmit(e);
+                }
               }}
             >
               <input
@@ -190,14 +252,28 @@ export default function AddScannedBooks() {
                 type="text"
                 placeholder="Scan Above, Then Scan Here"
                 ref={qrInputRef}
+                value={qr}
+                onChange={(e) => setQr(e.target.value)}
               />
-              <button className="m-4">Add To Inventory</button>
+              <button
+                className="m-4"
+                onClick={(e) => {
+                  onSubmit(e);
+                }}
+              >
+                Add To Inventory
+              </button>
             </form>
-
             <p>1. Use the scanner to scan a book's ISBN Number, usually on the back.</p>
-            <p>2. Verify the information in the details to the right, updating it as needed.</p>
+            <p>
+              2. Verify the information in the details to the right, updating it as
+              needed.
+            </p>
             <p>3. Click the QR code field above then scan a new QR code in.</p>
-            <p>4. Scanning the new code should add the book, click the Add to Inventory button if it doesn't.</p>
+            <p>
+              4. Scanning the new code should add the book, click the Add to Inventory
+              button if it doesn't.
+            </p>
             <button
               className="w-fit mt-4"
               onClick={() => {
@@ -221,141 +297,219 @@ export default function AddScannedBooks() {
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
               <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
-                Book Selected:
+                Last Scanned Book:
               </h4>
-              {title != null && author != null ? (
-                <div className="flex flex-row ">
-                  <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                    <img className="h-72 w-auto" src={thumbnail}></img>
-                  </section>
-                  <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
-                    <form method="post" onSubmit={() => {}} className="flex flex-col">
-                      <label>
-                        ISBN List:
-                        <input
-                          type="text"
-                          value={isbn_list}
-                          onChange={(e) => setIsbn_list(e.target.value)}
-                          placeholder="e.g.,(123456, 123457)"
-                        />
-                      </label>
 
-                      <label>
-                        Title:
-                        <input
-                          type="text"
-                          value={title}
-                          onChange={(e) => setTitle(e.target.value)}
-                          placeholder="e.g., Harry Potter"
-                        />
-                      </label>
+              <div className="flex flex-row ">
+                <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
+                  <img className="max-h-72 w-auto" src={thumbnail}></img>
+                </section>
+                <div className="p-5 py-10 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
+                  <form
+                    method="post"
+                    onSubmit={(e) => {
+                      onSubmit(e);
+                    }}
+                    className="flex flex-col"
+                  >
+                    <label>
+                      Title:{" "}
+                      <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="e.g. The Great Gatsby"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            title ? title.length + 3 : 20
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Author:{" "}
+                      <input
+                        type="text"
+                        value={author}
+                        onChange={(e) => setAuthor(e.target.value)}
+                        placeholder="e.g. Herman Melville"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            author ? author.length + 3 : 20
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Primary Genre:{" "}
+                      <select
+                        value={primary_genre}
+                        onChange={(e) => setPrimaryGenre(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          -- Choose an option --
+                        </option>
+                        <option value="Action-Adventure/Suspense">
+                          Action/Adventure
+                        </option>
+                        <option value="Activity Book">Activity Book</option>
+                        <option value="Board Book">Board Book</option>
+                        <option value="Dystopian">Dystopian</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Graphic Novel">Graphic Novel</option>
+                        <option value="Historical Fiction">Historical Fiction</option>
+                        <option value="Leveled Reader">Leveled Reader</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Paranormal">Paranormal</option>
+                        <option value="Picture Book">Picture Book</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Science Fiction">Science Fiction</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="Young Chapter Book">Young Chapter Book</option>
+                      </select>
+                    </label>
+                    <label>
+                      Audience:{" "}
+                      <select
+                        value={audience}
+                        onChange={(e) => setAudience(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          -- Choose an option --
+                        </option>
+                        <option value="Board Books (0-2 Years)">Board (0-2)</option>
+                        <option value="Picture Books (2-8 Years)">Picture (2-8)</option>
+                        <option value="Early Chapter Books (6-9 Years)">
+                          Early Chapter (6-9)
+                        </option>
+                        <option value="Middle Grade (8-12 Years)">
+                          Middle Grade (8-12)
+                        </option>
+                        <option value="Young Adult (12-18 Years)">
+                          Young Adult (12-18+)
+                        </option>
+                        <option value="Advanced (16+ Years)">Advanced (16+)</option>
+                      </select>
+                    </label>
+                    <label>
+                      Page Count:{" "}
+                      <input
+                        type="number"
+                        value={pages}
+                        onChange={(e) => setPages(e.target.value)}
+                        placeholder="e.g. 480"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            pages ? pages.length + 3 : 9
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Series Name:{" "}
+                      <input
+                        type="text"
+                        value={series_name}
+                        onChange={(e) => setSeries_name(e.target.value)}
+                        placeholder="e.g. Harry Potter"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            series_name ? series_name.length + 3 : 15
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Series Number:{" "}
+                      <input
+                        type="number"
+                        value={series_number}
+                        onChange={(e) => setSeries_number(e.target.value)}
+                        placeholder="e.g. 1"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            series_number ? series_number.length + 3 : 6
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Publish Date:{" "}
+                      <input
+                        type="number"
+                        value={publish_date}
+                        onChange={(e) => setPublish_date(e.target.value)}
+                        placeholder="e.g. 2024"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            publish_date ? publish_date.length + 3 : 10
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Short Description:{" "}
+                      <textarea
+                        value={short_description}
+                        onChange={(e) => setShort_description(e.target.value)}
+                        placeholder="e.g. You're a wizard, Harry!"
+                        style={{
+                          width: "100%",
+                          height: "5rem",
+                        }}
+                      />
+                    </label>
+                    <label>
+                      Location:{" "}
+                      {/*have fun dynamically pulling in the locations here lol*/}
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        placeholder="e.g. Upstairs"
+                        style={{
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            location ? location.length + 3 : 11
+                          )}ch`,
+                        }}
+                      />
+                    </label>
+                    <br></br>
 
-                      <label>
-                        Author:
-                        <input
-                          type="text"
-                          value={author}
-                          onChange={(e) => setAuthor(e.target.value)}
-                          placeholder="e.g., Takuns the best"
-                        />
-                      </label>
-
-                      <label>
-                        Primary Genre:
-                        <select
-                          value={primary_genre}
-                          onChange={(e) => setPrimaryGenre(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            -- Choose an option --
-                          </option>
-                          <option value="Advanced">Advanced</option>
-                          <option value="Action/Adventure">Action/Adventure</option>
-                          <option value="Dystopian">Dystopian</option>
-                          <option value="Fantasy">Fantasy</option>
-                          <option value="Fiction">Fiction</option>
-                          <option value="Graphic Novel">Graphic Novel</option>
-                          <option value="History Fiction">History Fiction</option>
-                          <option value="Mystery/Thriller">Mystery/Thriller</option>
-                          <option value="Non-Fiction">Non-Fiction</option>
-                          <option value="Paranormal">Paranormal</option>
-                          <option value="Poetry">Poetry</option>
-                          <option value="Romance">Romance</option>
-                          <option value="Science Fiction">Science Fiction</option>
-                          <option value="Spanish">Spanish</option>
-                        </select>
-                        <p>Selected Value: {primary_genre || "None"}</p>
-                      </label>
-
-                      <label>
-                        Audience:
-                        <select
-                          value={audience}
-                          onChange={(e) => setAudience(e.target.value)}
-                        >
-                          <option value="" disabled>
-                            -- Choose an option --
-                          </option>
-                          <option value="Board (0-2)">Board (0-2)</option>
-                          <option value="Picture (2-8)">Picture (2-8)</option>
-                          <option value="Early Chapter (6-9)">Early Chapter (6-9)</option>
-                          <option value="Middle Grade (8-12)">Middle Grade (8-12)</option>
-                          <option value="Young Adult (12-18+)">
-                            Young Adult (12-18+)
-                          </option>
-                          <option value="Advanced (16+)">Advanced (16+)</option>
-                        </select>
-                        <p>Selected Value: {audience || "None"}</p>
-                      </label>
-
-                      <label>
-                        Page Count:
-                        <input
-                          type="number"
-                          value={pages}
-                          onChange={(e) => setPages(e.target.value)}
-                          placeholder="eg. 240"
-                        />
-                      </label>
-
-                      <label>
-                        Series:
-                        <input
-                          type="text"
-                          value={series}
-                          onChange={(e) => setSeries(e.target.value)}
-                          placeholder="eg. Harry Potter"
-                        />
-                      </label>
-
-                      <label>
-                        Publish Date:
-                        <input
-                          type="number"
-                          value={publish_date}
-                          onChange={(e) => setPublish_date(e.target.value)}
-                          placeholder="eg. 2024"
-                        />
-                      </label>
-                      
-                      <label>
-                        Short Description or Synopsis:
-                        <input
-                          type="text"
-                          value={short_description}
-                          onChange={(e) => setShort_description(e.target.value)}
-                          placeholder="eg. Your a wizard Harry"
-                        />
-                      </label>
-                      <button type="submit">Update Book Details</button>
-                    </form>
-                  </div>
+                    <button type="submit">Update Book Details</button>
+                    {successType === "create" ? (
+                      <p className="text-green-500">Book successfully created!</p>
+                    ) : successType === "update" ? (
+                      <p className="text-green-500">Book successfully updated!</p>
+                    ) : successType === "unknown" ? (
+                      <p className="text-green-500">Book successfully modified!</p>
+                    ) : null}
+                  </form>
                 </div>
-              ) : (
-                <></>
-              )}
+              </div>
             </div>
           </section>
+        </div>
+        <div id="error-modal">
+          {error ? (
+            <ErrorModal
+              id="error-modal"
+              tabIndex="-1"
+              description={"Error"}
+              message={error}
+              onExit={() => {
+                setError("");
+              }}
+            />
+          ) : null}
         </div>
       </div>
     </div>
