@@ -31,11 +31,18 @@ export default function AddScannedBooks() {
   const [successType, setSuccessType] = useState("");
   const isbnInputRef = useRef(null);
   const qrInputRef = useRef(null);
+  const [locations, setLocations] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     isbnInputRef.current.focus();
+
+    async function getLocations() {
+      const locationList = await JSON.parse(Cookies.get("locationList"));
+      setLocations(locationList);
+    }
+    getLocations();
   }, []);
 
   useEffect(() => {
@@ -136,7 +143,7 @@ export default function AddScannedBooks() {
     if (qr !== "") bookData.qr = qr;
     if (primary_genre !== "") bookData.primary_genre = primary_genre;
     if (audience !== "") bookData.audience = audience;
-    if (location !== "") bookData.location = location;
+    if (location !== "") bookData.location_id = location;
 
     // these fields are optional
     if (series_name !== "") bookData.series_name = series_name;
@@ -206,9 +213,7 @@ export default function AddScannedBooks() {
       />
 
       <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
-          Add New Books
-        </h1>
+        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">Add New Books</h1>
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
             <h4>ISBN Number</h4>
@@ -265,15 +270,9 @@ export default function AddScannedBooks() {
               </button>
             </form>
             <p>1. Use the scanner to scan a book's ISBN Number, usually on the back.</p>
-            <p>
-              2. Verify the information in the details to the right, updating it as
-              needed.
-            </p>
+            <p>2. Verify the information in the details to the right, updating it as needed.</p>
             <p>3. Click the QR code field above then scan a new QR code in.</p>
-            <p>
-              4. Scanning the new code should add the book, click the Add to Inventory
-              button if it doesn't.
-            </p>
+            <p>4. Scanning the new code should add the book, click the Add to Inventory button if it doesn't.</p>
             <button
               className="w-fit mt-4"
               onClick={() => {
@@ -296,9 +295,7 @@ export default function AddScannedBooks() {
 
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-              <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
-                Last Scanned Book:
-              </h4>
+              <h4 className="bg-lightBlue text-center text-black text-2xl p-2">Last Scanned Book:</h4>
 
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
@@ -320,10 +317,7 @@ export default function AddScannedBooks() {
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g. The Great Gatsby"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            title ? title.length + 3 : 20
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, title ? title.length + 3 : 20)}ch`,
                         }}
                       />
                     </label>
@@ -335,25 +329,17 @@ export default function AddScannedBooks() {
                         onChange={(e) => setAuthor(e.target.value)}
                         placeholder="e.g. Herman Melville"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            author ? author.length + 3 : 20
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, author ? author.length + 3 : 20)}ch`,
                         }}
                       />
                     </label>
                     <label>
                       Primary Genre:{" "}
-                      <select
-                        value={primary_genre}
-                        onChange={(e) => setPrimaryGenre(e.target.value)}
-                      >
+                      <select value={primary_genre} onChange={(e) => setPrimaryGenre(e.target.value)}>
                         <option value="" disabled>
                           -- Choose an option --
                         </option>
-                        <option value="Action-Adventure/Suspense">
-                          Action/Adventure
-                        </option>
+                        <option value="Action-Adventure/Suspense">Action/Adventure</option>
                         <option value="Activity Book">Activity Book</option>
                         <option value="Board Book">Board Book</option>
                         <option value="Dystopian">Dystopian</option>
@@ -373,24 +359,15 @@ export default function AddScannedBooks() {
                     </label>
                     <label>
                       Audience:{" "}
-                      <select
-                        value={audience}
-                        onChange={(e) => setAudience(e.target.value)}
-                      >
+                      <select value={audience} onChange={(e) => setAudience(e.target.value)}>
                         <option value="" disabled>
                           -- Choose an option --
                         </option>
                         <option value="Board Books (0-2 Years)">Board (0-2)</option>
                         <option value="Picture Books (2-8 Years)">Picture (2-8)</option>
-                        <option value="Early Chapter Books (6-9 Years)">
-                          Early Chapter (6-9)
-                        </option>
-                        <option value="Middle Grade (8-12 Years)">
-                          Middle Grade (8-12)
-                        </option>
-                        <option value="Young Adult (12-18 Years)">
-                          Young Adult (12-18+)
-                        </option>
+                        <option value="Early Chapter Books (6-9 Years)">Early Chapter (6-9)</option>
+                        <option value="Middle Grade (8-12 Years)">Middle Grade (8-12)</option>
+                        <option value="Young Adult (12-18 Years)">Young Adult (12-18+)</option>
                         <option value="Advanced (16+ Years)">Advanced (16+)</option>
                       </select>
                     </label>
@@ -402,10 +379,7 @@ export default function AddScannedBooks() {
                         onChange={(e) => setPages(e.target.value)}
                         placeholder="e.g. 480"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            pages ? pages.length + 3 : 9
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, pages ? pages.length + 3 : 9)}ch`,
                         }}
                       />
                     </label>
@@ -417,10 +391,7 @@ export default function AddScannedBooks() {
                         onChange={(e) => setSeries_name(e.target.value)}
                         placeholder="e.g. Harry Potter"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            series_name ? series_name.length + 3 : 15
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, series_name ? series_name.length + 3 : 15)}ch`,
                         }}
                       />
                     </label>
@@ -432,10 +403,7 @@ export default function AddScannedBooks() {
                         onChange={(e) => setSeries_number(e.target.value)}
                         placeholder="e.g. 1"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            series_number ? series_number.length + 3 : 6
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, series_number ? series_number.length + 3 : 6)}ch`,
                         }}
                       />
                     </label>
@@ -447,10 +415,7 @@ export default function AddScannedBooks() {
                         onChange={(e) => setPublish_date(e.target.value)}
                         placeholder="e.g. 2024"
                         style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            publish_date ? publish_date.length + 3 : 10
-                          )}ch`,
+                          width: `${Math.min(MAX_LINE_WIDTH_CH, publish_date ? publish_date.length + 3 : 10)}ch`,
                         }}
                       />
                     </label>
@@ -467,20 +432,20 @@ export default function AddScannedBooks() {
                       />
                     </label>
                     <label>
-                      Location:{" "}
-                      {/*have fun dynamically pulling in the locations here lol*/}
-                      <input
-                        type="text"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        placeholder="e.g. Upstairs"
-                        style={{
-                          width: `${Math.min(
-                            MAX_LINE_WIDTH_CH,
-                            location ? location.length + 3 : 11
-                          )}ch`,
+                      Location:
+                      <select
+                        onChange={(e) => {
+                          console.log(e.target.value);
+                          setLocation(e.target.value);
                         }}
-                      />
+                      >
+                        <option disabled selected value>
+                          -- Choose an option --
+                        </option>
+                        {locations.map((location_obj) => {
+                          return <option value={location_obj.id}>{location_obj.location_name}</option>;
+                        })}
+                      </select>
                     </label>
                     <br></br>
 

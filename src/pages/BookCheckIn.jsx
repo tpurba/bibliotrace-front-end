@@ -12,11 +12,20 @@ export default function Checkin() {
   const [author, setAuthor] = useState("");
   const [series, setSeries] = useState("");
   const [message, setMessage] = useState("");
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(null);
+  const [locations, setLocations] = useState([]);
   const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function getLocations() {
+      const locationList = await JSON.parse(Cookies.get("locationList"));
+      setLocations(locationList);
+    }
+    getLocations();
+  }, []);
 
   useEffect(() => {
     const handleFocus = (event) => {
@@ -31,7 +40,7 @@ export default function Checkin() {
       document.removeEventListener("keydown", handleFocus);
     } else {
       // Add event listeners when modal is closed
-      document.addEventListener("click", handleFocus);
+      // document.addEventListener("click", handleFocus);
       document.addEventListener("keydown", handleFocus);
     }
 
@@ -43,10 +52,14 @@ export default function Checkin() {
   }, [bulkModalShow]);
 
   async function scanBook(e) {
-    if (e.key !== "Enter") {
+    if (e.key !== "Enter" || e.target.value == "") {
       return;
     }
     const qr_code = e.target.value;
+    if (!location) {
+      setMessage("Please select a location");
+      return;
+    }
 
     setTitle("");
     setAuthor("");
@@ -58,8 +71,6 @@ export default function Checkin() {
     if (jwtDataString == null) {
       navigate("/login");
     }
-    const jwtDataObject = JSON.parse(jwtDataString);
-    const campus = jwtDataObject.userRole.campus;
 
     const jwt = Cookies.get("authToken");
     try {
@@ -70,14 +81,13 @@ export default function Checkin() {
           Authorization: `Bearer ${jwt}`,
         },
         body: JSON.stringify({
-          qr_code,
-          campus,
+          qr_code: qr_code,
+          location: location,
         }),
       });
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data);
         setTitle(data.object.title);
         setAuthor(data.object.author);
 
@@ -115,7 +125,7 @@ export default function Checkin() {
   }
 
   return (
-    <div className="h-lvh">
+    <>
       <svg
         className="-z-10 absolute left-0 top-0"
         width="100vw"
@@ -152,22 +162,38 @@ export default function Checkin() {
       />
 
       <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
-          Book Check In
-        </h1>
+        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">Book Check In</h1>
+        <p className="text-center text-lg text-rubyRed h-0">{message}</p>
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
             <input
-              className="self-center w-full mb-10 border-2 border-black text-black p-4 rounded-lg text-2xl"
+              className="self-center w-full mb-5 border-2 border-black text-black p-4 rounded-lg text-2xl"
               type="text"
               onKeyDown={(e) => scanBook(e)}
               placeholder="Start Scanning"
               ref={inputRef}
             />
 
-            <p>1. Use the scanner to scan a book's QR code on the back.</p>
-            <p>2. Look for the book's information to pop up on the right.</p>
-            <p>3. If the book matches, you're all done! The book is yours to keep.</p>
+            <div className="text-xl mb-5">
+              <label className="text-2xl">Location:</label>
+              <select
+                className="ml-5 p-1 border border-black rounded-sm"
+                onChange={(e) => {
+                  setLocation(e.target.value);
+                }}
+              >
+                <option disabled selected value>
+                  -- Choose an option --
+                </option>
+                {locations.map((location_obj) => {
+                  return <option value={location_obj.id}>{location_obj.location_name}</option>;
+                })}
+              </select>
+            </div>
+
+            <p>1. Click the 'Scan Barcode' button</p>
+            <p>2. Scan the barcode on the book (book information will show up if scan is successful)</p>
+            <p>3. All done! The book is checked in</p>
             <button
               className="w-fit mt-4"
               onClick={() => {
@@ -190,9 +216,7 @@ export default function Checkin() {
 
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-              <h4 className="bg-peachPink  text-center text-black text-2xl p-2">
-                Checked In:
-              </h4>
+              <h4 className="bg-peachPink  text-center text-black text-2xl p-2">Checked In:</h4>
               {title != null && author != null ? (
                 <div className="flex flex-row ">
                   <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
@@ -202,7 +226,6 @@ export default function Checkin() {
                     <p className="">Title: {title}</p>
                     <p className="">Author: {author}</p>
                     <p className="">Series: {series}</p>
-                    <p className="">Location: {location}</p>
                   </div>
                 </div>
               ) : (
@@ -212,6 +235,6 @@ export default function Checkin() {
           </section>
         </div>
       </div>
-    </div>
+    </>
   );
 }
