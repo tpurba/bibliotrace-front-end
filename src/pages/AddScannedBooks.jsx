@@ -32,6 +32,8 @@ export default function AddScannedBooks() {
   const isbnInputRef = useRef(null);
   const qrInputRef = useRef(null);
   const [locations, setLocations] = useState([]);
+  const [genres, setGenres] = useState([]);
+  const [audiences, setAudiences] = useState([]);
 
   const navigate = useNavigate();
 
@@ -42,7 +44,17 @@ export default function AddScannedBooks() {
       const locationList = await JSON.parse(Cookies.get("locationList"));
       setLocations(locationList);
     }
+    async function getGenres() {
+      const genreList = Cookies.get("genreList").split(",");
+      setGenres(genreList);
+    }
+    async function getAudiences() {
+      const audienceList = Cookies.get("audienceList").split(",");
+      setAudiences(audienceList);
+    }
     getLocations();
+    getGenres();
+    getAudiences();
   }, []);
 
   useEffect(() => {
@@ -174,7 +186,6 @@ export default function AddScannedBooks() {
     }
   }
 
-  // TODO: Audiences and genres should not be hardcoded
   return (
     <div className="h-lvh">
       <svg
@@ -272,7 +283,10 @@ export default function AddScannedBooks() {
             <p>1. Use the scanner to scan a book's ISBN Number, usually on the back.</p>
             <p>2. Verify the information in the details to the right, updating it as needed.</p>
             <p>3. Click the QR code field above then scan a new QR code in.</p>
-            <p>4. Scanning the new code should add the book, click the Add to Inventory button if it doesn't.</p>
+            <p>
+              4. Scanning the new code should add the book, click the Add to Inventory button if it
+              doesn't.
+            </p>
             <button
               className="w-fit mt-4"
               onClick={() => {
@@ -295,7 +309,9 @@ export default function AddScannedBooks() {
 
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-              <h4 className="bg-lightBlue text-center text-black text-2xl p-2">Last Scanned Book:</h4>
+              <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
+                Last Scanned Book:
+              </h4>
 
               <div className="flex flex-row ">
                 <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
@@ -329,32 +345,25 @@ export default function AddScannedBooks() {
                         onChange={(e) => setAuthor(e.target.value)}
                         placeholder="e.g. Herman Melville"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, author ? author.length + 3 : 20)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            author ? author.length + 3 : 20
+                          )}ch`,
                         }}
                       />
                     </label>
                     <label>
                       Primary Genre:{" "}
-                      <select value={primary_genre} onChange={(e) => setPrimaryGenre(e.target.value)}>
+                      <select
+                        value={primary_genre}
+                        onChange={(e) => setPrimaryGenre(e.target.value)}
+                      >
                         <option value="" disabled>
                           -- Choose an option --
                         </option>
-                        <option value="Action-Adventure/Suspense">Action/Adventure</option>
-                        <option value="Activity Book">Activity Book</option>
-                        <option value="Board Book">Board Book</option>
-                        <option value="Dystopian">Dystopian</option>
-                        <option value="Fantasy">Fantasy</option>
-                        <option value="Fiction">Fiction</option>
-                        <option value="Graphic Novel">Graphic Novel</option>
-                        <option value="Historical Fiction">Historical Fiction</option>
-                        <option value="Leveled Reader">Leveled Reader</option>
-                        <option value="Non-Fiction">Non-Fiction</option>
-                        <option value="Paranormal">Paranormal</option>
-                        <option value="Picture Book">Picture Book</option>
-                        <option value="Romance">Romance</option>
-                        <option value="Science Fiction">Science Fiction</option>
-                        <option value="Spanish">Spanish</option>
-                        <option value="Young Chapter Book">Young Chapter Book</option>
+                        {genres.map((genre) => {
+                          return <option value={genre}>{genre}</option>;
+                        })}
                       </select>
                     </label>
                     <label>
@@ -363,12 +372,9 @@ export default function AddScannedBooks() {
                         <option value="" disabled>
                           -- Choose an option --
                         </option>
-                        <option value="Board Books (0-2 Years)">Board (0-2)</option>
-                        <option value="Picture Books (2-8 Years)">Picture (2-8)</option>
-                        <option value="Early Chapter Books (6-9 Years)">Early Chapter (6-9)</option>
-                        <option value="Middle Grade (8-12 Years)">Middle Grade (8-12)</option>
-                        <option value="Young Adult (12-18 Years)">Young Adult (12-18+)</option>
-                        <option value="Advanced (16+ Years)">Advanced (16+)</option>
+                        {audiences.map((audience) => {
+                          return <option value={audience}>{audience}</option>;
+                        })}
                       </select>
                     </label>
                     <label>
@@ -391,7 +397,10 @@ export default function AddScannedBooks() {
                         onChange={(e) => setSeries_name(e.target.value)}
                         placeholder="e.g. Harry Potter"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, series_name ? series_name.length + 3 : 15)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            series_name ? series_name.length + 3 : 15
+                          )}ch`,
                         }}
                       />
                     </label>
@@ -403,7 +412,10 @@ export default function AddScannedBooks() {
                         onChange={(e) => setSeries_number(e.target.value)}
                         placeholder="e.g. 1"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, series_number ? series_number.length + 3 : 6)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            series_number ? series_number.length + 3 : 6
+                          )}ch`,
                         }}
                       />
                     </label>
@@ -415,7 +427,10 @@ export default function AddScannedBooks() {
                         onChange={(e) => setPublish_date(e.target.value)}
                         placeholder="e.g. 2024"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, publish_date ? publish_date.length + 3 : 10)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            publish_date ? publish_date.length + 3 : 10
+                          )}ch`,
                         }}
                       />
                     </label>
@@ -443,7 +458,9 @@ export default function AddScannedBooks() {
                           -- Choose an option --
                         </option>
                         {locations.map((location_obj) => {
-                          return <option value={location_obj.id}>{location_obj.location_name}</option>;
+                          return (
+                            <option value={location_obj.id}>{location_obj.location_name}</option>
+                          );
                         })}
                       </select>
                     </label>
