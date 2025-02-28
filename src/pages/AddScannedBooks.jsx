@@ -453,6 +453,7 @@ export default function AddScannedBooks() {
                     <label>
                       Location:
                       <select
+                        value={location}
                         onChange={(e) => {
                           console.log(e.target.value);
                           setLocation(e.target.value);
