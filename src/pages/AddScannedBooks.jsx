@@ -74,6 +74,10 @@ export default function AddScannedBooks() {
       return;
     }
 
+    setPrimaryGenre("");
+    setAudience("");
+    setLocation("");
+
     const jwt = Cookies.get("authToken");
     const response = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
       headers: {
@@ -454,7 +458,7 @@ export default function AddScannedBooks() {
                           setLocation(e.target.value);
                         }}
                       >
-                        <option disabled selected value>
+                        <option value="" disabled>
                           -- Choose an option --
                         </option>
                         {locations.map((location_obj) => {
