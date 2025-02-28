@@ -47,13 +47,7 @@ export default function Login({ loginType }) {
   }, []);
 
   useEffect(() => {
-    if (
-      message &&
-      errorModalRef.current &&
-      inputRef1.current &&
-      inputRef2.current &&
-      loginButton.current
-    ) {
+    if (message && errorModalRef.current && inputRef1.current && inputRef2.current && loginButton.current) {
       inputRef1.current.blur();
       inputRef2.current.blur();
       loginButton.current.blur();
@@ -113,8 +107,23 @@ export default function Login({ loginType }) {
     } else {
       const jsonResult = await response.json();
       if (jsonResult != null && jsonResult.results != null) {
-        const genres = jsonResult.results;
-        Cookies.set("audienceList", genres);
+        const audiences = jsonResult.results;
+        Cookies.set("audienceList", audiences);
+      }
+    }
+
+    //Get Location List
+    const location_response = await fetch("http://localhost:8080/api/inventory/locations", {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    const data = await location_response.json();
+    if (!location_response.ok) {
+      setMessage(`Error Fetching Metadata: ${data.message}`);
+    } else {
+      if (data.object) {
+        Cookies.set("locationList", JSON.stringify(data.object));
       }
     }
 
@@ -138,18 +147,13 @@ export default function Login({ loginType }) {
         if (!response.ok) {
           const responseText = await response.text();
           if (responseText.indexOf("Invalid Login Credentials") != -1) {
-            setMessage(
-              `Invalid Login Credentials Provided. Please Modify Your Username and/or Password.`
-            );
+            setMessage(`Invalid Login Credentials Provided. Please Modify Your Username and/or Password.`);
           } else {
             setMessage(`Error: ${responseText}`);
           }
         } else {
           const jsonResult = await response.json();
-          if (
-            jsonResult != null &&
-            jsonResult.message === "Token generated successfully"
-          ) {
+          if (jsonResult != null && jsonResult.message === "Token generated successfully") {
             const jwtData = await setUpCookies(jsonResult.object);
 
             if (jwtData.userRole.roleType === "Admin") {
@@ -173,13 +177,7 @@ export default function Login({ loginType }) {
         className="size-full bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: `url(${loginBackground})` }}
       >
-        <NavBar
-          useDarkTheme={false}
-          showTitle={true}
-          bgColor={"#ff50e0"}
-          textColor={"white"}
-          showNavButtons={false}
-        />
+        <NavBar useDarkTheme={false} showTitle={true} bgColor={"#ff50e0"} textColor={"white"} showNavButtons={false} />
         <div className="h-[calc(100%-64px)] flex flex-col items-center">
           <h1 className="text-white mb-10 mt-20">{location.state?.loginType ?? ""}</h1>
           <form className="flex flex-col w-1/2 items-center" onSubmit={handleSubmit}>
