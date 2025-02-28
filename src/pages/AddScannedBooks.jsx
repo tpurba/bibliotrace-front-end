@@ -186,7 +186,6 @@ export default function AddScannedBooks() {
     }
   }
 
-  // TODO: Audiences and genres should not be hardcoded
   return (
     <div className="h-lvh">
       <svg
