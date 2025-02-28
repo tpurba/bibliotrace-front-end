@@ -79,7 +79,7 @@ export default function Login({ loginType }) {
     Cookies.set("jwtData", jwtDataString);
 
     // Get Genre List
-    let response = await fetch("http://localhost:8080/api/search/genres", {
+    let response = await fetch("http://localhost:8080/api/metadata/genres", {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -96,7 +96,7 @@ export default function Login({ loginType }) {
     }
 
     // Get Audience List
-    response = await fetch("http://localhost:8080/api/search/audiences", {
+    response = await fetch("http://localhost:8080/api/metadata/audiences", {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -113,7 +113,7 @@ export default function Login({ loginType }) {
     }
 
     //Get Location List
-    const location_response = await fetch("http://localhost:8080/api/inventory/locations", {
+    const location_response = await fetch("http://localhost:8080/api/metadata/locations", {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
