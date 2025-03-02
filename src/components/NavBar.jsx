@@ -66,7 +66,7 @@ const NavBar = ({
         <span>{title}</span>
       </div>
       {showNavButtons && (
-        <div className="flex items-center">
+        <div className="flex items-center md:visible hidden">
           <button
             style={{ background: bgColor, color: textColor }}
             className="flex flex-col justify-center items-center"
