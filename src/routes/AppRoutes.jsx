@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
+import Genre from "../pages/MobileGenrePage.jsx";
+import Age from "../pages/MobileAgePage.jsx";
 import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
@@ -64,6 +66,8 @@ const AppRoutes = () => {
         <Route element={<PublicRoute />}>
           {/*public pages*/}
           <Route path="/" element={<Home />} />
+          <Route path="/genre" element={<Genre />} />
+          <Route path="/age" element={<Age />} />
           <Route path="/suggest" element={<SuggestPage />} />
           <Route path="/search" element={<SearchPage />} />
           {/*private pages*/}

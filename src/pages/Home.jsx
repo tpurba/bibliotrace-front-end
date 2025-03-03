@@ -8,7 +8,6 @@ import NewArrivalsIcon from "../assets/NewArrivalsIcon.jpg";
 import SuggestBook from "../assets/SuggestBook.jpg";
 import WhatsPopular from "../assets/WhatsPopular.jpg";
 import CustomButton from "../components/ButtonComponent";
-import NewCustomButton from "../components/NewButtonComponent";
 import PopUpBar from "../modals/PopUpSideBar";
 
 const Home = () => {
@@ -51,8 +50,16 @@ const Home = () => {
     setShowPopupBarAge(!showPopupBarAge);
   };
 
+  const handleExploreByAgeMobile = () => {
+    navigate("/age")
+  };
+
   const handleExploreByGenre = () => {
     setShowPopupBarGenre(!showPopupBarGenre);
+  };
+
+  const handleExploreByGenreMobile = () => {
+    navigate("/genre");
   };
 
   const handlePopular = (filterInput) => {
@@ -83,7 +90,7 @@ const Home = () => {
 
   return (
     <div
-      className={`h-screen w-screen pb-5 start-bg flex flex-col items-center ${
+      className={`h-full w-full pb-5 start-bg flex flex-col items-center ${
         isBlurred ? "blur-sm" : ""
       }`}
     >
@@ -111,19 +118,9 @@ const Home = () => {
           Go!
         </button>
       </div>
-      <div className="flex md:flex-row flex-col">
-        <NewCustomButton
-          imageSrc={WhatsPopular}
-          text={"What's\nPopular"}
-          textColor="#FFFFFF"
-          onClick={handlePopular}
-          borderColor="#ff50df"
-          bgColor="#110057"
-          buttonLayout={"md:flex-col flex-row"} //this works 
-          imgClassName={"md:h-[12rem] md:w-[12rem] h-[3rem] w-[3rem]"}
-          textClassName={"flex p-2 border-2 m-2 rounded-lg border-l-white text-4xl text-white"}
-        />
 
+      <div className="flex md:flex-row flex-col">
+        {/* website buttons */}
         <CustomButton
           imageSrc={WhatsPopular}
           text={"What's\nPopular"}
@@ -131,12 +128,14 @@ const Home = () => {
           onClick={handlePopular}
           borderColor="#ff50df"
           bgColor="#110057"
+          className=" hidden md:flex"
           imageWidth="12em"
           imageHeight="12rem"
           textWidth="12rem"
           textHeight="6rem"
           textSize="1.5rem"
         />
+
         <CustomButton
           imageSrc={ExploreByAge}
           text={"Explore By\nAge"}
@@ -144,8 +143,8 @@ const Home = () => {
           onClick={handleExploreByAge}
           borderColor="#fa8804"
           bgColor="#110057"
-          className="mt-24"
-          imageWidth="12em"
+          className="mt-24 hidden md:flex"
+          imageWidth="12rem"
           imageHeight="12rem"
           textWidth="12rem"
           textHeight="6rem"
@@ -163,6 +162,7 @@ const Home = () => {
             buttonHeight={"10vh"}
           />
         )}
+
         <CustomButton
           imageSrc={NewArrivalsIcon}
           text={"New\nArrivals"}
@@ -170,12 +170,14 @@ const Home = () => {
           onClick={handleNewest}
           borderColor="#FFD700"
           bgColor="#110057"
+          className=" hidden md:flex"
           imageWidth="12em"
           imageHeight="12rem"
           textWidth="12rem"
           textHeight="6rem"
           textSize="1.5rem"
         />
+        
         <CustomButton
           imageSrc={ExploreByGenre}
           text={"Explore By\nGenre"}
@@ -183,7 +185,7 @@ const Home = () => {
           onClick={handleExploreByGenre}
           borderColor="#669bff"
           bgColor="#110057"
-          className="mt-24"
+          className="mt-24 hidden md:flex"
           imageWidth="12em"
           imageHeight="12rem"
           textWidth="12rem"
@@ -209,11 +211,93 @@ const Home = () => {
           onClick={handleSuggestBookNav}
           borderColor="#e12502"
           bgColor="#110057"
+          className=" hidden md:flex"
           imageWidth="12em"
           imageHeight="12rem"
           textWidth="12rem"
           textHeight="6rem"
           textSize="1.5rem"
+        />
+
+        {/* Mobile buttons */}
+        <CustomButton
+          imageSrc={WhatsPopular}
+          text={"What's Popular"}
+          textColor="#FFFFFF"
+          onClick={handlePopular}
+          borderColor="#ff50df"
+          bgColor="#110057"
+          className="md:hidden"
+          layout="row"
+          imageWidth="6em"
+          imageHeight="6rem"
+          textWidth="12rem"
+          textHeight="3rem"
+          textSize="1rem"
+        />
+
+        <CustomButton
+          imageSrc={NewArrivalsIcon}
+          text={"New Arrivals"}
+          textColor="#FFFFFF"
+          onClick={handleNewest}
+          borderColor="#FFD700"
+          bgColor="#110057"
+          className="md:hidden"
+          layout="row"
+          imageWidth="6em"
+          imageHeight="6rem"
+          textWidth="12rem"
+          textHeight="3rem"
+          textSize="1rem"
+        />
+
+        <CustomButton
+          imageSrc={ExploreByGenre}
+          text={"Explore By Genre"}
+          textColor="#FFFFFF"
+          onClick={handleExploreByGenreMobile}
+          borderColor="#669bff"
+          bgColor="#110057"
+          className="md:hidden"
+          layout="row"
+          imageWidth="6rem"
+          imageHeight="6rem"
+          textWidth="12rem"
+          textHeight="3rem"
+          textSize="1rem"
+        />
+        
+        <CustomButton
+          imageSrc={ExploreByAge}
+          text={"Explore By Age"}
+          textColor="#FFFFFF"
+          onClick={handleExploreByAgeMobile}
+          borderColor="#fa8804"
+          bgColor="#110057"
+          className="md:hidden"
+          layout="row"
+          imageWidth="6rem"
+          imageHeight="6rem"
+          textWidth="12rem"
+          textHeight="3rem"
+          textSize="1rem"
+        />
+
+        <CustomButton
+          imageSrc={SuggestBook}
+          text={"Suggest a Book"}
+          textColor="#FFFFFF"
+          onClick={handleSuggestBookNav}
+          borderColor="#e12502"
+          bgColor="#110057"
+          className="md:hidden"
+          layout="row"
+          imageWidth="6em"
+          imageHeight="6rem"
+          textWidth="12rem"
+          textHeight="3rem"
+          textSize="1rem"
         />
       </div>
     </div>

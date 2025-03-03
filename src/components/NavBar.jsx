@@ -58,15 +58,15 @@ const NavBar = ({
 
   return (
     <div
-      className="flex flex-col sm:flex-row w-full items-center justify-between px-4"
+      className="flex flex-row w-full items-center justify-between px-4"
       style={{ color: textColor }}
     >
       <div className="flex items-center">
-        <Logo className="h-16 w-48" />
+        <Logo className="h-12 md:h-16 w-24 md:w-48" />
         <span>{title}</span>
       </div>
       {showNavButtons && (
-        <div className="flex items-center md:visible hidden">
+        <div className="flex items-center mt-2 md:mt-0">
           <button
             style={{ background: bgColor, color: textColor }}
             className="flex flex-col justify-center items-center"
