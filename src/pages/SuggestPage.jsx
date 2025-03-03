@@ -40,9 +40,9 @@ function SuggestPage() {
 
   return (
     <>
-      <div className="bg-lightBlue w-full h-full relative z-10">
+      <div className="bg-darkBlue md:bg-lightBlue w-full h-full relative z-10">
         <svg
-          className="-z-10 absolute left-0 top-0"
+          className="-z-10 absolute left-0 top-0 hidden md:flex"
           width="100vw"
           height="100%"
           viewBox="0 0 100 100"
@@ -69,13 +69,13 @@ function SuggestPage() {
           textColor={tailwindConfig.theme.colors.white}
         />
 
-        <dialog className="rounded-md p-8" ref={submittedDialog}>
-          <h1 className="text-xl text-center mb-5">Thank you for your suggestion!</h1>
+        <dialog className="rounded-md p-8 border-2 border-rubyRed" ref={submittedDialog}>
+          <h1 className="text-xl text-center mb-5 font-rector font-bold text-darkBlue">Thank you for your suggestion!</h1>
           <p className="text-center mb-5 ">Would you like to submit another book idea?</p>
 
           <div className="flex flex-row justify-center">
             <button
-              className="mx-2"
+              className="mx-2 bg-darkBlue text-white"
               onClick={() => {
                 submittedDialog.current.close();
               }}
@@ -83,7 +83,7 @@ function SuggestPage() {
               Suggest Another
             </button>
             <button
-              className="mx-2"
+              className="mx-2 bg-darkBlue text-white"
               onClick={() => {
                 navigate("/");
               }}
@@ -93,15 +93,19 @@ function SuggestPage() {
           </div>
         </dialog>
 
-        <div className="flex flex-col md:flex-row m-20">
-          <div className="basis-1/2 mb-10 md:mb-0 md:mr-20 md:max-w-[40%]">
-            <h1 className="mb-10 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem] text-white">Have a book suggestion?</h1>
+        <div className="flex flex-col md:flex-row m-5 md:m-20">
+          <div className="items-center md:basis-1/2 mb-10 md:mb-0 md:mr-20 md:max-w-[40%] text-center md:text-left mx-auto md:mx-0">
+            <h1 className="mb-10 5xl:my-16 3xl:my-12 lg:my-4 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem] text-white">
+              Have a book suggestion?
+            </h1>
             <p className="text-white 3xl:text-3xl xl:text-lg">
               Please give as much detail of the book you want to suggest and we will do our best to find it! We love to hear your voice. Just remember our suggestions are checked every week.
             </p>
           </div>
-          <div className="basis-1/2 flex flex-col items-center ml-12 mb-10 md:mb-0">
-            <h1 className="mb-10 text-white 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem]">Tell us about it!</h1>
+          <div className="basis-1/2 flex flex-col items-center md:ml-12 mb-10 md:mb-0">
+            <h1 className="mb-10 text-white 4xl:text-[6rem] 3xl:text-[4rem] xl:text-[2rem] text-center md:text-right mx-auto md:mx-0">
+              Tell us about it!
+            </h1>
             <form
               className="flex flex-col items-center w-full flex-grow"
               onSubmit={(e) => submitSuggestion(e)}
