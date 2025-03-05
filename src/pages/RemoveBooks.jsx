@@ -1,1 +1,0 @@
-// This page will be used to forcefully remove books from the inventory. It will need to be able to do so in bulk.

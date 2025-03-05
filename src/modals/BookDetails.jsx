@@ -39,7 +39,7 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
       const dataResponse = await result.json();
       const bookDataReturned = dataResponse.object;
 
-      setAudience(bookDataReturned.audience_id);
+      setAudience(bookDataReturned.audience_name);
       setPublished(bookDataReturned.publish_date);
       setTags(""); // TODO: Once the back-end supplies this data, add this in here
       setSynopsis(bookDataReturned.short_description);

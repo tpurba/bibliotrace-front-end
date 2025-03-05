@@ -25,7 +25,9 @@ export default function AdminHome({}) {
     navigate("/remove-book");
   };
 
-
+  const handleSetLocation = () => {
+    navigate("/set-location")
+  }
 
   //buttons
   const settingButtons =[
@@ -46,7 +48,7 @@ export default function AdminHome({}) {
     {text: "Edit Genres", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Add Title", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Generate QR Codes", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Set Locations", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
+    {text: "Set Locations", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleSetLocation, width : "20vw", height : "10vh"},
   ];
 
   
