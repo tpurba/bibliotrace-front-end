@@ -16,6 +16,7 @@ import RemoveBook from "../pages/RemoveBook.jsx";
 import Checkout from "../pages/BookCheckOut.jsx";
 import CheckIn from "../pages/BookCheckIn.jsx";
 import SetLocation from "../pages/SetLocation.jsx";
+import CreateUser from "../pages/CreateNewUser.jsx"
 
 const AppRoutes = () => {
   const getToken = () => {
@@ -80,6 +81,7 @@ const AppRoutes = () => {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkin" element={<CheckIn />} />
             <Route path="/set-location" element={<SetLocation />} />
+            <Route path="/create-user" element={<CreateUser />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}
