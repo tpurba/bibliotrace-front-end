@@ -28,12 +28,16 @@ export default function AdminHome({}) {
   const handleSetLocation = () => {
     navigate("/set-location")
   }
+  const handleCreateUser = () => {
+    navigate("/create-user")
+  }
+
 
   //buttons
   const settingButtons =[
     {text: "Manage Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Feature 1 ", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Create New Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
+    {text: "Create New Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleCreateUser, width : "20vw", height : "10vh"},
     {text: "Feature 2", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Create New Database", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Feature 3", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
