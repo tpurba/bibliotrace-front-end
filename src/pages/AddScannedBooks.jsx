@@ -146,7 +146,7 @@ export default function AddScannedBooks() {
     const bookData = {
       book_title: title.length > 0 ? title : null,
       author: author.length > 0 ? author : null,
-      isbn: isbn_list,
+      isbn: isbn,
       pages: pages,
       publish_date: publish_date,
       short_description: short_description,
