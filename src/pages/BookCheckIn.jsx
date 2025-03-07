@@ -220,7 +220,7 @@ export default function Checkin() {
               {title != null && author != null ? (
                 <div className="flex flex-row ">
                   <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
-                    <img className="h-72 w-auto" src={thumbnail}></img>
+                    <img className="h-auto w-auto" src={thumbnail}></img>
                   </section>
                   <div className="p-5 py-20 basis-1/2 flex-grow flex flex-col justify-evenly text-lg">
                     <p className="">Title: {title}</p>

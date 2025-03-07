@@ -17,6 +17,8 @@ import Checkout from "../pages/BookCheckOut.jsx";
 import CheckIn from "../pages/BookCheckIn.jsx";
 import ShoppingList from "../pages/ShoppingList.jsx";
 import RestockList from "../pages/RestockList.jsx";
+import SetLocation from "../pages/SetLocation.jsx";
+import CreateUser from "../pages/CreateNewUser.jsx"
 
 const AppRoutes = () => {
   const getToken = () => {
@@ -82,6 +84,8 @@ const AppRoutes = () => {
             <Route path="/checkin" element={<CheckIn />} />
             <Route path="/shopping-list" element={<ShoppingList />} />
             <Route path="/restock-list" element={<RestockList />} />
+            <Route path="/set-location" element={<SetLocation />} />
+            <Route path="/create-user" element={<CreateUser />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} /> {/* Catch-all route for 404 */}

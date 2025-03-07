@@ -2,23 +2,20 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 import AddIcon from "../assets/add.svg?react";
 import EditIcon from "../assets/edit.svg?react";
 
 export default function BookDetails({ bookData, imageSrc, onExit }) {
-  const [audience, setAudience] = useState('');
-  const [published, setPublished] = useState('');
-  const [tags, setTags] = useState('');
-  const [synopsis, setSynopsis] = useState('');
+  const [audience, setAudience] = useState("");
+  const [published, setPublished] = useState("");
+  const [tags, setTags] = useState([]);
+  const [synopsis, setSynopsis] = useState("");
 
   console.log(bookData);
   const navigate = useNavigate();
 
   const jwtData = Cookies.get("jwtData");
-  if (jwtData == null) {
-    navigate("/login");
-  }
   const isAdmin = JSON.parse(jwtData).userRole.roleType === "Admin";
 
   const title = bookData.title;
@@ -26,10 +23,11 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
   const series = bookData.series;
   const genre = bookData.genre;
   const isbn = bookData.isbn;
+  console.log("made it here");
 
   const getExtraBookData = async () => {
     const jwt = Cookies.get("authToken");
-    const result = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
+    let result = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -39,14 +37,36 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
       const dataResponse = await result.json();
       const bookDataReturned = dataResponse.object;
 
-      setAudience(bookDataReturned.audience_id);
+      setAudience(bookDataReturned.audience_name);
       setPublished(bookDataReturned.publish_date);
-      setTags(""); // TODO: Once the back-end supplies this data, add this in here
       setSynopsis(bookDataReturned.short_description);
+
+      result = await fetch(`http://localhost:8080/api/inventory/get/tags/${isbn}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      if (result.ok) {
+        const tagsResult = await result.text();
+        const tagsObject = JSON.parse(tagsResult).object;
+
+        setTags(tagsObject);
+      }
     }
   };
 
-  getExtraBookData();
+  useEffect(() => {
+    if (jwtData == null) {
+      navigate("/login");
+    }
+  }, [jwtData, navigate]);
+
+  useEffect(() => {
+    if (isbn) {
+      getExtraBookData();
+    }
+  }, [isbn]);
 
   if (isAdmin) {
     return (
@@ -97,9 +117,15 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                     <h6 className="font-bold pr-2">Published:</h6>
                     <p>{published}</p>
                   </div>
-                  <div className="flex text-xl pt-4">
+                  <div className="flex text-xl pt-4 items-center flex-wrap">
                     <h6 className="font-bold pr-2">Tags:</h6>
-                    <p>{tags}</p>
+                    {tags.map((tag, index) => {
+                      return (
+                        <p className="bg-darkBlue px-2 m-2 rounded-3xl text-white text-center text-nowrap">
+                          {tag.tag}
+                        </p>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -193,9 +219,15 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                     <h6 className="font-bold pr-2">Published:</h6>
                     <p>{published}</p>
                   </div>
-                  <div className="flex text-xl pt-4">
+                  <div className="flex text-xl pt-4 items-center flex-wrap">
                     <h6 className="font-bold pr-2">Tags:</h6>
-                    <p>{tags}</p>
+                    {tags.map((tag, index) => {
+                      return (
+                        <p className="bg-darkBlue px-2 m-2 rounded-3xl text-white text-center text-nowrap">
+                          {tag.tag}
+                        </p>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
