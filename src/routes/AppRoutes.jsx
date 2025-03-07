@@ -15,6 +15,8 @@ import AddScannedBooks from "../pages/AddScannedBooks";
 import RemoveBook from "../pages/RemoveBook.jsx";
 import Checkout from "../pages/BookCheckOut.jsx";
 import CheckIn from "../pages/BookCheckIn.jsx";
+import ShoppingList from "../pages/ShoppingList.jsx";
+import RestockList from "../pages/RestockList.jsx";
 import SetLocation from "../pages/SetLocation.jsx";
 import CreateUser from "../pages/CreateNewUser.jsx"
 
@@ -80,6 +82,8 @@ const AppRoutes = () => {
             <Route path="/remove-book" element={<RemoveBook />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkin" element={<CheckIn />} />
+            <Route path="/shopping-list" element={<ShoppingList />} />
+            <Route path="/restock-list" element={<RestockList />} />
             <Route path="/set-location" element={<SetLocation />} />
             <Route path="/create-user" element={<CreateUser />} />
           </Route>
