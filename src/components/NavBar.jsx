@@ -62,7 +62,7 @@ const NavBar = ({
       style={{ color: textColor }}
     >
       <div className="flex items-center">
-        <Logo className="h-12 md:h-16 w-24 md:w-48" />
+        <Logo className="h-12 md:h-16 w-24 md:w-48" onClick={navigateHome} />
         <span>{title}</span>
       </div>
       {showNavButtons && (
