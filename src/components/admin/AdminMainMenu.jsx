@@ -9,7 +9,7 @@ import PeachColorIcon from "../../assets/CheckInIcon.jpg";
 //Libraries
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../ButtonComponent";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PopUpBar from "../../modals/PopUpSideBar";
 import Cookies from "js-cookie";
 
