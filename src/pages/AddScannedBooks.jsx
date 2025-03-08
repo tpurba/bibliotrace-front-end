@@ -96,6 +96,10 @@ export default function AddScannedBooks() {
       setShort_description(book.short_description);
       setImageUrl(book.img_callback);
       setLanguage(book.language);
+      setAudience(book.audience_name)
+      setPrimaryGenre(book.genre_name)
+      setSeries_name(book.series_name)
+      setSeries_number(book.series_number)
       await getCoverThumbnail(isbn);
       console.log("Book successfully imported");
       qrInputRef.current.focus();
@@ -133,11 +137,12 @@ export default function AddScannedBooks() {
     e.preventDefault();
     setError("");
     setSuccessType(false);
-    if (!qr) {
-      setError("Please enter a QR code.");
-      qrInputRef.current.focus();
-      return;
-    }
+
+    // if (!qr) {
+    //   setError("Please enter a QR code.");
+    //   qrInputRef.current.focus();
+    //   return;
+    // }
     const jwt = Cookies.get("authToken");
     const jwtData = JSON.parse(Cookies.get("jwtData"));
 
@@ -315,6 +320,13 @@ export default function AddScannedBooks() {
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
               <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
                 Last Scanned Book:
+                {successType === "create" ? (
+                      <p className="text-green-500">Book successfully created!</p>
+                    ) : successType === "update" ? (
+                      <p className="text-green-500">Book successfully updated!</p>
+                    ) : successType === "unknown" ? (
+                      <p className="text-green-500">Book successfully modified!</p>
+                    ) : null}
               </h4>
 
               <div className="flex flex-row ">
@@ -469,16 +481,6 @@ export default function AddScannedBooks() {
                         })}
                       </select>
                     </label>
-                    <br></br>
-
-                    <button type="submit">Update Book Details</button>
-                    {successType === "create" ? (
-                      <p className="text-green-500">Book successfully created!</p>
-                    ) : successType === "update" ? (
-                      <p className="text-green-500">Book successfully updated!</p>
-                    ) : successType === "unknown" ? (
-                      <p className="text-green-500">Book successfully modified!</p>
-                    ) : null}
                   </form>
                 </div>
               </div>
