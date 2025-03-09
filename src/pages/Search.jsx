@@ -195,9 +195,16 @@ const Search = () => {
     console.log("Buttons been pressed");
     setShowFilter(!showFilter);
   };
+
   const handleMobileFilterNav = () => {
     console.log("going to filter");
-    navigate('/filter');
+    console.log("filter input: " , filterInput);
+    const filterBody = { 
+      Audiences: [...filterInput.Audiences], 
+      Genres: [...filterInput.Genres], 
+      Special: [...filterInput.Special] 
+    };
+    navigate('/filter', { state: { initFilterCheckBox: filterBody }});
   };
 
   return (
