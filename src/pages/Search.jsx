@@ -8,6 +8,7 @@ import Prev from "../assets/prev.svg?react";
 import SearchResult from "../components/SearchResult.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import FilterBox from "../components/FilterBox.jsx";
+
 const Search = () => {
   const location = useLocation();
   const navigate = useNavigate()
@@ -194,6 +195,10 @@ const Search = () => {
     console.log("Buttons been pressed");
     setShowFilter(!showFilter);
   };
+  const handleMobileFilterNav = () => {
+    console.log("going to filter");
+    navigate('/filter');
+  };
 
   return (
     <div
@@ -226,7 +231,10 @@ const Search = () => {
         <div className="w-full flex justify-between my-4">
           {" "}
           {/* Buttons Above Results */}
-          <button className="bg-transparent border-none " onClick={handleFilterPress}>
+          <button className="bg-transparent border-none flex xl:hidden " onClick={handleMobileFilterNav}>
+            <Filter />
+          </button>
+          <button className="bg-transparent border-none hidden xl:flex" onClick={handleFilterPress}>
             <Filter />
           </button>
           {/* Filter Box (Overlay) */}
