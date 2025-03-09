@@ -1,36 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import NavBar from "../components/NavBar";
-import BarButton from "../components/BarButtons";
-
+import FilterBox from "../components/FilterBox.jsx";
 const MobileFilter = () => {
   const [searchInput, setSearchInput] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
-
-  const genreListString = Cookies.get("genreList");
-  let genres = [];
-  if (genreListString) {
-    const genreList = genreListString.split(",");
-    console.log(genreList);
-    genres = genreList.map((genre) => {
-      return { text: genre };
-    });
-  }
+  const storedFilter = sessionStorage.getItem("filterInput");
+  const [filterInput, setFilterInput] = useState(
+    // location.state?.initFilterCheckBox ?? (storedFilter ? JSON.parse(storedFilter) : { Audiences: [], Genres: [], Special: [] })
+    location.state?.initFilterCheckBox ?? { Audiences: [], Genres: [], Special: [] }
+  );
+  console.log("IN FIlter page filter input: " , filterInput);
+  
 
   //handle routes
   const handleSearch = () => {
     console.log("HOME.jsx searchInput: ", searchInput);
-    navigate("/search", { state: { initSearchInput: searchInput } });
+    navigate("/search", { state: { initSearchInput: filterInput} });
   };
-
-  const handleGenreSearch = (filterInput) => {
-    console.log("Whats in the filter: ", filterInput);
-    const filterBody = { Audiences: [], Genres: [], Special: [] }
-    filterBody.Genres.push(filterInput)
-    navigate("/search", { state: { initFilterInput: filterBody }});
-  };
-
 
   //event
   const handleKeyDown = (event) => {
@@ -46,18 +35,53 @@ const MobileFilter = () => {
     }
   }, []);
 
+  let filterString = "";
+  if (filterInput.Audiences.length > 0) {
+    filterString += "||Audience:";
+    for (let i = 0; i < filterInput.Audiences.length; i++) {
+      filterString += filterInput.Audiences[i];
+      if (i < filterInput.Audiences.length - 1) {
+        filterString += ",";
+      }
+    }
+    filterString += "||";
+  }
+  if (filterInput.Genres.length > 0) {
+    filterString += "||Genre:";
+    for (let i = 0; i < filterInput.Genres.length; i++) {
+      filterString += filterInput.Genres[i];
+      if (i < filterInput.Genres.length - 1) {
+        filterString += ",";
+      }
+    }
+    filterString += "||";
+  }
+  if (filterInput.Special.length > 0) {
+    filterString += "||Special:";
+    for (let i = 0; i < filterInput.Special.length; i++) {
+      filterString += filterInput.Special[i];
+      if (i < filterInput.Special.length - 1) {
+        filterString += ",";
+      }
+    }
+    filterString += "||";
+  }
+
+
+
+
   return (
     <div
-      className={`h-full w-full pb-5 start-bg flex flex-col items-center`}
+      className={`h-full w-full pb-5  search-bg flex flex-col items-center`}
     >
       <NavBar
-        useDarkTheme={false}
+        useDarkTheme={true}
         showTitle={false}
-        bgColor={"#110057"}
-        textColor={"#FFFFFF"}
+        bgColor={"none"}
+        textColor={"#000000"}
       />
       
-      <h1 className="mt-3 md:mt-16 md:text-5xl text-2xl text-white">Bibliotrace 3.0</h1>
+      <h1 className="mt-3 md:mt-16 md:text-5xl text-2xl text-gray">Bibliotrace 3.0</h1>
 
       {/* Search Bar */}
       <div className="h-16 my-6 flex md:w-7/12 w-full justify-center">
@@ -76,24 +100,18 @@ const MobileFilter = () => {
           Go!
         </button>
       </div>
-      
-      <h1 className="text-white text-2xl">Explore by Genre</h1>
-      <ul>
-          {genres.map((button, index) => (
-              <BarButton
-                key={index}
-                text={button.text}
-                textColor={"#FFFFFF"}
-                onClick={() => handleGenreSearch(button.text)}
-                borderColor={"#669bff"}
-                bgColor={ "#110057"}
-                buttonBgColor = {"#110057"}
-                width = {"20rem"}
-                height= {"3rem"}
-                className={"mt-12"}
-              />
-            ))}
-          </ul>
+      <h1 className="text-darkBlue text-3xl m-3">Filter</h1>
+      <FilterBox
+        onClose={(selectedFilters) => {
+          console.log("pre set: " , filterInput);
+          setFilterInput(selectedFilters);
+          setTimeout(() => {  // Ensure state update before navigation
+            console.log("post set:", filterInput);
+            navigate("/search", { state: { initFilterInput: selectedFilters } });
+          }, 0);
+        }}
+        prevSelectedItems={filterInput}
+      />
       
     </div>
   );

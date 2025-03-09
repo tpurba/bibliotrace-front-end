@@ -9,6 +9,7 @@ export default function FilterBox({ onClose, prevSelectedItems = { Audiences: []
   const [genreList, setGenreList] = useState([])
 
   const handleSubmit = () => {
+    console.log("on submit pressed");
     onClose(selectedItems); // Pass selected filters back to parent
   };
 
@@ -59,7 +60,7 @@ export default function FilterBox({ onClose, prevSelectedItems = { Audiences: []
 
   return (
     <div className="relative p-6 border-4 border-darkBlue backdrop-blur-3xl bg-opacity-100 bg-gray-900 rounded-xl">
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 gap-6">
         {categories.map((category, colIndex) => (
           <div key={colIndex} className="flex flex-col">
             <h2 className="text-xl text-darkBlue font-bold mb-2">{category.title}</h2>
@@ -71,7 +72,7 @@ export default function FilterBox({ onClose, prevSelectedItems = { Audiences: []
                   checked={selectedItems[category.title]?.includes(text)}
                   onChange={() => handleToggleSelection(category.title, text)}
                 />
-                <span className="text-darkBlue text-xl">{text}</span>
+                <span className="text-darkBlue text-sm md:text-xl">{text}</span>
               </label>
             ))}
           </div>
