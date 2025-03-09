@@ -8,6 +8,7 @@ import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
 import AddBooks from "../pages/AddBooks";
 import Cookies from "js-cookie";
+import Filter from "../pages/MobileFilterPage.jsx";
 
 import Login from "../pages/Login";
 import AdminHome from "../pages/AdminHome";
@@ -72,6 +73,7 @@ const AppRoutes = () => {
           <Route path="/" element={<Home />} />
           <Route path="/genre" element={<Genre />} />
           <Route path="/age" element={<Age />} />
+          <Route path="/filter" element={<Filter />} />
           <Route path="/suggest" element={<SuggestPage />} />
           <Route path="/search" element={<SearchPage />} />
           {/*private pages*/}

@@ -75,50 +75,45 @@ export default function CreateNewUser() {
         </section>
 
         <section className="2xl:p-20 xl:p-5 flex-1">
-          <div className="border-2 border-purple rounded-md min-h-48 h-full">
-            <h4 className="bg-purple  text-center text-white 3xl:text-3xl xl:text-lg p-2">Book Removed: </h4>
-            <div className="flex flex-col 5xl:text-[3rem] 3xl:text-[1.25rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
-            {/* <div className="p-5 py-20  flex-grow flex flex-col justify-evenly 5xl:text-[3rem] 3xl:text-[2rem] 2xl:text-3xl xl:text-2xl lg:text-lg"> */}
-                <div className="flex-1 items-center mb-3 mt-4">
-                    <label className="text-purple">Username: </label>
-                    <input
-                        ref={usernameRef}
-                        className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
-                        placeholder="Username"
-                        type="text"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="flex-1 items-center mb-3">
-                    <label className="text-purple">Password: </label>
-                    <input
-                        ref={passwordRef}
-                        className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
-                        placeholder="Password"
-                        type="text"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div className="flex-1 items-center">
-                    <label className="text-purple">Location: </label>
-                    <select
-                        value={location}
-                        onChange={(e) => {
-                          console.log(e.target.value);
-                          setLocation(e.target.value);
-                        }}
-                      >
-                        <option value="" disabled>
-                          -- Choose an option --
-                        </option>
-                        {locations.map((location_obj) => {
-                          return (
-                            <option value={location_obj.id}>{location_obj.location_name}</option>
-                          );
-                        })}
-                    </select>
-                </div>
-            {/* </div> */}
+          <div className="flex flex-col min-h-48 h-full 5xl:text-[3rem] 3xl:text-[1.25rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
+              <div className="flex-1 items-center mb-3 mt-4">
+                  <label className="text-purple">Username: </label>
+                  <input
+                      ref={usernameRef}
+                      className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
+                      placeholder="Username"
+                      type="text"
+                      onChange={(e) => setUsername(e.target.value)}
+                  />
+              </div>
+              <div className="flex-1 items-center mb-3">
+                  <label className="text-purple">Password: </label>
+                  <input
+                      ref={passwordRef}
+                      className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
+                      placeholder="Password"
+                      type="text"
+                      onChange={(e) => setUsername(e.target.value)}
+                  />
+              </div>
+              <div className="flex-1 items-center">
+                  <label className="text-purple">Location: </label>
+                  <select
+                      value={location}
+                      onChange={(e) => {
+                        console.log(e.target.value);
+                        setLocation(e.target.value);
+                      }}
+                    >
+                      <option value="" disabled>
+                        -- Choose an option --
+                      </option>
+                      {locations.map((location_obj) => {
+                        return (
+                          <option value={location_obj.id}>{location_obj.location_name}</option>
+                        );
+                      })}
+                  </select>
             </div>
           </div>
         </section>

@@ -4,18 +4,19 @@ import Cookies from "js-cookie";
 import NavBar from "../components/NavBar";
 import BarButton from "../components/BarButtons";
 
-const Age = () => {
+const MobileFilter = () => {
   const [searchInput, setSearchInput] = useState("");
   const navigate = useNavigate();
 
-  const agesListString = Cookies.get("audienceList");
-    let ages = [];
-    if (agesListString) {
-        const agesList = agesListString.split(",");
-        ages = agesList.map((age) => {
-        return { text: age };
-        });
-    }
+  const genreListString = Cookies.get("genreList");
+  let genres = [];
+  if (genreListString) {
+    const genreList = genreListString.split(",");
+    console.log(genreList);
+    genres = genreList.map((genre) => {
+      return { text: genre };
+    });
+  }
 
   //handle routes
   const handleSearch = () => {
@@ -23,12 +24,13 @@ const Age = () => {
     navigate("/search", { state: { initSearchInput: searchInput } });
   };
 
-  const handleAgeSearch = (filterInput) => {
+  const handleGenreSearch = (filterInput) => {
     console.log("Whats in the filter: ", filterInput);
     const filterBody = { Audiences: [], Genres: [], Special: [] }
-    filterBody.Audiences.push(filterInput)
+    filterBody.Genres.push(filterInput)
     navigate("/search", { state: { initFilterInput: filterBody }});
   };
+
 
   //event
   const handleKeyDown = (event) => {
@@ -75,15 +77,15 @@ const Age = () => {
         </button>
       </div>
       
-      <h1 className="text-white text-2xl">Explore by Age</h1>
+      <h1 className="text-white text-2xl">Explore by Genre</h1>
       <ul>
-          {ages.map((button, index) => (
+          {genres.map((button, index) => (
               <BarButton
                 key={index}
                 text={button.text}
                 textColor={"#FFFFFF"}
-                onClick={() => handleAgeSearch(button.text)}
-                borderColor={"#fa8804"}
+                onClick={() => handleGenreSearch(button.text)}
+                borderColor={"#669bff"}
                 bgColor={ "#110057"}
                 buttonBgColor = {"#110057"}
                 width = {"20rem"}
@@ -97,4 +99,4 @@ const Age = () => {
   );
 };
 
-export default Age;
+export default MobileFilter;
