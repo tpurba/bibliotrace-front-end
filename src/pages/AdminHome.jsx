@@ -32,11 +32,14 @@ export default function AdminHome({}) {
     navigate("/create-user")
   }
 
+  const handleManageLocations = () => {
+    navigate('/manage-locations')
+  }
 
   //buttons
   const settingButtons =[
     {text: "Manage Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
-    {text: "Feature 1 ", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
+    {text: "Manage Locations", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleManageLocations, width : "20vw", height : "10vh"},
     {text: "Create New Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleCreateUser, width : "20vw", height : "10vh"},
     {text: "Feature 2", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Create New Database", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
