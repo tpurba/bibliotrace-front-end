@@ -7,13 +7,14 @@ import BulkQrOnlyDump from "../modals/BulkQrOnlyDump";
 import Cookies from "js-cookie";
 import ErrorModal from "../modals/ErrorModal";
 
-export default function SetLocation () {
+export default function SetLocation() {
   const [thumbnail, setThumbnail] = useState(defaultBook);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [series, setSeries] = useState("");
   const [message, setMessage] = useState("");
   const [location, setLocation] = useState(null);
+  const [formerLocation, setFormerLocation] = useState("");
   const [locations, setLocations] = useState([]);
   const [bulkModalShow, setBulkModalShow] = useState(false);
   const inputRef = useRef(null);
@@ -90,10 +91,14 @@ export default function SetLocation () {
       const data = await response.json();
 
       if (response.ok) {
-        setTitle(data.object.title);
-        setAuthor(data.object.author);
+        console.log(data)
+        console.log(data.object._object)
+        setTitle(data.object._object.book_title);
+        setAuthor(data.object._object.author);
+        setSeries(data.object._object.series_name);
+        setFormerLocation(data.object._object.location_name)
 
-        const isbn = data.object.isbn.split("|")[0];
+        const isbn = data.object._object.isbn_list.split("|")[0];
         await getCoverThumbnail(isbn);
       } else {
         setMessage(`Error Occurred: ${data.message}`);
@@ -164,8 +169,18 @@ export default function SetLocation () {
       />
 
       <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">Set Book Location</h1>
-        {message && <ErrorModal description={'Error Setting Book Location'} message={message} onExit={() => {setMessage(null)}}/>}
+        <h1 className="text-center my-10 text-white font-rector pb-20 text-5xl">
+          Set Book Location
+        </h1>
+        {message && (
+          <ErrorModal
+            description={"Error Setting Book Location"}
+            message={message}
+            onExit={() => {
+              setMessage(null);
+            }}
+          />
+        )}
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
             <input
@@ -179,7 +194,7 @@ export default function SetLocation () {
             <div className="text-xl mb-5">
               <label className="text-2xl">Location:</label>
               <select
-                className="ml-5 p-1 border border-black rounded-sm"
+                className="self-center border-2 w-full p-4 m-2 mx-0 rounded-lg text-2xl"
                 onChange={(e) => {
                   setLocation(e.target.value);
                 }}
@@ -188,20 +203,26 @@ export default function SetLocation () {
                   -- Choose an option --
                 </option>
                 {locations.map((location_obj) => {
-                  return <option value={location_obj.id}>{location_obj.location_name}</option>;
+                  return (
+                    <option value={location_obj.id}>{location_obj.location_name}</option>
+                  );
                 })}
               </select>
             </div>
 
             <p>1. Get the scanner ready to scan books</p>
             <p>2. Select the books' new location above</p>
-            <p>3. Scan the QR on the book (book information will show up if the location has been updated)</p>
-
+            <p>
+              3. Scan the QR on the book (book information will show up if the location
+              has been updated)
+            </p>
           </section>
 
           <section className="p-20 flex-1">
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
-              <h4 className="bg-darkBlue  text-center text-white text-2xl p-2">Book Modified:</h4>
+              <h4 className="bg-darkBlue  text-center text-white text-2xl p-2">
+                Book Modified:
+              </h4>
               {title != null && author != null ? (
                 <div className="flex flex-row ">
                   <section className="p-5 basis-1/2 flex-grow flex justify-center items-center">
@@ -211,7 +232,7 @@ export default function SetLocation () {
                     <p className="">Title: {title}</p>
                     <p className="">Author: {author}</p>
                     <p className="">Series: {series}</p>
-                    <p className="">Former Location: {location}</p>
+                    <p className="">Former Location: {formerLocation}</p>
                   </div>
                 </div>
               ) : (
