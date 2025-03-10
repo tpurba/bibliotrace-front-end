@@ -96,6 +96,10 @@ export default function AddScannedBooks() {
       setShort_description(book.short_description);
       setImageUrl(book.img_callback);
       setLanguage(book.language);
+      setAudience(book.audience_name);
+      setPrimaryGenre(book.genre_name);
+      setSeries_name(book.series_name);
+      setSeries_number(book.series_number);
       await getCoverThumbnail(isbn);
       console.log("Book successfully imported");
       qrInputRef.current.focus();
@@ -133,11 +137,12 @@ export default function AddScannedBooks() {
     e.preventDefault();
     setError("");
     setSuccessType(false);
-    if (!qr) {
-      setError("Please enter a QR code.");
-      qrInputRef.current.focus();
-      return;
-    }
+
+    // if (!qr) {
+    //   setError("Please enter a QR code.");
+    //   qrInputRef.current.focus();
+    //   return;
+    // }
     const jwt = Cookies.get("authToken");
     const jwtData = JSON.parse(Cookies.get("jwtData"));
 
@@ -228,7 +233,9 @@ export default function AddScannedBooks() {
       />
 
       <div className="flex flex-col justify-between h-5/6">
-        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">Add New Books</h1>
+        <h1 className="text-center my-10 text-black font-rector pb-20 text-5xl">
+          Add New Books
+        </h1>
         <div className="flex flex-row pb-20">
           <section className="p-20 flex-1 flex flex-col">
             <h4>ISBN Number</h4>
@@ -258,6 +265,28 @@ export default function AddScannedBooks() {
               </button>
             </form>
 
+            <label>
+              Location:
+              <select
+                className="self-center border-2 w-full p-4 m-2 mx-0 rounded-lg text-2xl"
+                value={location}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setLocation(e.target.value);
+                }}
+              >
+                <option value="" disabled>
+                  -- Choose an option --
+                </option>
+                {locations.map((location_obj) => {
+                  return (
+                    <option value={location_obj.id}>{location_obj.location_name}</option>
+                  );
+                })}
+              </select>
+            </label>
+            <br></br>
+
             <h4>QR Code</h4>
             <form
               className="flex rounded-xl items-center"
@@ -284,12 +313,18 @@ export default function AddScannedBooks() {
                 Add To Inventory
               </button>
             </form>
+
+            <br></br>
+
             <p>1. Use the scanner to scan a book's ISBN Number, usually on the back.</p>
-            <p>2. Verify the information in the details to the right, updating it as needed.</p>
+            <p>
+              2. Verify the information in the details to the right, updating it as
+              needed.
+            </p>
             <p>3. Click the QR code field above then scan a new QR code in.</p>
             <p>
-              4. Scanning the new code should add the book, click the Add to Inventory button if it
-              doesn't.
+              4. Scanning the new code should add the book, click the Add to Inventory
+              button if it doesn't.
             </p>
             <button
               className="w-fit mt-4"
@@ -315,6 +350,13 @@ export default function AddScannedBooks() {
             <div className="border-2 border-darkBlue rounded-md min-h-56 h-full">
               <h4 className="bg-lightBlue text-center text-black text-2xl p-2">
                 Last Scanned Book:
+                {successType === "create" ? (
+                  <p className="text-green-500">Book successfully created!</p>
+                ) : successType === "update" ? (
+                  <p className="text-green-500">Book successfully updated!</p>
+                ) : successType === "unknown" ? (
+                  <p className="text-green-500">Book successfully modified!</p>
+                ) : null}
               </h4>
 
               <div className="flex flex-row ">
@@ -337,7 +379,10 @@ export default function AddScannedBooks() {
                         onChange={(e) => setTitle(e.target.value)}
                         placeholder="e.g. The Great Gatsby"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, title ? title.length + 3 : 20)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            title ? title.length + 3 : 20
+                          )}ch`,
                         }}
                       />
                     </label>
@@ -372,7 +417,10 @@ export default function AddScannedBooks() {
                     </label>
                     <label>
                       Audience:{" "}
-                      <select value={audience} onChange={(e) => setAudience(e.target.value)}>
+                      <select
+                        value={audience}
+                        onChange={(e) => setAudience(e.target.value)}
+                      >
                         <option value="" disabled>
                           -- Choose an option --
                         </option>
@@ -389,7 +437,10 @@ export default function AddScannedBooks() {
                         onChange={(e) => setPages(e.target.value)}
                         placeholder="e.g. 480"
                         style={{
-                          width: `${Math.min(MAX_LINE_WIDTH_CH, pages ? pages.length + 3 : 9)}ch`,
+                          width: `${Math.min(
+                            MAX_LINE_WIDTH_CH,
+                            pages ? pages.length + 3 : 9
+                          )}ch`,
                         }}
                       />
                     </label>
@@ -450,35 +501,6 @@ export default function AddScannedBooks() {
                         }}
                       />
                     </label>
-                    <label>
-                      Location:
-                      <select
-                        value={location}
-                        onChange={(e) => {
-                          console.log(e.target.value);
-                          setLocation(e.target.value);
-                        }}
-                      >
-                        <option value="" disabled>
-                          -- Choose an option --
-                        </option>
-                        {locations.map((location_obj) => {
-                          return (
-                            <option value={location_obj.id}>{location_obj.location_name}</option>
-                          );
-                        })}
-                      </select>
-                    </label>
-                    <br></br>
-
-                    <button type="submit">Update Book Details</button>
-                    {successType === "create" ? (
-                      <p className="text-green-500">Book successfully created!</p>
-                    ) : successType === "update" ? (
-                      <p className="text-green-500">Book successfully updated!</p>
-                    ) : successType === "unknown" ? (
-                      <p className="text-green-500">Book successfully modified!</p>
-                    ) : null}
                   </form>
                 </div>
               </div>
