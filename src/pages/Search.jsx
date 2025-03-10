@@ -8,6 +8,7 @@ import Prev from "../assets/prev.svg?react";
 import SearchResult from "../components/SearchResult.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import FilterBox from "../components/FilterBox.jsx";
+
 const Search = () => {
   const location = useLocation();
   const navigate = useNavigate()
@@ -195,6 +196,17 @@ const Search = () => {
     setShowFilter(!showFilter);
   };
 
+  const handleMobileFilterNav = () => {
+    console.log("going to filter");
+    console.log("filter input: " , filterInput);
+    const filterBody = { 
+      Audiences: [...filterInput.Audiences], 
+      Genres: [...filterInput.Genres], 
+      Special: [...filterInput.Special] 
+    };
+    navigate('/filter', { state: { initFilterCheckBox: filterBody }});
+  };
+
   return (
     <div
       className="w-screen pb-5 search-bg flex flex-col items-center"
@@ -226,7 +238,10 @@ const Search = () => {
         <div className="w-full flex justify-between my-4">
           {" "}
           {/* Buttons Above Results */}
-          <button className="bg-transparent border-none " onClick={handleFilterPress}>
+          <button className="bg-transparent border-none flex xl:hidden " onClick={handleMobileFilterNav}>
+            <Filter />
+          </button>
+          <button className="bg-transparent border-none hidden xl:flex" onClick={handleFilterPress}>
             <Filter />
           </button>
           {/* Filter Box (Overlay) */}

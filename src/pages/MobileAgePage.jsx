@@ -83,7 +83,7 @@ const Age = () => {
                 text={button.text}
                 textColor={"#FFFFFF"}
                 onClick={() => handleAgeSearch(button.text)}
-                borderColor={"#669bff"}
+                borderColor={"#fa8804"}
                 bgColor={ "#110057"}
                 buttonBgColor = {"#110057"}
                 width = {"20rem"}
