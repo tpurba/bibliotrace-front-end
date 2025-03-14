@@ -4,26 +4,64 @@ import tailwindConfig from "../../tailwind.config";
 import { useEffect, useRef, useState } from "react";
 
 export default function CreateNewUser() {
-  const bulkAddDialog = useRef(null);
-  const [thumbnail, setThumbnail] = useState("");
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [series, setSeries] = useState("");
+  const roles = ["Admin", "User"];
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
-  const [location, setLocation] = useState("");
-  const [locations, setLocations] = useState([]);
+  const emailRef = useRef(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [campus, setCampus] = useState("");
+  const [campuses, setCampusList] = useState([]);
+
+  async function createAccount(jwt, accountData) {
+    try{
+      const response = await fetch("http://localhost:8080/api/auth/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(accountData),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to create user");
+
+      console.log("User created:", data);
+      return data;
+  } catch (error) {
+    console.error("Error creating user:", error);
+  }
+
+  }
   useEffect(()=>{
-    async function getLocations() {
-        const locationList = await JSON.parse(Cookies.get("locationList"));
-        setLocations(locationList);
+    async function getCampuses() {
+        const campusList = await JSON.parse(Cookies.get("campusList"));
+        setCampusList(campusList);
+        console.log("campuses" , campuses);
       }
-      getLocations();
+      getCampuses();
   }, []);
- 
+
 
   const testClick = () => {
     console.log("clicked");
+  }
+
+  const onSubmit = () => {
+    console.log("submit");
+    const jwt = Cookies.get("authToken");
+    const accountData = {
+      username: username,
+      password: password,
+      email: email,
+      roleType: role,
+      campus: campus,
+    };
+    console.log("Submit account data: ", accountData);
+    createAccount(jwt, accountData);
   }
  
   return (
@@ -60,7 +98,7 @@ export default function CreateNewUser() {
       <h1 className="text-center 5xl:my-16 3xl:my-8 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-white font-rector">Create User</h1>
       <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
         <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
-          <button className="self-center w-full mb-10 border-2 border-darkBlue text-darkBlue" onClick={testClick}>
+          <button className="self-center w-full mb-10 border-2 border-darkBlue text-darkBlue" onClick={onSubmit}>
             Create Account
           </button>
           <p>1. Please only create a account if the location you are at has no account.</p>
@@ -76,6 +114,16 @@ export default function CreateNewUser() {
 
         <section className="2xl:p-20 xl:p-5 flex-1">
           <div className="flex flex-col min-h-48 h-full 5xl:text-[3rem] 3xl:text-[1.25rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
+              <div className="flex-1 items-center mb-3 mt-4">
+                  <label className="text-purple">Email: </label>
+                  <input
+                      ref={emailRef}
+                      className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
+                      placeholder="Email"
+                      type="text"
+                      onChange={(e) => setEmail(e.target.value)}
+                  />
+              </div>
               <div className="flex-1 items-center mb-3 mt-4">
                   <label className="text-purple">Username: </label>
                   <input
@@ -93,26 +141,47 @@ export default function CreateNewUser() {
                       className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
                       placeholder="Password"
                       type="text"
-                      onChange={(e) => setUsername(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                   />
               </div>
               <div className="flex-1 items-center">
-                  <label className="text-purple">Location: </label>
+                <label className="text-purple">Role: </label>
+                <select
+                  value={role || ""}
+                  onChange={(e) => {
+                    const selectedRole = e.target.value;  // Get the selected role name
+                    console.log("Selected Role:", selectedRole);
+                    setRole(selectedRole);  // Store the role name directly in the state
+                  }}
+                >
+                  <option value="" disabled>
+                    -- Choose a role --
+                  </option>
+                  {roles.map((roleName, index) => (
+                    <option key={index} value={roleName}>
+                      {roleName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1 items-center">
+                  <label className="text-purple">Campus: </label>
                   <select
-                      value={location}
+                      value={campus || ""}
                       onChange={(e) => {
-                        console.log(e.target.value);
-                        setLocation(e.target.value);
+                        const selectedCampus = e.target.value;  // Get the selected campus name
+                        console.log("Selected Campus:", selectedCampus);
+                        setCampus(selectedCampus);  // Store the campus name directly in the state
                       }}
                     >
                       <option value="" disabled>
                         -- Choose an option --
                       </option>
-                      {locations.map((location_obj) => {
-                        return (
-                          <option value={location_obj.id}>{location_obj.location_name}</option>
-                        );
-                      })}
+                      {campuses.map((campus_name, index) => (
+                      <option key={index} value={campus_name}>
+                        {campus_name}
+                      </option>
+                    ))}
                   </select>
             </div>
           </div>
