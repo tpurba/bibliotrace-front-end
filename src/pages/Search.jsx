@@ -268,22 +268,22 @@ const Search = () => {
         <div className="">
           {" "}
           {/* Results Table */}
-          <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl">
+          <div className="h-10 flex md:justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl">
             {" "}
             {/* Table Header */}
-            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
+            <div className="h-10 md:flex hidden items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent ">
               <h3>Cover</h3>
             </div>
-            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/3">
+            <div className="h-10 flex items-center justify-center md:px-3 border-r-slate-50 border-r-2 w-1/3">
               <h3>Title</h3>
             </div>
-            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/5">
+            <div className="h-10 flex items-center justify-center md:px-3 border-r-slate-50 border-r-2 md:w-1/5 w-1/3">
               <h3>Author</h3>
             </div>
-            <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/5">
+            <div className="h-10 flex items-center justify-center md:px-3 border-r-slate-50 border-r-2 md:w-1/5 w-1/3">
               <h3>Genre</h3>
             </div>
-            <div className="h-10 flex items-center justify-center px-3 w-1/5">
+            <div className="h-10 md:flex hidden items-center justify-center px-3 w-1/5">
               <h3>Series</h3>
             </div>
           </div>
