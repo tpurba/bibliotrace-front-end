@@ -133,8 +133,28 @@ export default function Login({ loginType }) {
       }
     }
 
+    
+    //Get campus List
+    const campus_response = await fetch("http://localhost:8080/api/metadata/campuses", {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    const campusData = await campus_response.json();
+    if (!campus_response.ok) {
+      setMessage(`Error Fetching Metadata: ${campusData.message}`);
+    } else {
+      if (campusData.results) {
+        Cookies.set("campusList", JSON.stringify(campusData.results));
+      }
+    }
+    // console.log("test");
+    // const campusList = Cookies.get('campusList')
+    // console.log("campus data: ", campusList);
     return jwtData;
   }
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

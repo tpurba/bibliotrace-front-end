@@ -7,9 +7,7 @@ const MobileFilter = () => {
   const [searchInput, setSearchInput] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const storedFilter = sessionStorage.getItem("filterInput");
   const [filterInput, setFilterInput] = useState(
-    // location.state?.initFilterCheckBox ?? (storedFilter ? JSON.parse(storedFilter) : { Audiences: [], Genres: [], Special: [] })
     location.state?.initFilterCheckBox ?? { Audiences: [], Genres: [], Special: [] }
   );
   console.log("IN FIlter page filter input: " , filterInput);
