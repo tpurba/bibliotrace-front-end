@@ -7,20 +7,11 @@ export default function Sidebar({onMenuChange, activeButton, setActiveButton}) {
       onMenuChange(menu);
     }
   }
-
- 
-  
-  // const buttons =[
-  //   {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleManageInventory, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Settings", textColor: "white", bgColor: "darkBlue", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleSettingsNav, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  // ];
   
   const buttons = [
     { text: "Manage Inventory", menu: "inventory" },
     { text: "Settings", menu: "settings" },
-    { text: "Reports", menu: null },
+    { text: "Reports", menu: "report" },
     { text: "Help", menu: null }
   ];
 
