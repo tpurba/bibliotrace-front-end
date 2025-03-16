@@ -94,22 +94,22 @@ const SearchResult = ({ bookData }) => {
   return (
     <div>
       <div
-        className="flex justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90 text-xl"
+        className="flex md:justify-between h-fit border-x-2 border-x-[#110057] border-b-2 border-b-[#110057] bg-[#FFFFFF] bg-opacity-90 text-xl"
         onClick={toggleModal}
       >
-        <div className="h-40 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
+        <div className="h-40 md:flex hidden items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
           <img src={image} className="w-28 m-2" alt="Cover Thumbnail"></img>
         </div>
         <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/3">
           {bookTitle}
         </div>
-        <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/5">
+        <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 md:w-1/5 w-1/3">
           {bookAuthor}
         </div>
-        <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-1/5">
+        <div className="flex items-center justify-center px-3 border-r-slate-50 border-r-2 md:w-1/5 w-1/3">
           {bookGenre}
         </div>
-        <div className="flex items-center justify-center px-3 w-1/5">{bookSeries}</div>
+        <div className="md:flex hidden items-center justify-center px-3 w-1/5">{bookSeries}</div>
       </div>
 
       {openModal && (
