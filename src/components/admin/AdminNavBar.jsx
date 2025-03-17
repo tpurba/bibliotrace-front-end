@@ -51,7 +51,7 @@ const AdminNavBar = ({ onMenuChange, setActiveButton, useDarkTheme, showTitle, b
           onKeyDown={handleKeyDown}
         />
         <button
-          className="ml-2 px-4 py-2 border-[#110057] border-2 bg-white rounded-2xl font-bold text-[#a49bc6]"
+          className="ml-2 px-4 py-2 border-[#110057]  border-2 hover:border-[#ff78e6] bg-white  rounded-2xl font-bold text-[#a49bc6] hover:text-[#ff78e6]"
           onClick={handleSearch}
         >
           Go!
