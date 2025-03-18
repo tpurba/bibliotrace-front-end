@@ -171,23 +171,21 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
       <AnimatePresence>
         {
           <motion.div
-            className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm"
+            className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm p-2 z-10"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onExit}
           >
             <motion.div
-              className="bg-white rounded-lg shadow-lg w-4/6 max-w-5xl relative"
+              className="bg-white rounded-lg shadow-lg w-5/6 max-w-3xl max-h-[80vh] overflow-y-auto relative"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-end items-center pl-4 pr-4 pt-2 pb-2 bg-darkBlue rounded-t-lg">
-                <h2 className="flex-1 text-center text-white text-lg font-semibold">
-                  {title}
-                </h2>
+                <h2 className="flex-1 text-center text-white text-lg font-semibold">{title}</h2>
                 <button className="text-gray-600" onClick={onExit}>
                   Back
                 </button>
