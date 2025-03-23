@@ -4,26 +4,80 @@ import tailwindConfig from "../../tailwind.config";
 import { useEffect, useRef, useState } from "react";
 
 export default function CreateNewUser() {
-  const bulkAddDialog = useRef(null);
-  const [thumbnail, setThumbnail] = useState("");
-  const [title, setTitle] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [series, setSeries] = useState("");
+  const roles = ["Admin", "User"];
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
-  const [location, setLocation] = useState("");
-  const [locations, setLocations] = useState([]);
-  useEffect(()=>{
-    async function getLocations() {
-        const locationList = await JSON.parse(Cookies.get("locationList"));
-        setLocations(locationList);
+  const emailRef = useRef(null);
+  let [username, setUsername] = useState("");
+  let [password, setPassword] = useState("");
+  let [email, setEmail] = useState("");
+  let [role, setRole] = useState("");
+  let [campus, setCampus] = useState("");
+  const [campuses, setCampusList] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [failedMessage, setFailedMessage] = useState("");
+
+  async function createAccount(jwt, accountData) {
+    try{
+      const response = await fetch("http://localhost:8080/api/auth/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify(accountData),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSuccessMessage(data.message);
+      } else {
+        setFailedMessage("*" + data.message);
       }
-      getLocations();
+      return data;
+  } catch (error) {
+    console.error("Error creating user:", error);
+  }
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      onSubmit();
+    }
+  };
+
+  useEffect(()=>{
+    async function getCampuses() {
+        const campusList = await JSON.parse(Cookies.get("campusList"));
+        setCampusList(campusList);
+      }
+      getCampuses();
   }, []);
- 
 
   const testClick = () => {
     console.log("clicked");
+  }
+
+  const onSubmit = () => {
+    setSuccessMessage(null);
+    setFailedMessage(null);
+    const jwt = Cookies.get("authToken");
+    if(username === "") username = null;
+    if(password == "") password = null;
+    if(role=="Admin"){
+      if(email == "") email = null;
+    }
+    if(role == "") role = null;
+    if(campus == "") campus = null;
+    const accountData = {
+      username: username,
+      password: password,
+      email: email,
+      roleType: role,
+      campus: campus,
+    };
+    createAccount(jwt, accountData);
   }
  
   return (
@@ -58,14 +112,16 @@ export default function CreateNewUser() {
       <NavBar useDarkTheme={false} showTitle={true} bgColor={tailwindConfig.theme.colors.purple} textColor={tailwindConfig.theme.colors.white} homeNavOnClick = '/admin'/>
 
       <h1 className="text-center 5xl:my-16 3xl:my-8 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-white font-rector">Create User</h1>
-      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12">
+      <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12 " >
         <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
-          <button className="self-center w-full mb-10 border-2 border-darkBlue text-darkBlue" onClick={testClick}>
+          <button className="self-center w-full mb-10 border-2 border-purple hover:bg-purple hover:scale-105 text-purple hover:text-white" onClick={onSubmit}>
             Create Account
           </button>
+          <p className="text-purple">{successMessage}</p>
+          <p className="text-rubyRed">{failedMessage}</p>
           <p>1. Please only create a account if the location you are at has no account.</p>
           <p>2. Please do not use a username or login information that will pertain to your id or health information.</p>
-          <p>3. You must specify the location of the clincs library.</p>
+          <p>3. You must specify the location of the clinics library.</p>
           <p
             className="self-center mt-10 underline text-lightBlue hover:cursor-pointer hover:opacity-80 active:text-darkBlue"
             onClick={testClick}
@@ -77,6 +133,31 @@ export default function CreateNewUser() {
         <section className="2xl:p-20 xl:p-5 flex-1">
           <div className="flex flex-col min-h-48 h-full 5xl:text-[3rem] 3xl:text-[1.25rem] 2xl:text-3xl xl:text-2xl lg:text-lg">
               <div className="flex-1 items-center mb-3 mt-4">
+                  <label className="text-purple">Email: </label>
+                  <input
+                    ref={emailRef}
+                    className={`border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg
+                      ${role === "User" ? "opacity-50 cursor-not-allowed" : ""}`}
+                    placeholder="Email"
+                    type="text"
+                    value={role === "User" ? "" : email} 
+                    onChange={(e) => {
+                      if (role !== "User") {
+                        setEmail(e.target.value);
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (role === "User") {
+                        e.preventDefault(); 
+                      } else {
+                        handleKeyDown(e);
+                      }
+                    }}
+                    disabled={role === "User"}
+                    readOnly={role === "User"}
+                  />
+              </div>
+              <div className="flex-1 items-center mb-3 mt-4">
                   <label className="text-purple">Username: </label>
                   <input
                       ref={usernameRef}
@@ -84,6 +165,7 @@ export default function CreateNewUser() {
                       placeholder="Username"
                       type="text"
                       onChange={(e) => setUsername(e.target.value)}
+                      onKeyDown={handleKeyDown}
                   />
               </div>
               <div className="flex-1 items-center mb-3">
@@ -93,26 +175,46 @@ export default function CreateNewUser() {
                       className="border-2 border-purple border-solid rounded-md h-14 w-full p-4 placeholder-purple placeholder:font-bold text-lg"
                       placeholder="Password"
                       type="text"
-                      onChange={(e) => setUsername(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
+                      onKeyDown={handleKeyDown}
                   />
               </div>
               <div className="flex-1 items-center">
-                  <label className="text-purple">Location: </label>
+                <label className="text-purple">Role: </label>
+                <select
+                  value={role || ""}
+                  onChange={(e) => {
+                    const selectedRole = e.target.value;  // Get the selected role name
+                    setRole(selectedRole);  // Store the role name directly in the state
+                  }}
+                >
+                  <option value="" disabled>
+                    -- Choose a role --
+                  </option>
+                  {roles.map((roleName, index) => (
+                    <option key={index} value={roleName}>
+                      {roleName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex-1 items-center">
+                  <label className="text-purple">Campus: </label>
                   <select
-                      value={location}
+                      value={campus || ""}
                       onChange={(e) => {
-                        console.log(e.target.value);
-                        setLocation(e.target.value);
+                        const selectedCampus = e.target.value;  // Get the selected campus name
+                        setCampus(selectedCampus);  // Store the campus name directly in the state
                       }}
                     >
                       <option value="" disabled>
                         -- Choose an option --
                       </option>
-                      {locations.map((location_obj) => {
-                        return (
-                          <option value={location_obj.id}>{location_obj.location_name}</option>
-                        );
-                      })}
+                      {campuses.map((campus_name, index) => (
+                      <option key={index} value={campus_name}>
+                        {campus_name}
+                      </option>
+                    ))}
                   </select>
             </div>
           </div>

@@ -7,31 +7,22 @@ export default function Sidebar({onMenuChange, activeButton, setActiveButton}) {
       onMenuChange(menu);
     }
   }
-
- 
-  
-  // const buttons =[
-  //   {text: "Manage Inventory", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleManageInventory, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Settings", textColor: "white", bgColor: "darkBlue", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleSettingsNav, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Reports", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  //   {text: "Help", textColor: "darkBlue", bgColor: "white", borderColor: "darkBlue", buttonBgColor: "white", onClick: handleTestClick, className: "mt-12 pr-16", width : "14vw", height : "7vh"},
-  // ];
   
   const buttons = [
     { text: "Manage Inventory", menu: "inventory" },
     { text: "Settings", menu: "settings" },
-    { text: "Reports", menu: null },
+    { text: "Reports", menu: "report" },
     { text: "Help", menu: null }
   ];
 
     return (
-      <div className="ml-auto flex flex-col">
+      <div className="ml-auto flex flex-col pr-5">
       {buttons.map((button, index) => (
         <NewBarButton
           key={index}
           text={button.text}
           onClick={() => handleButtonClick(button.menu, button.text)}
-          className={`h-md:mt-12 mt-6 px-10 5xl:w-[20rem] 3xl:w-[15rem] 2xl:w-[8rem] xl:w-[8rem] w-[7rem]  5xl:h-[6rem] 3xl:h-[4rem] h-[3rem] transition-colors duration-300
+          className={`h-md:mt-12 mt-6 5xl:w-[20rem] 3xl:w-[15rem] 2xl:w-[8rem] xl:w-[8rem] w-[7rem]  5xl:h-[6rem] 3xl:h-[4rem] h-[3rem] transition-colors duration-300
             ${
               activeButton === button.text
                 ? "bg-darkBlue text-white" // Active style

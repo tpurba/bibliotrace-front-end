@@ -36,6 +36,15 @@ export default function AdminHome({}) {
     navigate('/manage-locations')
   }
 
+
+  //reports 
+  const handleShoppingList = () => {
+    navigate('/shopping-list')
+  }
+  const handleRestockList = () => {
+    navigate('/restock-list')
+  }
+
   //buttons
   const settingButtons =[
     {text: "Manage Profile", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
@@ -56,6 +65,13 @@ export default function AdminHome({}) {
     {text: "Add Title", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Generate QR Codes", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
     {text: "Set Locations", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleSetLocation, width : "20vw", height : "10vh"},
+  ];
+
+
+  const ReportButtons =[
+    {text: "Shopping List", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleShoppingList, width : "20vw", height : "10vh"},
+    {text: "Audit", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleTestClick, width : "20vw", height : "10vh"},
+    {text: "Restock List", textColor: "white", bgColor: "#110057", borderColor: "white", buttonBgColor: "#110057", onClick: handleRestockList, width : "20vw", height : "10vh"},
   ];
 
   
@@ -97,7 +113,13 @@ export default function AdminHome({}) {
           <>
             <AdminManageMenu menuButtons= {inventoryButtons} title = 'Manage Inventory'/>
           </>
-        ) : null}
+        ) : activeMenu === "report" ?(
+          <>
+            <AdminManageMenu menuButtons= {ReportButtons} title = 'Reports'/>
+          </>
+        )
+        :null}
+        
       </div>
       <AdminSideBar onMenuChange={setActiveMenu} activeButton={activeButton} setActiveButton={setActiveButton}/>
     </div>

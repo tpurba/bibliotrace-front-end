@@ -125,7 +125,7 @@ export default function MainMenu() {
   }, [])
 
   return (
-    <div className="absolute left-0 top-auto z-10">
+    <div className="absolute left-0 top-auto z-10 w-1/2 pl-5">
       <CustomButton
         imageSrc={PurpleIcon}
         text="CHECK OUT"
@@ -137,7 +137,7 @@ export default function MainMenu() {
         textWidth="42vw"
         textSize="1.25rem"
       />
-      <div className="grid grid-cols-2 w-2/3 justify-start">
+      <div className="grid grid-cols-2 justify-start">
         {menuItems.map((item, index) => (
           <CustomButton
             key={index}
