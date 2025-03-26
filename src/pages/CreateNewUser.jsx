@@ -114,11 +114,6 @@ export default function CreateNewUser() {
       <h1 className="text-center 5xl:my-16 3xl:my-8 lg:my-4 4xl:text-[8rem] 3xl:text-[6rem] xl:text-[3rem]  text-white font-rector">Create User</h1>
       <div className="flex flex-row h-xl:mt-44 h-lg:mt-44 h-md:mt-44 h-sm:mt-36 mt-12 " >
         <section className="2xl:p-20 p-10 flex-1 flex flex-col justify-around 3xl:text-3xl xl:text-lg">
-          <button className="self-center w-full mb-10 border-2 border-purple hover:bg-purple hover:scale-105 text-purple hover:text-white" onClick={onSubmit}>
-            Create Account
-          </button>
-          <p className="text-purple">{successMessage}</p>
-          <p className="text-rubyRed">{failedMessage}</p>
           <p>1. Please only create a account if the location you are at has no account.</p>
           <p>2. Please do not use a username or login information that will pertain to your id or health information.</p>
           <p>3. You must specify the location of the clinics library.</p>
@@ -216,7 +211,15 @@ export default function CreateNewUser() {
                       </option>
                     ))}
                   </select>
-            </div>
+              </div>
+              <div className="flex-1 items-center pt-12">
+                <button className="self-center w-full mb-10 border-2 border-purple hover:bg-purple hover:scale-105 text-purple hover:text-white" onClick={onSubmit}>
+                Create Account
+                </button>
+                <p className="text-purple">{successMessage}</p>
+                <p className="text-rubyRed">{failedMessage}</p>
+              </div>
+            
           </div>
         </section>
       </div>
