@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import Genre from "../pages/MobileGenrePage.jsx";
 import Age from "../pages/MobileAgePage.jsx";
@@ -27,6 +21,7 @@ import RestockList from "../pages/RestockList.jsx";
 import SetLocation from "../pages/SetLocation.jsx";
 import CreateUser from "../pages/CreateNewUser.jsx";
 import ManageLocations from "../pages/ManageLocations.jsx";
+import Audit from "../pages/Audit.jsx";
 
 const AppRoutes = () => {
   const getToken = () => {
@@ -88,6 +83,7 @@ const AppRoutes = () => {
             <Route path="/add" element={<AddBooks />} />
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/add-scanned" element={<AddScannedBooks />} />
+            <Route path="/audit" element={<Audit />} />
             <Route path="/remove-book" element={<RemoveBook />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkin" element={<CheckIn />} />
