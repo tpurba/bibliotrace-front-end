@@ -268,7 +268,7 @@ const Search = () => {
         <div className="">
           {" "}
           {/* Results Table */}
-          <div className="h-10 flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl">
+          <div className="h-10 hidden md:flex justify-between bg-[#110057] text-white text-center items-center rounded-t-2xl">
             {" "}
             {/* Table Header */}
             <div className="h-10 flex items-center justify-center px-3 border-r-slate-50 border-r-2 w-28 text-transparent">
