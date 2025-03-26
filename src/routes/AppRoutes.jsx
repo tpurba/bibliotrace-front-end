@@ -70,7 +70,6 @@ const AppRoutes = () => {
     <Router basename={"/bibliotrace-front-end"}>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/edit-genres-tags" element={<ManageGenresTags />} />
         <Route element={<PublicRoute />}>
           {/*public pages*/}
           <Route path="/" element={<Home />} />
@@ -84,6 +83,7 @@ const AppRoutes = () => {
             <Route path="/add" element={<AddBooks />} />
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/add-scanned" element={<AddScannedBooks />} />
+            <Route path="/edit-genres-tags" element={<ManageGenresTags />} />
             <Route path="/remove-book" element={<RemoveBook />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkin" element={<CheckIn />} />
