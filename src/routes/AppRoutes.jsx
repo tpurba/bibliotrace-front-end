@@ -12,7 +12,6 @@ import Age from "../pages/MobileAgePage.jsx";
 import SearchPage from "../pages/Search";
 import SuggestPage from "../pages/SuggestPage";
 import NotFound from "../pages/NotFound";
-import AddBooks from "../pages/AddBooks";
 import Cookies from "js-cookie";
 import Filter from "../pages/MobileFilterPage.jsx";
 
@@ -85,7 +84,6 @@ const AppRoutes = () => {
           <Route path="/search" element={<SearchPage />} />
           {/*private pages*/}
           <Route element={<PrivateRoute />}>
-            <Route path="/add" element={<AddBooks />} />
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/add-scanned" element={<AddScannedBooks />} />
             <Route path="/remove-book" element={<RemoveBook />} />
