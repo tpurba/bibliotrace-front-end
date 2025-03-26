@@ -47,13 +47,7 @@ export default function Login({ loginType }) {
   }, []);
 
   useEffect(() => {
-    if (
-      message &&
-      errorModalRef.current &&
-      inputRef1.current &&
-      inputRef2.current &&
-      loginButton.current
-    ) {
+    if (message && errorModalRef.current && inputRef1.current && inputRef2.current && loginButton.current) {
       inputRef1.current.blur();
       inputRef2.current.blur();
       loginButton.current.blur();
@@ -85,24 +79,43 @@ export default function Login({ loginType }) {
     Cookies.set("jwtData", jwtDataString);
 
     // Get Genre List
-    let response = await fetch("http://localhost:8080/api/metadata/genres", {
+    let genreResponse = await fetch("http://localhost:8080/api/metadata/genre", {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     });
-    if (!response.ok) {
-      const responseText = await response.text();
-      setMessage(`Error Fetching Metadata: ${responseText}`);
+    const genreData = await genreResponse.json();
+    if (!genreResponse.ok) {
+      setMessage(`Error Fetching Metadata: ${genreData.message}`);
     } else {
-      const jsonResult = await response.json();
-      if (jsonResult != null && jsonResult.results != null) {
-        const genres = jsonResult.results;
-        Cookies.set("genreList", genres);
-      }
+      Cookies.set(
+        "genreList",
+        genreData.object.map((genre) => {
+          return genre.genre_name;
+        })
+      );
+    }
+
+    // Get Tag List
+    let tagResponse = await fetch("http://localhost:8080/api/metadata/tag", {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    const tagData = await tagResponse.json();
+    if (!tagResponse.ok) {
+      setMessage(`Error Fetching Metadata: ${tagData.message}`);
+    } else {
+      Cookies.set(
+        "tagList",
+        tagData.object.map((tag) => {
+          return tag.tag_name;
+        })
+      );
     }
 
     // Get Audience List
-    response = await fetch("http://localhost:8080/api/metadata/audiences", {
+    let response = await fetch("http://localhost:8080/api/metadata/audiences", {
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -133,7 +146,6 @@ export default function Login({ loginType }) {
       }
     }
 
-    
     //Get campus List
     const campus_response = await fetch("http://localhost:8080/api/metadata/campuses", {
       headers: {
@@ -153,8 +165,6 @@ export default function Login({ loginType }) {
     // console.log("campus data: ", campusList);
     return jwtData;
   }
-
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -198,13 +208,7 @@ export default function Login({ loginType }) {
         className="size-full bg-cover bg-center bg-no-repeat "
         style={{ backgroundImage: `url(${loginBackground})` }}
       >
-        <NavBar
-          useDarkTheme={false}
-          showTitle={true}
-          bgColor={"#ff50e0"}
-          textColor={"white"}
-          showNavButtons={false}
-        />
+        <NavBar useDarkTheme={false} showTitle={true} bgColor={"#ff50e0"} textColor={"white"} showNavButtons={false} />
         <div className="h-[calc(100%-64px)] flex flex-col items-center">
           <h1 className="text-white mb-10 mt-20">{location.state?.loginType ?? ""}</h1>
           <form className="flex flex-col w-1/2 items-center" onSubmit={handleSubmit}>

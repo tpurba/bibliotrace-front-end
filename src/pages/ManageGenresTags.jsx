@@ -5,14 +5,16 @@ import NavBar from "../components/NavBar";
 export default function ManageGenresTags() {
   const [genres, setGenres] = useState([]);
   const [tags, setTags] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    let genreList = Cookies.get("genreList");
-    setGenres(genreList.split(","));
+    setGenres(Cookies.get("genreList")?.split(",") ?? []);
+    setTags(Cookies.get("tagList")?.split(",") ?? []);
   }, []);
 
   async function handleAddGenre(e) {
     //fetch call to add genreToAdd
+    setMessage("");
     e.preventDefault();
     try {
       const formData = new FormData(e.target);
@@ -30,9 +32,14 @@ export default function ManageGenresTags() {
 
       const data = await response.json();
       if (!response.ok) {
+        setMessage(`Error creating genre: ${genreToAdd}`);
         console.log(data.message);
       } else {
-        setGenres([...genres, genreToAdd].sort());
+        let newGenres = [...genres, genreToAdd].sort();
+        setGenres(newGenres);
+        let genreList = newGenres.join(",");
+        Cookies.set("genreList", genreList);
+        e.target.reset();
       }
     } catch (e) {
       console.log(e);
@@ -41,6 +48,7 @@ export default function ManageGenresTags() {
 
   async function handleRemoveGenre(genre) {
     //fetch call to remove genre
+    setMessage("");
     try {
       const response = await fetch("http://localhost:8080/api/inventory/genre", {
         method: "DELETE",
@@ -50,9 +58,13 @@ export default function ManageGenresTags() {
 
       const data = await response.json();
       if (!response.ok) {
+        setMessage(`Error removing genre: ${genre}`);
         console.log(data.message);
       } else {
-        setGenres(genres.filter((g) => g !== genre));
+        let newGenres = genres.filter((g) => g !== genre);
+        setGenres(newGenres);
+        let genreList = newGenres.join(",");
+        Cookies.set("genreList", genreList);
       }
     } catch (e) {
       console.log(e);
@@ -62,6 +74,7 @@ export default function ManageGenresTags() {
   async function handleAddTag(e) {
     //fetch call to add tagToAdd
     e.preventDefault();
+    setMessage("");
     try {
       const formData = new FormData(e.target);
       const tagToAdd = formData.get("tag_name");
@@ -78,9 +91,15 @@ export default function ManageGenresTags() {
 
       const data = await response.json();
       if (!response.ok) {
+        console.log("tag: ", tagToAdd);
+        setMessage(`Error creating tag: ${tagToAdd}`);
         console.log(data.message);
       } else {
-        setTags([...tags, tagToAdd].sort());
+        let newTags = [...tags, tagToAdd].sort();
+        setTags(newTags);
+        let tagList = newTags.join(",");
+        Cookies.set("tagList", tagList);
+        e.target.reset();
       }
     } catch (e) {
       console.log(e);
@@ -89,6 +108,7 @@ export default function ManageGenresTags() {
 
   async function handleRemoveTag(tag) {
     //fetch call to remove tag
+    setMessage("");
     try {
       const response = await fetch("http://localhost:8080/api/inventory/tag", {
         method: "DELETE",
@@ -98,9 +118,13 @@ export default function ManageGenresTags() {
 
       const data = await response.json();
       if (!response.ok) {
+        setMessage(`Error removing tag: ${tag}`);
         console.log(data.message);
       } else {
-        setTags(tags.filter((t) => t !== tag));
+        let newTags = tags.filter((t) => t !== tag);
+        setTags(newTags);
+        let tagList = newTags.join(",");
+        Cookies.set("tagList", tagList);
       }
     } catch (e) {
       console.log(e);
@@ -111,9 +135,10 @@ export default function ManageGenresTags() {
     <>
       <NavBar useDarkTheme={true} showTitle={true} showNavButtons={true}></NavBar>
       <h1 className="text-center my-10">Edit Genres/Tags</h1>
-      <div className="flex flex-row justify-between w-full h-[100vh]">
+      <p className="text-red text-center mb-5 h-10">{message}</p>
+      <div className="flex flex-row justify-between w-full h-[calc(100vh-200px)]">
         <section id="genres-container" className="flex-1 w-full h-full mx-[5%] ml-[10%] ">
-          <ul className="border h-[60%] overflow-y-scroll">
+          <ul className="border h-[70%] overflow-y-scroll">
             {genres.map((genre) => {
               return (
                 <>
@@ -138,7 +163,7 @@ export default function ManageGenresTags() {
         </section>
 
         <section id="tags-container" className="flex-1 w-full h-full mx-[5%] mr-[10%]">
-          <ul className="border h-[60%] overflow-y-scroll">
+          <ul className="border h-[70%] overflow-y-scroll">
             {tags.map((tag) => {
               return (
                 <>
