@@ -3,10 +3,6 @@
 // Home, ManageInventory, Settings, Help, and Reports. These components are stored in the ../components/admin folder.
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminNavBar from "../components/admin/AdminNavBar.jsx";
-import AdminMainMenu from "../components/admin/AdminMainMenu.jsx";
-import AdminSideBar from "../components/admin/AdminSideBar.jsx";
-import AdminManageMenu from "../components/admin/AdminManageMenu.jsx";
 
 export default function AdminHome({}) {
   const [activeMenu, setActiveMenu] = useState("main"); //for the component

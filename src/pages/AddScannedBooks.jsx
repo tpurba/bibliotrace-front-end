@@ -79,12 +79,13 @@ export default function AddScannedBooks() {
     setLocation("");
 
     const jwt = Cookies.get("authToken");
-    const response = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
+    const response = await fetch(`http://localhost:8080/api/bookdata/${isbn}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
 
+    // TODO: If the response if 400, prompt the user with the suggestions if they are an admin?
     if (response.ok) {
       const book = (await response.json()).object;
       console.log(book);
@@ -500,6 +501,9 @@ export default function AddScannedBooks() {
                           height: "5rem",
                         }}
                       />
+                    </label>
+                    <label>
+                      TODO: Add tags editor here
                     </label>
                   </form>
                 </div>

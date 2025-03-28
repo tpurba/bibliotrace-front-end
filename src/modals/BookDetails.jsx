@@ -10,6 +10,7 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
   const [audience, setAudience] = useState("");
   const [published, setPublished] = useState("");
   const [tags, setTags] = useState([]);
+  const [secondaryGenres, setSecondaryGenres] = useState([]);
   const [synopsis, setSynopsis] = useState("");
 
   console.log(bookData);
@@ -27,7 +28,7 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
 
   const getExtraBookData = async () => {
     const jwt = Cookies.get("authToken");
-    let result = await fetch(`http://localhost:8080/api/inventory/get/${isbn}`, {
+    let result = await fetch(`http://localhost:8080/api/bookdata/${isbn}`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -40,19 +41,8 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
       setAudience(bookDataReturned.audience_name);
       setPublished(bookDataReturned.publish_date);
       setSynopsis(bookDataReturned.short_description);
-
-      result = await fetch(`http://localhost:8080/api/inventory/get/tags/${isbn}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-
-      if (result.ok) {
-        const tagsResult = await result.text();
-        const tagsObject = JSON.parse(tagsResult).object;
-
-        setTags(tagsObject);
-      }
+      setTags(bookDataReturned.tag_list);
+      setSecondaryGenres(bookDataReturned.genre_list);
     }
   };
 
@@ -87,9 +77,7 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-end items-center pl-4 pr-4 pt-2 pb-2 bg-darkBlue rounded-t-lg">
-                <h2 className="flex-1 text-center text-white text-lg font-semibold">
-                  {title}
-                </h2>
+                <h2 className="flex-1 text-center text-white text-lg font-semibold">{title}</h2>
                 <button className="text-gray-600" onClick={onExit}>
                   Back
                 </button>
@@ -107,22 +95,25 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                   </div>
                   <div className="flex text-xl pt-4">
                     <h6 className="font-bold pr-2">Genre:</h6>
-                    <p>{genre}</p>
+                    <p className="pr-2">{genre}</p>
+                    {secondaryGenres.map((genre) => {
+                      return <p className="px-2 italic">{genre}</p>;
+                    })}
                   </div>
                   <div className="flex text-xl pt-4">
                     <h6 className="font-bold pr-2">Recommended Age:</h6>
                     <p>{audience}</p>
                   </div>
                   <div className="flex text-xl pt-4">
-                    <h6 className="font-bold pr-2">Published:</h6>
+                    <h6 className="font-bold px-2">Published:</h6>
                     <p>{published}</p>
                   </div>
                   <div className="flex text-xl pt-4 items-center flex-wrap">
                     <h6 className="font-bold pr-2">Tags:</h6>
                     {tags.map((tag, index) => {
                       return (
-                        <p className="bg-darkBlue px-2 m-2 rounded-3xl text-white text-center text-nowrap">
-                          {tag.tag}
+                        <p className="bg-darkBlue px-4 py-1 m-2 rounded-3xl text-white text-center text-nowrap">
+                          {tag}
                         </p>
                       );
                     })}
@@ -191,11 +182,7 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                 </button>
               </div>
               <div className="flex flex-wrap justify-center">
-                <img
-                  src={imageSrc}
-                  alt="Cover Image"
-                  className="p-6 max-w-full w-1/3 max-h-fit min-w-60 "
-                />
+                <img src={imageSrc} alt="Cover Image" className="p-6 max-w-full w-1/3 max-h-fit min-w-60 " />
                 <div className="p-6">
                   <div className="flex text-xl">
                     <h6 className="font-bold pr-2">Author:</h6>
@@ -207,22 +194,25 @@ export default function BookDetails({ bookData, imageSrc, onExit }) {
                   </div>
                   <div className="flex text-xl pt-4">
                     <h6 className="font-bold pr-2">Genre:</h6>
-                    <p>{genre}</p>
+                    <p className="pr-2">{genre}</p>
+                    {secondaryGenres.map((genre) => {
+                      return <p className="px-2 italic">{genre}</p>;
+                    })}
                   </div>
                   <div className="flex text-xl pt-4">
                     <h6 className="font-bold pr-2">Recommended Age:</h6>
                     <p>{audience}</p>
                   </div>
                   <div className="flex text-xl pt-4">
-                    <h6 className="font-bold pr-2">Published:</h6>
+                    <h6 className="font-bold px-2">Published:</h6>
                     <p>{published}</p>
                   </div>
                   <div className="flex text-xl pt-4 items-center flex-wrap">
                     <h6 className="font-bold pr-2">Tags:</h6>
                     {tags.map((tag, index) => {
                       return (
-                        <p className="bg-darkBlue px-2 m-2 rounded-3xl text-white text-center text-nowrap">
-                          {tag.tag}
+                        <p className="bg-darkBlue px-4 py-1 m-2 rounded-3xl text-white text-center text-nowrap">
+                          {tag}
                         </p>
                       );
                     })}
