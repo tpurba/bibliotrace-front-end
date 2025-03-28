@@ -6,7 +6,7 @@
   "proxy": "http://localhost:8080",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node exportVite404.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
