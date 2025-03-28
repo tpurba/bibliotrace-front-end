@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import Genre from "../pages/MobileGenrePage.jsx";
 import Age from "../pages/MobileAgePage.jsx";
@@ -71,7 +65,8 @@ const AppRoutes = () => {
   };
 
   return (
-    <Router basename={"/bibliotrace-front-end"}>
+    <Router basename={"/"}>
+      {/*PLEASE do not change the basename, the default name is what the deployment pipeline expects.-->*/}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route element={<PublicRoute />}>
