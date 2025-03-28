@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 
 export default function Audit() {
   const [isAuditOngoing, setIsAuditOngoing] = useState(false);
+  const [auditID, setAuditID] = useState(null);
   const [lastAuditCompletedDate, setLastAuditCompletedDate] = useState("");
   const [lastAuditStartDate, setLastAuditStartDate] = useState("10/10/2020");
   const [currentLocation, setCurrentLocation] = useState("");
@@ -26,17 +27,52 @@ export default function Audit() {
     //set isAuditOngoing
   }, []);
 
-  function handleStartAudit() {
+  async function handleStartAudit() {
     //create new audit
-    setIsAuditOngoing(true);
-    setLastAuditStartDate(new Date().toLocaleDateString());
+    try {
+      const response = await fetch("http://localhost:8080/api/inventory/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(response.message);
+      } else {
+        setIsAuditOngoing(true);
+        setLastAuditStartDate(new Date().toLocaleDateString());
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   function goToReports() {}
 
   function handleCompleteLocation() {}
 
-  function handleScan() {}
+  async function handleScan(e) {
+    if (e.key !== "Enter" || e.target.value == "") {
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8080/api/inventory/auditEntry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+        body: { qr_code: e.target.value, location: currentLocation, audit_id: auditID },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(response.message);
+      } else {
+        //set book data
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   function handleCompleteAudit() {}
   return (
@@ -85,7 +121,7 @@ export default function Audit() {
                 className="border p-2 mb-10"
                 type="text"
                 placeholder="Start Scanning"
-                onKeyDown={handleScan}
+                onKeyDown={(e) => handleScan(e)}
               ></input>
               <div className="flex flex-col w-full">
                 <p className="text-lg mb-5 ml-5">Title: {bookTitle}</p>
