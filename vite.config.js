@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import svgr from 'vite-plugin-svgr'
-import react from '@vitejs/plugin-react'
-import tailwindcss from "tailwindcss"
+import { defineConfig } from "vite";
+import svgr from "vite-plugin-svgr";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "tailwindcss";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -9,7 +9,6 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [tailwindcss()],
-    }
+    },
   },
-  base: '/bibliotrace-front-end',
-})
+});
