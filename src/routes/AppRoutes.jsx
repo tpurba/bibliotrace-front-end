@@ -20,6 +20,7 @@ import RestockList from "../pages/RestockList.jsx";
 import SetLocation from "../pages/SetLocation.jsx";
 import CreateUser from "../pages/CreateNewUser.jsx";
 import ManageLocations from "../pages/ManageLocations.jsx";
+import ManageGenresTags from "../pages/ManageGenresTags.jsx";
 
 const AppRoutes = () => {
   const getToken = () => {
@@ -81,6 +82,7 @@ const AppRoutes = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/admin" element={<AdminHome />} />
             <Route path="/add-scanned" element={<AddScannedBooks />} />
+            <Route path="/edit-genres-tags" element={<ManageGenresTags />} />
             <Route path="/remove-book" element={<RemoveBook />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkin" element={<CheckIn />} />
