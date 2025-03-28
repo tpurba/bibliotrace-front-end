@@ -5,26 +5,53 @@ import tailwindConfig from "../../tailwind.config";
 import Cookies from "js-cookie";
 
 export default function Audit() {
-  const [isAuditOngoing, setIsAuditOngoing] = useState(false);
+  const [isAuditOngoing, setIsAuditOngoing] = useState(null);
   const [auditID, setAuditID] = useState(null);
   const [lastAuditCompletedDate, setLastAuditCompletedDate] = useState("");
-  const [lastAuditStartDate, setLastAuditStartDate] = useState("10/10/2020");
+  const [lastAuditStartDate, setLastAuditStartDate] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
-  const [locations, setLocations] = useState([
-    "basement",
-    "storage bin 1",
-    "shelf",
-    "storage bin 2",
-    "storage bin 3",
-    "storage bin 4",
-  ]);
-  const [allLocationsComplete, setAllLocationsComplete] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const [allLocationsComplete, setAllLocationsComplete] = useState();
   const [bookTitle, setBookTitle] = useState("");
   const [bookAuthor, setBookAuthor] = useState("");
-  const [bookLocation, setBookLocation] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     //set isAuditOngoing
+    async function getCurrentAudit() {
+      try {
+        const response = await fetch("http://localhost:8080/api/inventory/audit", {
+          method: "GET",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          setMessage(data.message);
+        } else if (data.object) {
+          setIsAuditOngoing(true);
+          setAuditID(data.object.id);
+          setLastAuditStartDate(data.object.start_date.split("T")[0]);
+        } else {
+          setIsAuditOngoing(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    if (isAuditOngoing == null) {
+      getCurrentAudit();
+    }
+    if (Cookies.get("locationList")) {
+      const locationList = JSON.parse(Cookies.get("locationList"));
+      setLocations(locationList);
+      setAllLocationsComplete(
+        !locationList.filter((location) => {
+          location.in_audit === 1;
+        }).length
+      );
+    }
   }, []);
 
   async function handleStartAudit() {
@@ -41,6 +68,73 @@ export default function Audit() {
       } else {
         setIsAuditOngoing(true);
         setLastAuditStartDate(new Date().toLocaleDateString());
+        setAuditID(data.object.id);
+
+        const updatedLocations = locations.map((location) => {
+          location.in_audit = 1;
+        });
+        setLocations(updatedLocations);
+        Cookies.set("locationList", JSON.stringify(updatedLocations));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function handleScan(e) {
+    if (e.key !== "Enter" || e.target.value === "") {
+      return;
+    }
+    if (!currentLocation) {
+      setMessage("Select a location before scanning");
+      return;
+    }
+    //clear values
+    setMessage("");
+    setBookTitle("");
+    setBookAuthor("");
+
+    try {
+      const response = await fetch("http://localhost:8080/api/inventory/auditEntry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+        body: JSON.stringify({ qr_code: e.target.value, location_id: currentLocation.id, audit_id: auditID }),
+      });
+
+      const data = await response.json();
+      if (!response.ok || !data.object) {
+        setMessage(data.message);
+      } else {
+        e.target.value = "";
+        //set book data
+        setBookTitle(data.object.book_title);
+        setBookAuthor(data.object.author);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  async function handleCompleteLocation(location) {
+    try {
+      const response = await fetch("http://localhost:8080/api/inventory/audit/completeLocation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+        body: JSON.stringify({ location_id: location.id, audit_id: auditID }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setMessage(data.message);
+      } else {
+        //cross off location
+        location.in_audit = 0;
+        setCurrentLocation("");
+        Cookies.set("locationList", JSON.stringify(locations));
+
+        if (!locations.filter(location.in_audit === 1).length) {
+          setAllLocationsComplete(true);
+        }
       }
     } catch (error) {
       console.log(error.message);
@@ -48,33 +142,6 @@ export default function Audit() {
   }
 
   function goToReports() {}
-
-  function handleCompleteLocation() {}
-
-  async function handleScan(e) {
-    if (e.key !== "Enter" || e.target.value == "") {
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:8080/api/inventory/auditEntry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
-        body: { qr_code: e.target.value, location: currentLocation, audit_id: auditID },
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(response.message);
-      } else {
-        //set book data
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  function handleCompleteAudit() {}
   return (
     <>
       <NavBar></NavBar>
@@ -82,28 +149,32 @@ export default function Audit() {
       {isAuditOngoing ? (
         <>
           <h2 className="text-center text-2xl mb-10">Started On: {lastAuditStartDate}</h2>
-
+          <p className="text-center">{message}</p>
           <div className="flex flex-row justify-around h-[60%]">
             <section className="flex flex-col w-full mx-10">
-              <h3 className="text-center text-xl mb-5">Current Location: {currentLocation}</h3>
+              <h3 className="text-center text-xl mb-5">Current Location: {currentLocation.location_name}</h3>
               <ul className="border overflow-y-scroll w-full h-full p-5 text-lg">
                 {locations.map((location) => {
                   return (
                     <li className="flex flex-row flex-nowrap justify-between items-center mb-7">
-                      <label className="w-full" for={`${location}-radio`}>
+                      <label
+                        className={"w-full" + (location.in_audit ? "" : " line-through")}
+                        for={`${location.location_name}-radio`}
+                      >
                         <input
-                          id={`${location}-radio`}
+                          id={`${location.location_name}-radio`}
                           className="mr-3"
                           type="radio"
                           name="location"
                           onClick={() => {
                             setCurrentLocation(location);
                           }}
+                          disabled={location.in_audit ? false : true}
                         ></input>
-                        {location}
+                        {location.location_name}
                       </label>
-                      {location === currentLocation ? (
-                        <button className="text-sm" onClick={handleCompleteLocation}>
+                      {location.id === currentLocation.id ? (
+                        <button className="text-sm" onClick={() => handleCompleteLocation(location)}>
                           Complete
                         </button>
                       ) : (
@@ -126,7 +197,6 @@ export default function Audit() {
               <div className="flex flex-col w-full">
                 <p className="text-lg mb-5 ml-5">Title: {bookTitle}</p>
                 <p className="text-lg mb-5 ml-5">Author: {bookAuthor}</p>
-                <p className="text-lg mb-5 ml-5">Location: {bookLocation}</p>
               </div>
               {allLocationsComplete ? (
                 <button className="mt-auto" onClick={handleCompleteAudit}>
