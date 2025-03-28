@@ -25,7 +25,8 @@ jobs:
 
       - name: Build project
         run: |
-          npm ci && npm run build
+          npm ci && rm -rf dist && npm run build
+          cp dist/index.html dist/404.html
 
       - name: Create OIDC token to AWS
         uses: aws-actions/configure-aws-credentials@v4
