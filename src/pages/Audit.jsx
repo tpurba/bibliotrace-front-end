@@ -3,18 +3,24 @@ import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import tailwindConfig from "../../tailwind.config";
 import Cookies from "js-cookie";
+import CompleteAuditDialog from "../modals/CompleteAuditDialog";
+import CompleteLocationDialog from "../modals/CompleteLocationDialog";
+import AuditCompletedDialog from "../modals/AuditCompletedDialog";
 
 export default function Audit() {
+  const completeLocationDialog = useRef(null);
+  const completeAuditDialog = useRef(null);
+  const auditCompletedDialog = useRef(null);
   const [isAuditOngoing, setIsAuditOngoing] = useState(null);
   const [auditID, setAuditID] = useState(null);
   const [lastAuditCompletedDate, setLastAuditCompletedDate] = useState("");
   const [lastAuditStartDate, setLastAuditStartDate] = useState("");
   const [currentLocation, setCurrentLocation] = useState("");
   const [locations, setLocations] = useState([]);
-  const [allLocationsComplete, setAllLocationsComplete] = useState();
   const [bookTitle, setBookTitle] = useState("");
   const [bookAuthor, setBookAuthor] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     //set isAuditOngoing
@@ -46,11 +52,6 @@ export default function Audit() {
     if (Cookies.get("locationList")) {
       const locationList = JSON.parse(Cookies.get("locationList"));
       setLocations(locationList);
-      setAllLocationsComplete(
-        !locationList.filter((location) => {
-          location.in_audit === 1;
-        }).length
-      );
     }
   }, []);
 
@@ -72,6 +73,7 @@ export default function Audit() {
 
         const updatedLocations = locations.map((location) => {
           location.in_audit = 1;
+          return location;
         });
         setLocations(updatedLocations);
         Cookies.set("locationList", JSON.stringify(updatedLocations));
@@ -116,13 +118,20 @@ export default function Audit() {
   }
 
   async function handleCompleteLocation(location) {
+    if (locations.filter((location) => location.in_audit === 1).length <= 1) {
+      completeAuditDialog.current.showModal();
+    } else {
+      completeLocationDialog.current.showModal();
+    }
+  }
+
+  async function completeLocation(location) {
     try {
       const response = await fetch("http://localhost:8080/api/inventory/audit/completeLocation", {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
         body: JSON.stringify({ location_id: location.id, audit_id: auditID }),
       });
-
       const data = await response.json();
       if (!response.ok) {
         setMessage(data.message);
@@ -131,10 +140,28 @@ export default function Audit() {
         location.in_audit = 0;
         setCurrentLocation("");
         Cookies.set("locationList", JSON.stringify(locations));
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
-        if (!locations.filter(location.in_audit === 1).length) {
-          setAllLocationsComplete(true);
-        }
+  async function completeAudit() {
+    try {
+      const response = await fetch("http://localhost:8080/api/inventory/audit/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${Cookies.get("authToken")}` },
+        body: JSON.stringify({ audit_id: auditID }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        setMessage(data.message);
+      } else {
+        setIsAuditOngoing(false);
+        // setLastAuditCompletedDate(data.)
+        completeAuditDialog.current.close();
+        auditCompletedDialog.current.showModal();
       }
     } catch (error) {
       console.log(error.message);
@@ -148,6 +175,18 @@ export default function Audit() {
       <h1 className="text-center mb-10">Audit</h1>
       {isAuditOngoing ? (
         <>
+          <CompleteAuditDialog
+            completeAuditDialog={completeAuditDialog}
+            currentLocation={currentLocation}
+            completeLocation={completeLocation}
+            completeAudit={completeAudit}
+          />
+          <CompleteLocationDialog
+            completeLocationDialog={completeLocationDialog}
+            currentLocation={currentLocation}
+            completeLocation={completeLocation}
+          />
+          <AuditCompletedDialog auditCompletedDialog={auditCompletedDialog} />
           <h2 className="text-center text-2xl mb-10">Started On: {lastAuditStartDate}</h2>
           <p className="text-center">{message}</p>
           <div className="flex flex-row justify-around h-[60%]">
@@ -198,13 +237,6 @@ export default function Audit() {
                 <p className="text-lg mb-5 ml-5">Title: {bookTitle}</p>
                 <p className="text-lg mb-5 ml-5">Author: {bookAuthor}</p>
               </div>
-              {allLocationsComplete ? (
-                <button className="mt-auto" onClick={handleCompleteAudit}>
-                  COMPLETE AUDIT
-                </button>
-              ) : (
-                <></>
-              )}
             </section>
 
             <section className="flex flex-col w-full mx-10">
@@ -223,13 +255,18 @@ export default function Audit() {
         </>
       ) : (
         <>
-          <h2 className="text-center text-2xl mb-20">Last Audit Completed: {lastAuditCompletedDate}</h2>
+          {/* <h2 className="text-center text-2xl mb-20">Last Audit Completed: {lastAuditCompletedDate}</h2> */}
           <div className="flex flex-row justify-center items-center">
             <button className="m-5" onClick={handleStartAudit}>
               Start New Audit
             </button>
-            <button className="m-5" onClick={goToReports}>
-              Go to Audit Reports
+            <button
+              className="m-5"
+              onClick={() => {
+                navigate("/reports");
+              }}
+            >
+              Go to Reports
             </button>
           </div>
         </>
